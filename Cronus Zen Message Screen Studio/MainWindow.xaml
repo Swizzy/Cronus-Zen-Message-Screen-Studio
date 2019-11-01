@@ -1,7 +1,8 @@
-﻿<Window
+﻿<controls:MetroWindow
     x:Class="CronusZenMessageScreenStudio.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     Title="Cronus Zen Message Screen Studio"
     Icon="cronus_new_icon.ico">
     <Grid>
@@ -52,4 +53,4 @@
             </Viewbox>
         </ScrollViewer>
     </Grid>
-</Window>
+</controls:MetroWindow>
