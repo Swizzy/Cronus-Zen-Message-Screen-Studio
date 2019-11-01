@@ -1,57 +1,156 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
+using System.Windows.Documents;
 
 namespace CronusZenMessageScreenStudio
 {
-    internal class ImageProcessor
+    public class ImageProcessor
     {
+        public enum ScalingTypes
+        {
+            Scaled,
+            FixedSize
+        }
+
+        [Flags]
+        public enum Positions
+        {
+            None    = 0 << 0,
+            HLeft   = 1 << 0,
+            HCenter = 1 << 1,
+            HRight  = 1 << 2,
+            VTop    = 1 << 3,
+            VCenter = 1 << 4,
+            VBottom = 1 << 5,
+
+            TopLeft   = VTop | HLeft,
+            TopCenter = VTop | HCenter,
+            TopRight  = VTop | HRight,
+
+            CenterLeft  = VCenter | HLeft,
+            Center      = VCenter | HCenter,
+            CenterRight = VCenter | HRight,
+
+            BottomLeft   = VBottom | HLeft,
+            BottomCenter = VBottom | HCenter,
+            BottomRight  = VBottom | HRight
+        }
+
         public static Bitmap LoadImage(string filename) => new Bitmap(filename);
 
-        public static Bitmap ScaleImage(Image input, int width, int height)
+        public static Bitmap ScaleImage(Image input,
+                                        int width,
+                                        int height,
+                                        ScalingTypes scalingType,
+                                        Positions position,
+                                        int marginTop,
+                                        int marginBottom,
+                                        int marginLeft,
+                                        int marginRight,
+                                        Color backgroundColor)
         {
             int sourceWidth = input.Width;
             int sourceHeight = input.Height;
-            double ratio = Math.Min(width / (double)sourceWidth, height / (double)sourceHeight);
+            int destWidth, targetWidth;
+            int destHeight, targetHeight;
             int destX = 0;
             int destY = 0;
-            int destWidth = (int)(sourceWidth * ratio);
-            int destHeight = (int)(sourceHeight * ratio);
-            if (width > destWidth)
+
+            if (scalingType == ScalingTypes.Scaled)
             {
-                destX = Convert.ToInt32((width - destWidth) / 2);
+                destWidth = targetWidth = (int)(sourceWidth * (width / (double)sourceWidth));
+                destHeight = targetHeight = (int)(sourceHeight * (height / (double)sourceHeight));
             }
-            if (height > destHeight)
+            else
             {
-                destY = Convert.ToInt32((height - destHeight) / 2);
+                targetWidth = width;
+                targetHeight = height;
+
+                width -= marginLeft + marginRight;
+                height -= marginTop + marginBottom;
+
+                double ratio = Math.Min(width / (double)sourceWidth, height / (double)sourceHeight);
+                destWidth = (int)(sourceWidth * ratio);
+                destHeight = (int)(sourceHeight * ratio);
+
+                if (width > destWidth)
+                {
+                    if ((position & Positions.HCenter) == Positions.HCenter)
+                    {
+                        destX = Convert.ToInt32((targetWidth - (destWidth + marginLeft + marginRight)) / 2);
+                    }
+                    else if ((position & Positions.HRight) == Positions.HRight)
+                    {
+                        destX = targetWidth - destWidth;
+                    }
+                }
+                if (height > destHeight)
+                {
+                    if ((position & Positions.VCenter) == Positions.VCenter)
+                    {
+                        destY = Convert.ToInt32((targetHeight - (destHeight + marginTop + marginBottom)) / 2);
+                    }
+                    else if ((position & Positions.VBottom) == Positions.VBottom)
+                    {
+                        destY = targetHeight - destHeight;
+                    }
+                }
+                destX += marginLeft;
+                destY += marginTop;
             }
-            Bitmap toReturn = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+
+            Bitmap toReturn = new Bitmap(targetWidth, targetHeight, PixelFormat.Format24bppRgb);
             toReturn.SetResolution(input.HorizontalResolution, input.VerticalResolution);
             using (Graphics graphics = Graphics.FromImage(toReturn))
             {
-                graphics.Clear(Color.Black);
+                graphics.Clear(backgroundColor);
                 graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 graphics.DrawImage(input, new Rectangle(destX, destY, destWidth, destHeight), new Rectangle(0, 0, sourceWidth, sourceHeight), GraphicsUnit.Pixel);
             }
             return toReturn;
         }
 
-        public static bool[,] MakeBinaryMatrix(Bitmap img)
+        public static bool[,] MakeBinaryMatrix(Bitmap img, int threshold, bool invert)
         {
             var toReturn = new bool[img.Width,img.Height];
             for (int x = 0; x < img.Width; x++)
             {
                 for (int y = 0; y < img.Height; y++)
                 {
-                    var pixel = img.GetPixel(x, y);
-                    var sum = new[] { pixel.R, pixel.G, pixel.B }.Sum(c => c);
-                    toReturn[x, y] = sum >= 1;
+                    Color pixel = img.GetPixel(x, y);
+                    var colors = new List<byte> { pixel.R, pixel.G, pixel.B };
+                    double avg = colors.Average(c => c);
+                    if (invert)
+                    {
+                        toReturn[x, y] = avg < threshold;
+                    }
+                    else
+                    {
+                        toReturn[x, y] = avg >= threshold;
+                    }
                 }
             }
 
+            return toReturn;
+        }
+
+        public static Bitmap MakeBinaryImage(Bitmap img, int threshold, bool invert)
+        {
+            Bitmap toReturn = new Bitmap(img.Width, img.Height);
+            bool[,] pixels = MakeBinaryMatrix(img, threshold, invert);
+            for (int x = 0; x < img.Width; x++)
+            {
+                for (int y = 0; y < img.Height; y++)
+                {
+                    toReturn.SetPixel(x, y, pixels[x, y] ? Color.White : Color.Black);
+                }
+            }
             return toReturn;
         }
 

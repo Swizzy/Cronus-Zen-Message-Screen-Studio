@@ -65,29 +65,17 @@ namespace CronusZenMessageScreenStudio
 
         private void LoadImage_Click(object sender, RoutedEventArgs e)
         {
-            var ofd = new OpenFileDialog()
-                      {
-                          Filter = ImageProcessor.GetFilterString()
-                      };
-            if (ofd.ShowDialog() == true)
+            var imageWindow = new LoadImageWindow();
+            if (imageWindow.ShowDialog() == true)
             {
-                try
+                var pixels = imageWindow.GetPixels();
+                for (int y = 0; y < 64; y++)
                 {
-                    var img = ImageProcessor.LoadImage(ofd.FileName);
-                    img = ImageProcessor.ScaleImage(img, 128, 64);
-                    var pixels = ImageProcessor.MakeBinaryMatrix(img);
-                    for (int y = 0; y < 64; y++)
+                    for (var x = 0; x < 128; x++)
                     {
-                        for (var x = 0; x < 128; x++)
-                        {
-                            PixelControl pixel = _pixelControls.First(p => p.X == x && p.Y == y);
-                            pixel.Color = pixels[x, y];
-                        }
+                        PixelControl pixel = _pixelControls.First(p => p.X == x && p.Y == y);
+                        pixel.Color = pixels[x, y];
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("A error occured while processing the image file you selected:\r\n" + ex.Message, "A Error occured", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
