@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMDisplayStudio", "CMDisplayStudio\CMDisplayStudio.csproj", "{7D34B160-9525-4514-94A5-40AA1A4FB05D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cronus Zen Message Screen Studio", "Cronus Zen Message Screen Studio\Cronus Zen Message Screen Studio.csproj", "{7D34B160-9525-4514-94A5-40AA1A4FB05D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
