@@ -9,7 +9,7 @@ namespace CronusZenMessageScreenStudio
     /// </summary>
     public partial class ExportWindow
     {
-        private ExportProcessor _exportProcessor;
+        private readonly ExportProcessor _exportProcessor;
         public ExportWindow(List<PixelControl> pixelControls)
         {
             _exportProcessor = new ExportProcessor(pixelControls);
@@ -70,5 +70,7 @@ namespace CronusZenMessageScreenStudio
             string data = _exportProcessor.GenerateExportData(settings, identifier);
             _exportProcessor.Savefile(data);
         }
+
+        private void ImgButton_Click(object sender, RoutedEventArgs e) { _exportProcessor.GenerateAndSaveImage(); }
     }
 }

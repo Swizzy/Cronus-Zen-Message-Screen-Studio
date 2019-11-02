@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Documents;
 using Microsoft.Win32;
 
 namespace CronusZenMessageScreenStudio
@@ -75,7 +76,7 @@ namespace CronusZenMessageScreenStudio
             if ((settings & ExportSettings.IndividualPixels) == ExportSettings.IndividualPixels)
             {
                 bool includeClear = (settings & ExportSettings.IncludeClear) == ExportSettings.IncludeClear;
-                toReturn.AppendLine(GeneratePixelGPCScript(includeClear, whitePixels));
+                toReturn.AppendLine(GeneratePixelOledLines(includeClear, whitePixels, 2));
             }
 
             if ((settings & ExportSettings.SampleScript) == ExportSettings.SampleScript)
@@ -95,9 +96,9 @@ namespace CronusZenMessageScreenStudio
         private string GeneratePackedFunction(ExportSettings settings, string identifier)
         {
             var toReturn = new StringBuilder();
-            toReturn.AppendLine($"int __{identifier}X, __{identifier}X2, __{identifier}Y, __{identifier}Y2, __{identifier}Bit, __{identifier}Offset;");
-            toReturn.AppendLine($"function draw_{identifier}(x, y, inv) {{");
-            toReturn.AppendLine("\tcls_oled(inv); // Clear the screen before we start");
+            toReturn.AppendLine($"int __{identifier}X, __{identifier}X2, __{identifier}Y, __{identifier}Y2, __{identifier}Bit, __{identifier}Offset, __{identifier}Data;");
+            toReturn.AppendLine($"function draw_{identifier}(x, y, invert) {{");
+            toReturn.AppendLine("\tcls_oled(invert); // Clear the screen before we start");
             if ((settings & ExportSettings.Packed1DArray) == ExportSettings.Packed1DArray)
             {
                 int bits = 0;
@@ -113,16 +114,17 @@ namespace CronusZenMessageScreenStudio
                 toReturn.AppendLine($"\t__{identifier}Bit = {bits}; // Reset bit flag");
                 toReturn.AppendLine($"\tfor (__{identifier}Y = 0; __{identifier}Y < {identifier}[0]; __{identifier}Y++) {{ // Loop the Y axis");
                 toReturn.AppendLine($"\t\tfor (__{identifier}X = 0; __{identifier}X < {identifier}[1]; __{identifier}X++) {{ // Loop the X axis");
-                toReturn.AppendLine($"\t\t\tif (test_bit({identifier}[__{identifier}Offset], __{identifier}Bit) && !inv) {{ // Check if we should draw this pixel white or not(inv standards for invert)");
+                toReturn.AppendLine($"\t\t\t__{identifier}Data = {identifier}[__{identifier}Offset]");
+                toReturn.AppendLine($"\t\t\tif (test_bit(__{identifier}Data, __{identifier}Bit) && !invert) {{ // Check if we should draw this pixel white or not(inv standards for invert)");
                 toReturn.AppendLine($"\t\t\t\t__{identifier}X2 = x + __{identifier}X;");
                 toReturn.AppendLine($"\t\t\t\t__{identifier}Y2 = y + __{identifier}Y;");
                 toReturn.AppendLine($"\t\t\t\tif (__{identifier}X2 < 0 || __{identifier}X2 >= 128) {{");
                 toReturn.AppendLine($"\t\t\t\t\t__{identifier}X2 -= 128;");
-                toReturn.AppendLine($"\t\t\t\t}}");
+                toReturn.AppendLine("\t\t\t\t}");
                 toReturn.AppendLine($"\t\t\t\tif (__{identifier}Y2 < 0 || __{identifier}Y2 >= 64) {{");
                 toReturn.AppendLine($"\t\t\t\t\t__{identifier}Y2 -= 64;");
-                toReturn.AppendLine($"\t\t\t\t}}");
-                toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, 1);");
+                toReturn.AppendLine("\t\t\t\t}");
+                toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, invert);");
                 toReturn.AppendLine("\t\t\t}");
                 toReturn.AppendLine($"\t\t\t__{identifier}Bit--; // Decrement the bit flag, we're moving to the next bit");
                 toReturn.AppendLine($"\t\t\tif (__{identifier}Bit < 0) {{ // Check if we've just handled the last bit");
@@ -166,19 +168,9 @@ namespace CronusZenMessageScreenStudio
                     dataType = "int";
                     dataString = string.Join(",", data.Select(d => $" 0x{d:X04}")).Trim();
                 }
-                toReturn.AppendLine($"const {dataType} {identifier}[] = {{{dwidth}, {dheight}, {dataString}}}");
+                toReturn.AppendLine($"const {dataType} {identifier}[] = {{{dwidth}, {dheight}, {dataString}}};");
             }
             return toReturn.ToString();
-        }
-
-        private string GeneratePixelGPCScript(bool includeClear, bool whitePixels)
-        {
-            StringBuilder data = new StringBuilder();
-
-            data.AppendLine(GeneratePixelOledLines(includeClear, whitePixels, 2));
-            data.AppendLine("\t}");
-            data.AppendLine("}");
-            return data.ToString();
         }
 
         private bool WhitePixelMinority
@@ -197,18 +189,21 @@ namespace CronusZenMessageScreenStudio
             int height;
             if (allPixels)
             {
-                width = _pixelControls.Max(p => p.X);
-                height = _pixelControls.Max(p => p.Y);
+                width = _pixelControls.Max(p => p.X) + 1;
+                height = _pixelControls.Max(p => p.Y) + 1;
             }
             else
             {
-                width = _pixelControls.Where(p => p.Color == whitePixels).Max(p => p.X);
-                height = _pixelControls.Where(p => p.Color == whitePixels).Max(p => p.Y);
+                List<PixelControl> pixels = _pixelControls.Where(p => p.Color == whitePixels)
+                                                          .DefaultIfEmpty(new PixelControl())
+                                                          .ToList();
+                width = pixels.Max(p => p.X) + 1;
+                height = pixels.Max(p => p.Y) + 1;
             }
             bool[,] matrix = new bool[width, height];
-            for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
             {
-                for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
                 {
                     matrix[x, y] = _pixelControls.First(p => p.X == x && p.Y == y).Color;
                 }
@@ -297,5 +292,46 @@ namespace CronusZenMessageScreenStudio
         }
 
         private string GeneratePixelOled(PixelControl pixel, string prefix) => $"{prefix}pixel_oled({pixel.X}, {pixel.Y}, {(pixel.Color ? 1 : 0)});";
+
+        public void GenerateAndSaveImage()
+        {
+            (int width, int height, bool[,] matrix) = GetPixelMatrix(true, true);
+            Bitmap img = ImageProcessor.MakeBinaryImage(matrix, width, height);
+            SaveFileDialog sfd = new SaveFileDialog()
+                      {
+                          FileName = "image.bmp",
+                          AddExtension = true,
+                          DefaultExt = ".bmp"
+                      };
+            StringBuilder filters = new StringBuilder();
+            filters.AppendFormat("Bitmap Images ({0})|{0}", "*.bmp");
+            filters.AppendFormat("|JPEG Images ({0})|{0}", "*.jpg;jpeg");
+            filters.AppendFormat("|GIF Images ({0})|{0}", "*.gif");
+            filters.AppendFormat("|TIFF Images ({0})|{0}", "*.tiff");
+            filters.AppendFormat("|PNG Images ({0})|{0}", "*.png");
+            sfd.Filter = filters.ToString();
+
+            if (sfd.ShowDialog() == true)
+            {
+                switch (sfd.FilterIndex)
+                {
+                    case 0:
+                        img.Save(sfd.FileName, ImageFormat.Bmp);
+                        break;
+                    case 1:
+                        img.Save(sfd.FileName, ImageFormat.Jpeg);
+                        break;
+                    case 2:
+                        img.Save(sfd.FileName, ImageFormat.Gif);
+                        break;
+                    case 3:
+                        img.Save(sfd.FileName, ImageFormat.Tiff);
+                        break;
+                    case 4:
+                        img.Save(sfd.FileName, ImageFormat.Png);
+                        break;
+                }
+            }
+        }
     }
 }
