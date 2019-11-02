@@ -123,5 +123,10 @@ namespace CronusZenMessageScreenStudio
                 pixel.Invert();
             }
         }
+
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Viewbox.Width = Viewbox.ActualWidth * (ScrollViewer.ActualWidth / Viewbox.ActualWidth);
+        }
     }
 }

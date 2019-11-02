@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     Title="Cronus Zen Message Screen Studio"
-    Icon="cronus_new_icon.ico">
+    Icon="cronus_new_icon.ico"
+    Loaded="MainWindow_OnLoaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -41,6 +42,7 @@
                 Content="Invert" />
         </Grid>
         <ScrollViewer
+            x:Name="ScrollViewer"
             Grid.Row="1"
             HorizontalScrollBarVisibility="Auto"
             PreviewMouseWheel="ViewBox_MouseWheel"
