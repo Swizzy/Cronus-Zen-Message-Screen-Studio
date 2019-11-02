@@ -167,7 +167,7 @@ namespace CronusZenMessageScreenStudio
             }
             toReturn.Append(sep + "All files (*.*)|*.*");
 
-            string extensions = string.Join(",", fileFormats);
+            string extensions = string.Join(";", fileFormats);
             return $"All Imagefiles ({extensions})|{extensions}|{toReturn}";
         }
     }
