@@ -19,7 +19,7 @@ namespace CronusZenMessageScreenStudio
         [Flags]
         public enum Positions
         {
-            None    = 0 << 0,
+            Default    = 0 << 0,
             HLeft   = 1 << 0,
             HCenter = 1 << 1,
             HRight  = 1 << 2,
@@ -62,8 +62,18 @@ namespace CronusZenMessageScreenStudio
 
             if (scalingType == ScalingTypes.Scaled)
             {
-                destWidth = targetWidth = (int)(sourceWidth * (width / (double)sourceWidth));
-                destHeight = targetHeight = (int)(sourceHeight * (height / (double)sourceHeight));
+                double maxRatio = width / (double)height;
+                double srcRatio = sourceWidth / (double)sourceHeight;
+                if (srcRatio > maxRatio)
+                {
+                    destWidth = targetWidth = width;
+                    destHeight = targetHeight = (int)(height / srcRatio);
+                }
+                else
+                {
+                    destWidth = targetWidth = (int)(width / srcRatio);
+                    destHeight = targetHeight = height;
+                }
             }
             else
             {
@@ -103,7 +113,12 @@ namespace CronusZenMessageScreenStudio
                 destY += marginTop;
             }
 
-            Bitmap toReturn = new Bitmap(targetWidth, targetHeight, PixelFormat.Format24bppRgb);
+            PixelFormat pixelFormat = PixelFormat.Format24bppRgb;
+            if (backgroundColor == Color.Transparent)
+            {
+                pixelFormat = PixelFormat.Format32bppArgb;
+            }
+            Bitmap toReturn = new Bitmap(targetWidth, targetHeight, pixelFormat);
             toReturn.SetResolution(input.HorizontalResolution, input.VerticalResolution);
             using (Graphics graphics = Graphics.FromImage(toReturn))
             {

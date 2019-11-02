@@ -4,7 +4,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using Image = System.Drawing.Image;
@@ -62,6 +61,16 @@ namespace CronusZenMessageScreenStudio
                 try
                 {
                     _selectedImage = ImageProcessor.LoadImage(ofd.FileName);
+                    _selectedImage = ImageProcessor.ScaleImage(_selectedImage,
+                                                               512,
+                                                               512,
+                                                               ImageProcessor.ScalingTypes.Scaled,
+                                                               ImageProcessor.Positions.Default,
+                                                               0,
+                                                               0,
+                                                               0,
+                                                               0,
+                                                               Color.Transparent);
                     UpdatePreview();
                 }
                 catch (Exception ex)
