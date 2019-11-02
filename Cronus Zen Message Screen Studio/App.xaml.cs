@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace CronusZenMessageScreenStudio
+﻿namespace CronusZenMessageScreenStudio
 {
     /// <summary>
     /// Interaction logic for App.xaml
