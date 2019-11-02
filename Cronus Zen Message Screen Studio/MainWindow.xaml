@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-    Title="Cronus Zen Message Screen Studio"
     Icon="cronus_new_icon.ico"
     Loaded="MainWindow_OnLoaded">
     <Grid>

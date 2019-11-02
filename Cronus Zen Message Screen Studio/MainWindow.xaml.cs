@@ -15,6 +15,8 @@ namespace CronusZenMessageScreenStudio
         public MainWindow()
         {
             InitializeComponent();
+            Title = $"Cronus Zen Message Screen Studio v{App.Version}";
+
             for (int x = 0; x < 129; x++)
             {
                 TextBlock label = new TextBlock
