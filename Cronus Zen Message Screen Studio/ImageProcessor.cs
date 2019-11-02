@@ -155,11 +155,16 @@ namespace CronusZenMessageScreenStudio
 
         public static Bitmap MakeBinaryImage(Bitmap img, int threshold, bool invert)
         {
-            Bitmap toReturn = new Bitmap(img.Width, img.Height);
             bool[,] pixels = MakeBinaryMatrix(img, threshold, invert);
-            for (int x = 0; x < img.Width; x++)
+            return MakeBinaryImage(pixels, img.Width, img.Height);
+        }
+
+        public static Bitmap MakeBinaryImage(bool[,] pixels, int width, int height)
+        {
+            Bitmap toReturn = new Bitmap(width, height);
+            for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < img.Height; y++)
+                for (int y = 0; y < height; y++)
                 {
                     toReturn.SetPixel(x, y, pixels[x, y] ? Color.White : Color.Black);
                 }
