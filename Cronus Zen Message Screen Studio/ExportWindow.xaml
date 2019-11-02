@@ -1,0 +1,126 @@
+﻿<mah:MetroWindow
+    x:Class="CronusZenMessageScreenStudio.ExportWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    Title="Export options"
+    ResizeMode="NoResize"
+    SizeToContent="WidthAndHeight"
+    WindowStartupLocation="CenterOwner">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="General settings">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <CheckBox
+                    x:Name="SampleScriptBox"
+                    Grid.ColumnSpan="3"
+                    Content="Generate Sample GPC Script" />
+                <RadioButton
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Content="Auto select color"
+                    GroupName="PixelSelection"
+                    IsChecked="True" />
+                <RadioButton
+                    x:Name="ForceWhitePixels"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="10,0,0,0"
+                    Content="Use white pixels"
+                    GroupName="PixelSelection" />
+                <RadioButton
+                    x:Name="ForceBlackPixels"
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Margin="10,0,10,0"
+                    Content="Use black pixels"
+                    GroupName="PixelSelection" />
+            </Grid>
+        </GroupBox>
+        <GroupBox
+            Grid.Row="1"
+            Margin="0,10,0,0"
+            Header="Export individual pixel settings">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <CheckBox
+                    x:Name="IncludeClearScreen"
+                    Grid.Row="0"
+                    Content="Clear screen first" />
+                <Button
+                    Grid.Row="1"
+                    Click="Individual_Click"
+                    Content="Export individual pixels" />
+            </Grid>
+        </GroupBox>
+        <GroupBox
+            Grid.Row="2"
+            Margin="0,10,0,0"
+            Header="Packed format">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    Text="Identifier:" />
+                <TextBox
+                    x:Name="Identifier"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    MinWidth="100"
+                    Text="picture" />
+                <CheckBox
+                    x:Name="IncludeFunction"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Content="Generate function" />
+                <CheckBox
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Margin="10,0,0,0"
+                    Content="All pixels" />
+                <Button
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Click="Packed16_Click"
+                    Content="Export 16-bit Packed" />
+                <Button
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Click="Packed8_Click"
+                    Content="Export 8-bit Packed" />
+            </Grid>
+        </GroupBox>
+    </Grid>
+</mah:MetroWindow>

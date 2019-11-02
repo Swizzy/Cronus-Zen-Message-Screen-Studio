@@ -40,28 +40,7 @@ namespace CronusZenMessageScreenStudio
             }
         }
 
-        private void Export_Click(object sender, RoutedEventArgs e)
-        {
-            StringBuilder data = new StringBuilder();
-            data.AppendLine("main {");
-            data.AppendLine("\tif (get_val(XB1_A)) {");
-            data.AppendLine("\t\tcls_oled(1);");
-            foreach (PixelControl pixel in _pixelControls.Where(p => p.Color))
-            {
-                data.AppendLine($"\t\tpixel_oled({pixel.X}, {pixel.Y}, 1)");
-            }
-            data.AppendLine("\t}");
-            data.AppendLine("}");
-
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.AddExtension = true;
-            sfd.DefaultExt = ".gpc";
-            sfd.FileName = "script.gpc";
-            if (sfd.ShowDialog() == true)
-            {
-                File.WriteAllText(sfd.FileName, data.ToString());
-            }
-        }
+        private void Export_Click(object sender, RoutedEventArgs e) => new ExportWindow(_pixelControls) { Owner = this }.ShowDialog();
 
         private void LoadImage_Click(object sender, RoutedEventArgs e)
         {

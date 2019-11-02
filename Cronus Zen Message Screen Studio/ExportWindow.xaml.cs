@@ -1,0 +1,74 @@
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Windows;
+
+namespace CronusZenMessageScreenStudio
+{
+    /// <summary>
+    ///     Interaction logic for ExportWindow.xaml
+    /// </summary>
+    public partial class ExportWindow
+    {
+        private ExportProcessor _exportProcessor;
+        public ExportWindow(List<PixelControl> pixelControls)
+        {
+            _exportProcessor = new ExportProcessor(pixelControls);
+            InitializeComponent();
+        }
+
+        private void Individual_Click(object sender, RoutedEventArgs e)
+        {
+            ExportProcessor.ExportSettings settings = ExportProcessor.ExportSettings.IndividualPixels;
+            if (IncludeClearScreen.IsChecked == true)
+            {
+                settings |= ExportProcessor.ExportSettings.IncludeClear;
+            }
+            PerformExport(settings);
+        }
+
+        private void Packed16_Click(object sender, RoutedEventArgs e) => PerformPackedExport(true);
+
+        private void Packed8_Click(object sender, RoutedEventArgs e) => PerformPackedExport(false);
+
+        private void PerformPackedExport(bool use16Bit)
+        {
+            ExportProcessor.ExportSettings settings = ExportProcessor.ExportSettings.Packed1DArray;
+            if (use16Bit)
+            {
+                settings |= ExportProcessor.ExportSettings.Packed16Bit;
+            }
+            else
+            {
+                settings |= ExportProcessor.ExportSettings.Packed8Bit;
+            }
+
+            if (IncludeFunction.IsChecked == true)
+            {
+                settings |= ExportProcessor.ExportSettings.IncludeFunction;
+            }
+            PerformExport(settings);
+        }
+
+        private void PerformExport(ExportProcessor.ExportSettings settings)
+        {
+            if (SampleScriptBox.IsChecked == true)
+            {
+                settings |= ExportProcessor.ExportSettings.SampleScript;
+            }
+
+            if (ForceWhitePixels.IsChecked == true)
+            {
+                settings |= ExportProcessor.ExportSettings.ForceWhite;
+            }
+            else if (ForceBlackPixels.IsChecked == true)
+            {
+                settings |= ExportProcessor.ExportSettings.ForceBlack;
+            }
+
+            string identifier = Identifier.Text.Trim();
+            identifier = Regex.Replace(identifier, "[^a-zA-Z0-9_]", "_");
+            string data = _exportProcessor.GenerateExportData(settings, identifier);
+            _exportProcessor.Savefile(data);
+        }
+    }
+}
