@@ -65,7 +65,7 @@ namespace CronusZenMessageScreenStudio
 
         private void LoadImage_Click(object sender, RoutedEventArgs e)
         {
-            var imageWindow = new LoadImageWindow();
+            var imageWindow = new LoadImageWindow { Owner = this };
             if (imageWindow.ShowDialog() == true)
             {
                 var pixels = imageWindow.GetPixels();
