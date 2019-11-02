@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
-using System.Windows.Documents;
 
 namespace CronusZenMessageScreenStudio
 {
@@ -118,13 +116,13 @@ namespace CronusZenMessageScreenStudio
 
         public static bool[,] MakeBinaryMatrix(Bitmap img, int threshold, bool invert)
         {
-            var toReturn = new bool[img.Width,img.Height];
+            bool[,] toReturn = new bool[img.Width,img.Height];
             for (int x = 0; x < img.Width; x++)
             {
                 for (int y = 0; y < img.Height; y++)
                 {
                     Color pixel = img.GetPixel(x, y);
-                    var colors = new List<byte> { pixel.R, pixel.G, pixel.B };
+                    List<byte> colors = new List<byte> { pixel.R, pixel.G, pixel.B };
                     double avg = colors.Average(c => c);
                     if (invert)
                     {
@@ -156,17 +154,21 @@ namespace CronusZenMessageScreenStudio
 
         public static string GetFilterString()
         {
-            var toReturn = new StringBuilder();
-            var sep = "";
+            List<string> fileFormats = new List<string>();
+            StringBuilder toReturn = new StringBuilder();
+            string sep = "";
             foreach (ImageCodecInfo codec in ImageCodecInfo.GetImageDecoders())
             {
-                var name = codec.CodecName.Substring(8).Replace("Codec", "Files").Trim();
-                var ext = codec.FilenameExtension;
+                string name = codec.CodecName.Substring(8).Replace("Codec", "Files").Trim();
+                string ext = codec.FilenameExtension;
                 toReturn.AppendFormat("{0}{1} ({2})|{2}", sep, name, ext);
                 sep = "|";
+                fileFormats.Add(ext);
             }
             toReturn.Append(sep + "All files (*.*)|*.*");
-            return toReturn.ToString();
+
+            string extensions = string.Join(",", fileFormats);
+            return $"All Imagefiles ({extensions})|{extensions}|{toReturn}";
         }
     }
 }
