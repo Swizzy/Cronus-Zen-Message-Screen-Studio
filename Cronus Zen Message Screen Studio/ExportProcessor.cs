@@ -315,19 +315,19 @@ namespace CronusZenMessageScreenStudio
             {
                 switch (sfd.FilterIndex)
                 {
-                    case 0:
+                    case 1:
                         img.Save(sfd.FileName, ImageFormat.Bmp);
                         break;
-                    case 1:
+                    case 2:
                         img.Save(sfd.FileName, ImageFormat.Jpeg);
                         break;
-                    case 2:
+                    case 3:
                         img.Save(sfd.FileName, ImageFormat.Gif);
                         break;
-                    case 3:
+                    case 4:
                         img.Save(sfd.FileName, ImageFormat.Tiff);
                         break;
-                    case 4:
+                    case 5:
                         img.Save(sfd.FileName, ImageFormat.Png);
                         break;
                 }
