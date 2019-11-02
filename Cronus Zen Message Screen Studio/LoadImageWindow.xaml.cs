@@ -95,7 +95,7 @@ namespace CronusZenMessageScreenStudio
             ImagePreview.Source = BitmapToImageSource(_finalImage);
         }
 
-        public bool[,] GetPixels() => ImageProcessor.MakeBinaryMatrix(_finalImage, Threshold, Invert);
+        public bool[,] GetPixels() => ImageProcessor.MakeBinaryMatrix(_finalImage, Threshold, false);
 
         private void PositionBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => UpdatePreview();
 
