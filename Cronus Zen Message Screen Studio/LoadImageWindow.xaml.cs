@@ -141,7 +141,10 @@ namespace CronusZenMessageScreenStudio
 
         private void Ok_click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            if (_finalImage != null)
+            {
+                DialogResult = true;
+            }
             Close();
         }
     }
