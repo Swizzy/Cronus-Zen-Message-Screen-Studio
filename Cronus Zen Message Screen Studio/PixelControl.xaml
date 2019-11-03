@@ -2,6 +2,7 @@
     x:Class="CronusZenMessageScreenStudio.PixelControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="Black"
     BorderBrush="DodgerBlue"
     BorderThickness="0.5">
     <Grid

@@ -60,6 +60,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
@@ -76,6 +77,22 @@
                 <CheckBox x:Name="HighlightFullColumnAndRowBox" Content="Highlight full column and row" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="2">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Margin="10,0"
+                        VerticalAlignment="Center"
+                        Text="Pen thickness:" />
+                    <controls:NumericUpDown
+                        Name="PenThickness"
+                        Width="80"
+                        Interval="2"
+                        Maximum="63"
+                        Minimum="1"
+                        ValueChanged="PenThickness_OnValueChanged"
+                        Value="1" />
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="3">
                 <TextBlock Name="CursorPosition" />
             </StatusBarItem>
         </StatusBar>

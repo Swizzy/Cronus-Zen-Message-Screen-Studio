@@ -48,9 +48,7 @@ namespace CronusZenMessageScreenStudio
         public PixelControl()
         {
             InitializeComponent();
-            _colorChanged = true;
             Refresh();
-            _colorChanged = false;
             MouseEnter += HandleMouseEnter;
             MouseLeave += HandleMouseLeave;
             MouseLeftButtonDown += HandleMouseButtonEvent;
@@ -69,11 +67,12 @@ namespace CronusZenMessageScreenStudio
         {
             if (e.ButtonState == MouseButtonState.Pressed)
             {
+                _highlightRowAndColumn(this);
                 switch (e.ChangedButton)
                 {
                     case MouseButton.Left:
                         Color = true;
-                    break;
+                        break;
                     case MouseButton.Right:
                         Color = false;
                         break;
@@ -83,6 +82,8 @@ namespace CronusZenMessageScreenStudio
 
         private void HandleMouseEnter(object sender, MouseEventArgs e)
         {
+            Highlighted = true;
+            _highlightRowAndColumn(this);
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 Color = true;
@@ -91,8 +92,6 @@ namespace CronusZenMessageScreenStudio
             {
                 Color = false;
             }
-            Highlighted = true;
-            _highlightRowAndColumn(this);
         }
 
         private void HandleMouseLeave(object sender, MouseEventArgs e)

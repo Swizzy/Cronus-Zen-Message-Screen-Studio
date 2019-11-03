@@ -12,6 +12,7 @@ namespace CronusZenMessageScreenStudio
     public partial class MainWindow
     {
         readonly List<PixelControl> _pixelControls = new List<PixelControl>();
+        private PixelControl _lastHighlight;
         public MainWindow()
         {
             InitializeComponent();
@@ -40,17 +41,38 @@ namespace CronusZenMessageScreenStudio
 
         private void HighlightRowAndColumn(PixelControl control)
         {
+            if (control == null)
+            {
+                return;
+            }
+            _lastHighlight = control;
+            bool setWhite = false;
+            bool setBlack = false;
+
+            if (control.Highlighted && Mouse.LeftButton == MouseButtonState.Pressed)
+            {
+                setWhite = true;
+            }
+            else if (control.Highlighted && Mouse.RightButton == MouseButtonState.Pressed)
+            {
+                setBlack = true;
+            }
             int x = control.X;
             int y = control.Y;
             CursorPosition.Text = control.Highlighted ? $"X: {x} Y: {y}" : "";
-            if (HighlightColumnAndRowBox.IsChecked == true || HighlightFullColumnAndRowBox.IsChecked == true)
+            int thickness = (int)(PenThickness.Value ?? 1) - 1;
+            if (HighlightColumnAndRowBox.IsChecked == true || HighlightFullColumnAndRowBox.IsChecked == true || thickness > 0)
             {
+                int xMin = x - (thickness / 2);
+                int xMax = x + (thickness / 2);
+                int yMin = y - (thickness / 2);
+                int yMax = y + (thickness / 2);
                 foreach (PixelControl pixelControl in _pixelControls)
                 {
                     pixelControl.Highlighted = control.Highlighted
                                                &&
                                                (
-                                                   HighlightFullColumnAndRowBox.IsChecked != true
+                                                   HighlightColumnAndRowBox.IsChecked == true
                                                    &&
                                                    (
                                                        pixelControl.X <= x && pixelControl.Y == y
@@ -65,7 +87,21 @@ namespace CronusZenMessageScreenStudio
                                                        ||
                                                        pixelControl.X == x
                                                    )
+                                                   ||
+                                                   (
+                                                       (pixelControl.Y >= yMin && pixelControl.Y <= yMax)
+                                                       &&
+                                                       (pixelControl.X >= xMin && pixelControl.X <= xMax)
+                                                    )
                                                );
+                    if (setWhite && ((pixelControl.X >= xMin && pixelControl.X <= xMax) && (pixelControl.Y >= yMin && pixelControl.Y <= yMax)))
+                    {
+                        pixelControl.Color = true;
+                    }
+                    else if (setBlack && ((pixelControl.X >= xMin && pixelControl.X <= xMax) && (pixelControl.Y >= yMin && pixelControl.Y <= yMax)))
+                    {
+                        pixelControl.Color = false;
+                    }
                 }
             }
         }
@@ -137,5 +173,7 @@ namespace CronusZenMessageScreenStudio
         {
             Viewbox.Width = Viewbox.ActualWidth * (ScrollViewer.ActualWidth / Viewbox.ActualWidth);
         }
+
+        private void PenThickness_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e) => HighlightRowAndColumn(_lastHighlight);
     }
 }
