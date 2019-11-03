@@ -209,5 +209,7 @@ namespace CronusZenMessageScreenStudio
                                      };
             bw.RunWorkerAsync();
         }
+
+        private void MainWindow_OnStateChanged(object sender, EventArgs e) { MainWindow_OnSizeChanged(sender, null); }
     }
 }

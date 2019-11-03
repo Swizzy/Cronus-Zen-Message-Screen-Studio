@@ -3,9 +3,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    MinWidth="710"
+    MinHeight="280"
     Activated="MainWindow_OnActivated"
+    Icon="cronus_new_icon.ico"
     SizeChanged="MainWindow_OnSizeChanged"
-    Icon="cronus_new_icon.ico">
+    StateChanged="MainWindow_OnStateChanged">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
