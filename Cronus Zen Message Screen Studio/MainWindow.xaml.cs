@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,6 +14,7 @@ namespace CronusZenMessageScreenStudio
     {
         readonly List<PixelControl> _pixelControls = new List<PixelControl>();
         private PixelControl _lastHighlight;
+        private bool _windowLoaded;
         public MainWindow()
         {
             InitializeComponent();
@@ -169,7 +171,15 @@ namespace CronusZenMessageScreenStudio
             }
         }
 
-        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e) { ShowAllPixels_Click(this, e); }
+        private void MainWindow_OnActivated(object sender, EventArgs eventArgs)
+        {
+            if (_windowLoaded)
+            {
+                return;
+            }
+            ShowAllPixels_Click(this, null);
+            _windowLoaded = true;
+        }
 
         private void PenThickness_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e) => HighlightRowAndColumn(_lastHighlight);
 

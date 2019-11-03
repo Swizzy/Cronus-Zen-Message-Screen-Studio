@@ -3,8 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-    Icon="cronus_new_icon.ico"
-    Loaded="MainWindow_OnLoaded">
+    Activated="MainWindow_OnActivated"
+    Icon="cronus_new_icon.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
