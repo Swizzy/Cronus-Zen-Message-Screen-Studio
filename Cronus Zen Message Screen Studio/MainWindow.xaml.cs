@@ -169,11 +169,14 @@ namespace CronusZenMessageScreenStudio
             }
         }
 
-        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Viewbox.Width = Viewbox.ActualWidth * (ScrollViewer.ActualWidth / Viewbox.ActualWidth);
-        }
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e) { ShowAllPixels_Click(this, e); }
 
         private void PenThickness_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e) => HighlightRowAndColumn(_lastHighlight);
+
+        private void ShowAllPixels_Click(object sender, RoutedEventArgs e)
+        {
+            Viewbox.Width = Viewbox.MinWidth = ScrollViewer.ViewportWidth;
+            Viewbox.Height = Viewbox.MinHeight = ScrollViewer.ViewportHeight;
+        }
     }
 }
