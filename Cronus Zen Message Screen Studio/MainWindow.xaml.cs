@@ -24,13 +24,20 @@ namespace CronusZenMessageScreenStudio
             {
                 TextBlock label = new TextBlock
                                   {
-                                      TextAlignment = TextAlignment.Center, Text = x == 0 ? "" : (x - 1).ToString()
+                                      TextAlignment = TextAlignment.Center,
+                                      Text = x == 0 ? "" : (x - 1).ToString(),
+                                      Margin = new Thickness(0,0,5,0)
                                   };
                 Canvas.Children.Add(label);
             }
             for (int y = 0; y < 64; y++)
             {
-                TextBlock label = new TextBlock { Text = y.ToString(), TextAlignment = TextAlignment.Right };
+                TextBlock label = new TextBlock
+                                  {
+                                      Text = y.ToString(),
+                                      TextAlignment = TextAlignment.Right,
+                                      Margin = new Thickness(5, 0, 5, 0)
+                };
                 Canvas.Children.Add(label);
                 for (int x = 0; x < 128; x++)
                 {
