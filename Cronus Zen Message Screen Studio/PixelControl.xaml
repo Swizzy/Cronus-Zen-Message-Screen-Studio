@@ -3,4 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     BorderBrush="DodgerBlue"
-    BorderThickness="0.5" />
+    BorderThickness="0.5">
+    <Grid
+        x:Name="Overlay"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Opacity="0.25" />
+</UserControl>

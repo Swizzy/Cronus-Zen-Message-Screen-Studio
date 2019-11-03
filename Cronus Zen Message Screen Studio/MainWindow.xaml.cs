@@ -31,9 +31,41 @@ namespace CronusZenMessageScreenStudio
                 Canvas.Children.Add(label);
                 for (int x = 0; x < 128; x++)
                 {
-                    PixelControl control = new PixelControl(x, y);
+                    PixelControl control = new PixelControl(HighlightRowAndColumn, x, y);
                     _pixelControls.Add(control);
                     Canvas.Children.Add(control);
+                }
+            }
+        }
+
+        private void HighlightRowAndColumn(PixelControl control)
+        {
+            int x = control.X;
+            int y = control.Y;
+            CursorPosition.Text = control.Highlighted ? $"X: {x} Y: {y}" : "";
+            if (HighlightColumnAndRowBox.IsChecked == true || HighlightFullColumnAndRowBox.IsChecked == true)
+            {
+                foreach (PixelControl pixelControl in _pixelControls)
+                {
+                    pixelControl.Highlighted = control.Highlighted
+                                               &&
+                                               (
+                                                   HighlightFullColumnAndRowBox.IsChecked != true
+                                                   &&
+                                                   (
+                                                       pixelControl.X <= x && pixelControl.Y == y
+                                                       ||
+                                                       pixelControl.Y <= y && pixelControl.X == x
+                                                   )
+                                                   ||
+                                                   HighlightFullColumnAndRowBox.IsChecked == true
+                                                   &&
+                                                   (
+                                                       pixelControl.Y == y
+                                                       ||
+                                                       pixelControl.X == x
+                                                   )
+                                               );
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace CronusZenMessageScreenStudio
@@ -8,7 +9,9 @@ namespace CronusZenMessageScreenStudio
     /// </summary>
     public partial class PixelControl
     {
-        private bool _color;
+        private readonly Action<PixelControl> _highlightRowAndColumn;
+        private bool _color, _colorChanged;
+        private bool _highlighted, _highlightedChanged;
         public int X { get; set; }
         public int Y { get; set; }
 
@@ -19,8 +22,25 @@ namespace CronusZenMessageScreenStudio
             {
                 if (_color != value)
                 {
+                    _colorChanged = true;
                     _color = value;
                     Refresh();
+                    _colorChanged = false;
+                }
+            }
+        }
+
+        public bool Highlighted
+        {
+            get => _highlighted;
+            set
+            {
+                if (_highlighted != value)
+                {
+                    _highlightedChanged = true;
+                    _highlighted = value;
+                    Refresh();
+                    _highlightedChanged = false;
                 }
             }
         }
@@ -28,14 +48,18 @@ namespace CronusZenMessageScreenStudio
         public PixelControl()
         {
             InitializeComponent();
+            _colorChanged = true;
             Refresh();
-            MouseEnter += HandleMouseEvent;
+            _colorChanged = false;
+            MouseEnter += HandleMouseEnter;
+            MouseLeave += HandleMouseLeave;
             MouseLeftButtonDown += HandleMouseButtonEvent;
             MouseRightButtonDown += HandleMouseButtonEvent;
         }
 
-        public PixelControl(int x, int y, bool color = false) : this()
+        public PixelControl(Action<PixelControl> highlightRowAndColumn, int x, int y, bool color = false) : this()
         {
+            _highlightRowAndColumn = highlightRowAndColumn;
             X = x;
             Y = y;
             Color = color;
@@ -57,7 +81,7 @@ namespace CronusZenMessageScreenStudio
             }
         }
 
-        private void HandleMouseEvent(object sender, MouseEventArgs e)
+        private void HandleMouseEnter(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
@@ -67,6 +91,14 @@ namespace CronusZenMessageScreenStudio
             {
                 Color = false;
             }
+            Highlighted = true;
+            _highlightRowAndColumn(this);
+        }
+
+        private void HandleMouseLeave(object sender, MouseEventArgs e)
+        {
+            Highlighted = false;
+            _highlightRowAndColumn(this);
         }
 
         public void Invert()
@@ -74,6 +106,24 @@ namespace CronusZenMessageScreenStudio
             Color = !Color;
         }
 
-        public void Refresh() { Background = Color ? Brushes.White : Brushes.Black; }
+        public void Refresh()
+        {
+            if (_colorChanged)
+            {
+                Background = Color ? Brushes.White : Brushes.Black;
+            }
+
+            if (_highlightedChanged || Highlighted && _colorChanged)
+            {
+                if (Highlighted)
+                {
+                    Overlay.Background = Color ? Brushes.Black : Brushes.White;
+                }
+                else
+                {
+                    Overlay.Background = Brushes.Transparent;
+                }
+            }
+        }
     }
 }

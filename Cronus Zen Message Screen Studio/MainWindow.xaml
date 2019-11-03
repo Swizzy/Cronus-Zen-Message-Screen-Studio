@@ -9,6 +9,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
@@ -53,5 +54,30 @@
                     Rows="65" />
             </Viewbox>
         </ScrollViewer>
+        <StatusBar Grid.Row="2">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Grid.Column="0">
+                <CheckBox
+                    x:Name="HighlightColumnAndRowBox"
+                    Content="Highlight column and row"
+                    IsChecked="True" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="1">
+                <CheckBox x:Name="HighlightFullColumnAndRowBox" Content="Highlight full column and row" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="2">
+                <TextBlock Name="CursorPosition" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </controls:MetroWindow>
