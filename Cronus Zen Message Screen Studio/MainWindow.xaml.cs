@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -194,6 +196,18 @@ namespace CronusZenMessageScreenStudio
         {
             Viewbox.Width = Viewbox.MinWidth = ScrollViewer.ViewportWidth;
             Viewbox.Height = Viewbox.MinHeight = ScrollViewer.ViewportHeight;
+        }
+
+        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var bw = new BackgroundWorker();
+            bw.DoWork += (o, args) => Thread.Sleep(100);
+            bw.RunWorkerCompleted += (o, args) =>
+                                     {
+                                         Viewbox.MinWidth = ScrollViewer.ViewportWidth;
+                                         Viewbox.MinHeight = ScrollViewer.ViewportHeight;
+                                     };
+            bw.RunWorkerAsync();
         }
     }
 }

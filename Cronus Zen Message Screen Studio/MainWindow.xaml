@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     Activated="MainWindow_OnActivated"
+    SizeChanged="MainWindow_OnSizeChanged"
     Icon="cronus_new_icon.ico">
     <Grid>
         <Grid.RowDefinitions>
