@@ -135,13 +135,13 @@ namespace CronusZenMessageScreenStudio
                 var height = Viewbox.ActualHeight;
                 if (e.Delta > 0)
                 {
-                    width *= 1.1;
-                    height *= 1.1;
+                    width *= 1.02;
+                    height *= 1.02;
                 }
                 else if (e.Delta < 0)
                 {
-                    width *= 0.9;
-                    height *= 0.9;
+                    width *= 0.98;
+                    height *= 0.98;
                 }
 
                 Viewbox.Width = width;
