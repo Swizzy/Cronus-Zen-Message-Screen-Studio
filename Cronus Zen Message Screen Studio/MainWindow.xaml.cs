@@ -17,6 +17,9 @@ namespace CronusZenMessageScreenStudio
         readonly List<PixelControl> _pixelControls = new List<PixelControl>();
         private PixelControl _lastHighlight;
         private bool _windowLoaded;
+        private double previousViewBoxWidth = 0;
+        private double previousViewBoxHeight = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -182,6 +185,7 @@ namespace CronusZenMessageScreenStudio
 
         private void MainWindow_OnActivated(object sender, EventArgs eventArgs)
         {
+            SetShowAllPixelsLabel();
             if (_windowLoaded)
             {
                 return;
@@ -192,10 +196,22 @@ namespace CronusZenMessageScreenStudio
 
         private void PenThickness_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e) => HighlightRowAndColumn(_lastHighlight);
 
+
+
         private void ShowAllPixels_Click(object sender, RoutedEventArgs e)
         {
-            Viewbox.Width = Viewbox.MinWidth = ScrollViewer.ViewportWidth;
-            Viewbox.Height = Viewbox.MinHeight = ScrollViewer.ViewportHeight;
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                Viewbox.Width = previousViewBoxWidth;
+                Viewbox.Height = previousViewBoxHeight;
+            }
+            else
+            {
+                previousViewBoxWidth = Viewbox.ActualWidth;
+                previousViewBoxHeight = Viewbox.ActualHeight;
+                Viewbox.Width = Viewbox.MinWidth = ScrollViewer.ViewportWidth;
+                Viewbox.Height = Viewbox.MinHeight = ScrollViewer.ViewportHeight;
+            }
         }
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -211,5 +227,19 @@ namespace CronusZenMessageScreenStudio
         }
 
         private void MainWindow_OnStateChanged(object sender, EventArgs e) { MainWindow_OnSizeChanged(sender, null); }
+
+        private void SetShowAllPixelsLabel()
+        {
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                ShowAllPixelsBtn.Content = "Back";
+            }
+            else
+            {
+                ShowAllPixelsBtn.Content = "Show all pixels";
+            }
+        }
+
+        private void MainWindow_OnPreviewKeyDownOrUp(object sender, KeyEventArgs e) { SetShowAllPixelsLabel(); }
     }
 }

@@ -7,6 +7,8 @@
     MinHeight="280"
     Activated="MainWindow_OnActivated"
     Icon="cronus_new_icon.ico"
+    PreviewKeyDown="MainWindow_OnPreviewKeyDownOrUp"
+    PreviewKeyUp="MainWindow_OnPreviewKeyDownOrUp"
     SizeChanged="MainWindow_OnSizeChanged"
     StateChanged="MainWindow_OnStateChanged">
     <Grid>
@@ -95,7 +97,10 @@
                 </StackPanel>
             </StatusBarItem>
             <StatusBarItem Grid.Column="3">
-                <Button Click="ShowAllPixels_Click" Content="Show all pixels" />
+                <Button
+                    x:Name="ShowAllPixelsBtn"
+                    Click="ShowAllPixels_Click"
+                    Content="Show all pixels" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="4">
                 <TextBlock Name="CursorPosition" />
