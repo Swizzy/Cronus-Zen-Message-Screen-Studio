@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace CronusZenMessageScreenStudio
 {
@@ -269,5 +271,30 @@ namespace CronusZenMessageScreenStudio
         }
 
         private void ShowPreview_Click(object sender, RoutedEventArgs e) { PreviewWindow.ShowWindow(_pixelControls); }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            PresentationSource source = PresentationSource.FromVisual(this);
+            ((HwndSource)source)?.AddHook(Hook);
+            base.OnSourceInitialized(e);
+        }
+
+        private IntPtr Hook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            switch (msg)
+            {
+                case 0x020E: // WM_MOUSEHWHEEL - Horizontal Wheel
+                    if (wParam.ToInt32() > 0)
+                    {
+                        ScrollViewer.LineRight();
+                    }
+                    else
+                    {
+                        ScrollViewer.LineLeft();
+                    }
+                    return (IntPtr)1;
+            }
+            return IntPtr.Zero;
+        }
     }
 }
