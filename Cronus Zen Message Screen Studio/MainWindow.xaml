@@ -75,10 +75,18 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem Grid.Column="0">
-                <CheckBox x:Name="HighlightColumnAndRowBox" Content="Highlight column and row" />
+                <CheckBox
+                    x:Name="HighlightColumnAndRowBox"
+                    Checked="HighlightColumnAndRowBox_OnChecked"
+                    Content="Highlight column and row"
+                    Unchecked="HighlightColumnAndRowBox_OnChecked" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="1">
-                <CheckBox x:Name="HighlightFullColumnAndRowBox" Content="Highlight full column and row" />
+                <CheckBox
+                    x:Name="HighlightFullColumnAndRowBox"
+                    Checked="HighlightFullColumnAndRowBox_OnChecked"
+                    Content="Highlight full column and row"
+                    Unchecked="HighlightFullColumnAndRowBox_OnChecked" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="2">
                 <StackPanel Orientation="Horizontal">
@@ -87,7 +95,7 @@
                         VerticalAlignment="Center"
                         Text="Pen thickness:" />
                     <controls:NumericUpDown
-                        Name="PenThickness"
+                        x:Name="PenThickness"
                         Width="80"
                         Interval="2"
                         Maximum="63"

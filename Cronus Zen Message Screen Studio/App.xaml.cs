@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Windows;
 
 namespace CronusZenMessageScreenStudio
 {
@@ -30,6 +31,11 @@ namespace CronusZenMessageScreenStudio
                     return ver.Major + "." + ver.Minor;
                 }
             }
+        }
+
+        private void App_OnExit(object sender, ExitEventArgs e)
+        {
+            Settings.SaveSettings();
         }
     }
 }

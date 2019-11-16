@@ -25,6 +25,13 @@ namespace CronusZenMessageScreenStudio
             InitializeComponent();
             Title = $"Cronus Zen Message Screen Studio v{App.Version}";
 
+            // Setup settings in the view
+            Settings.LoadSettings();
+            PenThickness.Value = Settings.CurrentSettings.PenThickness;
+            HighlightColumnAndRowBox.IsChecked = Settings.CurrentSettings.HighlightColumnAndRow;
+            HighlightFullColumnAndRowBox.IsChecked = Settings.CurrentSettings.HighlightFullColumnAndRow;
+
+            // Setup the pixel controls and line/column numbers
             for (int x = 0; x < 129; x++)
             {
                 TextBlock label = new TextBlock
@@ -74,8 +81,8 @@ namespace CronusZenMessageScreenStudio
             int x = control.X;
             int y = control.Y;
             CursorPosition.Text = control.Highlighted ? $"X: {x} Y: {y}" : "";
-            int thickness = (int)(PenThickness.Value ?? 1) - 1;
-            if (HighlightColumnAndRowBox.IsChecked == true || HighlightFullColumnAndRowBox.IsChecked == true || thickness > 0)
+            int thickness = Settings.CurrentSettings.PenThickness - 1;
+            if (Settings.CurrentSettings.HighlightColumnAndRow || Settings.CurrentSettings.HighlightFullColumnAndRow || thickness > 0)
             {
                 int xMin = x - (thickness / 2);
                 int xMax = x + (thickness / 2);
@@ -86,7 +93,7 @@ namespace CronusZenMessageScreenStudio
                     pixelControl.Highlighted = control.Highlighted
                                                &&
                                                (
-                                                   HighlightColumnAndRowBox.IsChecked == true
+                                                   Settings.CurrentSettings.HighlightColumnAndRow
                                                    &&
                                                    (
                                                        pixelControl.X <= x && pixelControl.Y == y
@@ -94,7 +101,7 @@ namespace CronusZenMessageScreenStudio
                                                        pixelControl.Y <= y && pixelControl.X == x
                                                    )
                                                    ||
-                                                   HighlightFullColumnAndRowBox.IsChecked == true
+                                                   Settings.CurrentSettings.HighlightFullColumnAndRow == true
                                                    &&
                                                    (
                                                        pixelControl.Y == y
@@ -194,8 +201,11 @@ namespace CronusZenMessageScreenStudio
             _windowLoaded = true;
         }
 
-        private void PenThickness_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e) => HighlightRowAndColumn(_lastHighlight);
-
+        private void PenThickness_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            Settings.CurrentSettings.PenThickness = (int)(e.NewValue ?? 1);
+            HighlightRowAndColumn(_lastHighlight);
+        }
 
 
         private void ShowAllPixels_Click(object sender, RoutedEventArgs e)
@@ -241,5 +251,15 @@ namespace CronusZenMessageScreenStudio
         }
 
         private void MainWindow_OnPreviewKeyDownOrUp(object sender, KeyEventArgs e) { SetShowAllPixelsLabel(); }
+
+        private void HighlightColumnAndRowBox_OnChecked(object sender, RoutedEventArgs e)
+        {
+            Settings.CurrentSettings.HighlightColumnAndRow = HighlightColumnAndRowBox.IsChecked == true;
+        }
+
+        private void HighlightFullColumnAndRowBox_OnChecked(object sender, RoutedEventArgs e)
+        {
+            Settings.CurrentSettings.HighlightFullColumnAndRow = HighlightFullColumnAndRowBox.IsChecked == true;
+        }
     }
 }
