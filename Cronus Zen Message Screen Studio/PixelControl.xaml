@@ -4,7 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Background="Black"
     BorderBrush="DodgerBlue"
-    BorderThickness="0.5">
+    BorderThickness="0.5"
+    Cursor="Pen"
+    ForceCursor="True">
     <Grid
         x:Name="Overlay"
         HorizontalAlignment="Stretch"
