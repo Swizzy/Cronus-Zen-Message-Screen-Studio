@@ -11,8 +11,27 @@ namespace CronusZenMessageScreenStudio
         {
             get
             {
-                Version ver = Assembly.GetAssembly(typeof(App)).GetName().Version;
-                return ver.Major + "." + ver.Minor;
+                object major, minor;
+                string preReleaseLabel = "";
+                Assembly assembly = typeof(App).Assembly;
+                try
+                {
+                    Type infoType = assembly.GetType("GitVersionInformation");
+                    major = infoType.GetField("Major").GetValue(null);
+                    minor = infoType.GetField("Minor").GetValue(null);
+                    preReleaseLabel = infoType.GetField("PreReleaseLabel").GetValue(null)?.ToString();
+                    if (preReleaseLabel != "")
+                    {
+                        preReleaseLabel += " " + infoType.GetField("PreReleaseNumber").GetValue(null);
+                    }
+                }
+                catch
+                {
+                    Version ver = assembly.GetName().Version;
+                    major = ver.Major;
+                    minor = ver.Minor;
+                }
+                return (major + "." + minor + " " + preReleaseLabel).Trim();
             }
         }
     }
