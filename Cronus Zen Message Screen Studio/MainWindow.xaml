@@ -9,6 +9,7 @@
     Icon="cronus_new_icon.ico"
     PreviewKeyDown="MainWindow_OnPreviewKeyDownOrUp"
     PreviewKeyUp="MainWindow_OnPreviewKeyDownOrUp"
+    ShowIconOnTitleBar="False"
     SizeChanged="MainWindow_OnSizeChanged"
     StateChanged="MainWindow_OnStateChanged">
     <Grid>
