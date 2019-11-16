@@ -20,36 +20,30 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Button
-                Grid.Row="0"
-                Grid.Column="0"
-                Click="Export_Click"
-                Content="Export" />
-            <Button
-                Grid.Row="0"
-                Grid.Column="1"
-                Click="LoadImage_Click"
-                Content="Load Image" />
-            <Button
-                Grid.Row="1"
-                Grid.Column="0"
-                Click="Clear_Click"
-                Content="Clear" />
-            <Button
-                Grid.Row="1"
-                Grid.Column="1"
-                Click="Invert_Click"
-                Content="Invert" />
-        </Grid>
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Click="Export_Click" Header="Export" />
+                <MenuItem Click="LoadImage_Click" Header="Load image" />
+            </MenuItem>
+            <MenuItem Header="Tools">
+                <MenuItem Click="Clear_Click" Header="Clear" />
+                <MenuItem Click="Invert_Click" Header="Invert" />
+            </MenuItem>
+            <MenuItem Header="Settings">
+                <MenuItem
+                    x:Name="HighlightColumnAndRowBox"
+                    Checked="HighlightColumnAndRowBox_OnChecked"
+                    Header="Highlight column and row"
+                    IsCheckable="True"
+                    Unchecked="HighlightColumnAndRowBox_OnChecked" />
+                <MenuItem
+                    x:Name="HighlightFullColumnAndRowBox"
+                    Checked="HighlightFullColumnAndRowBox_OnChecked"
+                    Header="Highlight full column and row"
+                    IsCheckable="True"
+                    Unchecked="HighlightFullColumnAndRowBox_OnChecked" />
+            </MenuItem>
+        </Menu>
         <ScrollViewer
             x:Name="ScrollViewer"
             Grid.Row="1"
@@ -77,20 +71,6 @@
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <StatusBarItem Grid.Column="0">
-                <CheckBox
-                    x:Name="HighlightColumnAndRowBox"
-                    Checked="HighlightColumnAndRowBox_OnChecked"
-                    Content="Highlight column and row"
-                    Unchecked="HighlightColumnAndRowBox_OnChecked" />
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="1">
-                <CheckBox
-                    x:Name="HighlightFullColumnAndRowBox"
-                    Checked="HighlightFullColumnAndRowBox_OnChecked"
-                    Content="Highlight full column and row"
-                    Unchecked="HighlightFullColumnAndRowBox_OnChecked" />
-            </StatusBarItem>
             <StatusBarItem Grid.Column="2">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock
