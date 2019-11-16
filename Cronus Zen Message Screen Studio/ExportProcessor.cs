@@ -293,10 +293,16 @@ namespace CronusZenMessageScreenStudio
 
         private string GeneratePixelOled(PixelControl pixel, string prefix) => $"{prefix}pixel_oled({pixel.X}, {pixel.Y}, {(pixel.Color ? 1 : 0)});";
 
-        public void GenerateAndSaveImage()
+        public Image GenerateImage()
         {
             (int width, int height, bool[,] matrix) = GetPixelMatrix(true, true);
             Bitmap img = ImageProcessor.MakeBinaryImage(matrix, width, height);
+            return img;
+        }
+
+        public void GenerateAndSaveImage()
+        {
+            Image img = GenerateImage();
             SaveFileDialog sfd = new SaveFileDialog()
                       {
                           FileName = "image.bmp",

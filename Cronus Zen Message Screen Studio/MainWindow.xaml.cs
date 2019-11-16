@@ -60,6 +60,8 @@ namespace CronusZenMessageScreenStudio
                     Canvas.Children.Add(control);
                 }
             }
+
+            Closing += (sender, args) => PreviewWindow.CloseWindow();
         }
 
         private void HighlightRowAndColumn(PixelControl control)
@@ -265,5 +267,7 @@ namespace CronusZenMessageScreenStudio
         {
             Settings.CurrentSettings.HighlightFullColumnAndRow = HighlightFullColumnAndRowBox.IsChecked == true;
         }
+
+        private void ShowPreview_Click(object sender, RoutedEventArgs e) { PreviewWindow.ShowWindow(_pixelControls); }
     }
 }

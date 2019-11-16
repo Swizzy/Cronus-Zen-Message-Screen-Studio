@@ -28,6 +28,7 @@
             <MenuItem Header="Tools">
                 <MenuItem Click="Clear_Click" Header="Clear" />
                 <MenuItem Click="Invert_Click" Header="Invert" />
+                <MenuItem Click="ShowPreview_Click" Header="Show Preview" />
             </MenuItem>
             <MenuItem Header="Settings">
                 <MenuItem
