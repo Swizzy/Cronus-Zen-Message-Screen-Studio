@@ -30,6 +30,8 @@ namespace CronusZenMessageScreenStudio
             PenThickness.Value = Settings.CurrentSettings.PenThickness;
             HighlightColumnAndRowBox.IsChecked = Settings.CurrentSettings.HighlightColumnAndRow;
             HighlightFullColumnAndRowBox.IsChecked = Settings.CurrentSettings.HighlightFullColumnAndRow;
+            Width = Math.Max(MinWidth, Settings.CurrentSettings.WindowWidth);
+            Height = Math.Max(MinHeight, Settings.CurrentSettings.WindowHeight);
 
             // Setup the pixel controls and line/column numbers
             for (int x = 0; x < 129; x++)
@@ -226,6 +228,8 @@ namespace CronusZenMessageScreenStudio
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
+            Settings.CurrentSettings.WindowWidth = Width;
+            Settings.CurrentSettings.WindowHeight = Height;
             var bw = new BackgroundWorker();
             bw.DoWork += (o, args) => Thread.Sleep(100);
             bw.RunWorkerCompleted += (o, args) =>
