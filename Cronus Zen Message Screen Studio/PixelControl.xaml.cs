@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using System.Windows.Media;
+using Color = System.Drawing.Color;
 
 namespace CronusZenMessageScreenStudio
 {
@@ -123,6 +124,24 @@ namespace CronusZenMessageScreenStudio
                     Overlay.Background = Brushes.Transparent;
                 }
             }
+        }
+
+        public Color GetColor()
+        {
+            if (Color)
+            {
+                if (Highlighted)
+                {
+                    return System.Drawing.Color.FromArgb(191, 191, 191);
+                }
+                return System.Drawing.Color.White;
+            }
+
+            if (Highlighted)
+            {
+                return System.Drawing.Color.FromArgb(64, 64, 64);
+            }
+            return System.Drawing.Color.Black;
         }
     }
 }

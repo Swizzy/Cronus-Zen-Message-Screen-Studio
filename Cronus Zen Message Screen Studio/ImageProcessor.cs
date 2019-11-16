@@ -172,6 +172,19 @@ namespace CronusZenMessageScreenStudio
             return toReturn;
         }
 
+        public static Bitmap MakeImage(Color[,] pixels, int width, int height)
+        {
+            Bitmap toReturn = new Bitmap(width, height);
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    toReturn.SetPixel(x, y, pixels[x, y]);
+                }
+            }
+            return toReturn;
+        }
+
         public static string GetFilterString()
         {
             List<string> fileFormats = new List<string>();

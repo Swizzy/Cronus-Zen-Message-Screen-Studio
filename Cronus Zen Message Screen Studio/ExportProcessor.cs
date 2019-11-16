@@ -212,6 +212,35 @@ namespace CronusZenMessageScreenStudio
             return (width, height, matrix);
         }
 
+        private (int width, int height, Color[,] matrix) GetPixelColors(bool allPixels, bool whitePixels)
+        {
+            int width;
+            int height;
+            if (allPixels)
+            {
+                width = _pixelControls.Max(p => p.X) + 1;
+                height = _pixelControls.Max(p => p.Y) + 1;
+            }
+            else
+            {
+                List<PixelControl> pixels = _pixelControls.Where(p => p.Color == whitePixels)
+                                                          .DefaultIfEmpty(new PixelControl())
+                                                          .ToList();
+                width = pixels.Max(p => p.X) + 1;
+                height = pixels.Max(p => p.Y) + 1;
+            }
+            Color[,] matrix = new Color[width, height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    matrix[x, y] = _pixelControls.First(p => p.X == x && p.Y == y).GetColor();
+                }
+            }
+
+            return (width, height, matrix);
+        }
+
         private (int width, int height, byte[] data) Pack8(bool allPixels, bool whitePixels)
         {
             (int width, int height, bool[,] matrix) = GetPixelMatrix(allPixels, whitePixels);
@@ -297,6 +326,13 @@ namespace CronusZenMessageScreenStudio
         {
             (int width, int height, bool[,] matrix) = GetPixelMatrix(true, true);
             Bitmap img = ImageProcessor.MakeBinaryImage(matrix, width, height);
+            return img;
+        }
+
+        public Image GenerateColoredImage()
+        {
+            (int width, int height, Color[,] pixels) = GetPixelColors(true, true);
+            Bitmap img = ImageProcessor.MakeImage(pixels, width, height);
             return img;
         }
 

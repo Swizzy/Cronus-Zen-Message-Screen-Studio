@@ -45,7 +45,7 @@ namespace CronusZenMessageScreenStudio
         private void BackgroundWorkerOnDoWork(object sender, DoWorkEventArgs e)
         {
             ExportProcessor export = new ExportProcessor(_pixels);
-            e.Result = export.GenerateImage();
+            e.Result = export.GenerateColoredImage();
         }
 
         private static BitmapImage BitmapToImageSource(Image image)
