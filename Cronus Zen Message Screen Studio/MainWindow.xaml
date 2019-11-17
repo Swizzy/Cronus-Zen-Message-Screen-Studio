@@ -29,6 +29,7 @@
                 <MenuItem Click="Clear_Click" Header="Clear" />
                 <MenuItem Click="Invert_Click" Header="Invert" />
                 <MenuItem Click="ShowPreview_Click" Header="Show Preview" />
+                <MenuItem Click="ShowDevicePreview_Click" Header="Show Device Preview" />
             </MenuItem>
             <MenuItem Header="Settings">
                 <MenuItem

@@ -63,7 +63,11 @@ namespace CronusZenMessageScreenStudio
                 }
             }
 
-            Closing += (sender, args) => PreviewWindow.CloseWindow();
+            Closing += (sender, args) =>
+                       {
+                           PreviewWindow.CloseWindow();
+                           DevicePreviewWindow.CloseWindow();
+                       };
         }
 
         private void HighlightRowAndColumn(PixelControl control)
@@ -271,6 +275,7 @@ namespace CronusZenMessageScreenStudio
         }
 
         private void ShowPreview_Click(object sender, RoutedEventArgs e) { PreviewWindow.ShowWindow(_pixelControls); }
+        private void ShowDevicePreview_Click(object sender, RoutedEventArgs e) { DevicePreviewWindow.ShowWindow(_pixelControls); }
 
         protected override void OnSourceInitialized(EventArgs e)
         {
