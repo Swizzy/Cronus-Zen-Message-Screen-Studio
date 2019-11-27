@@ -65,6 +65,11 @@ namespace CronusZenMessageScreenStudio
         public double WindowWidth { get; set; }
         public double WindowHeight { get; set; }
 
+        public double PreviewWidth { get; set; }
+        public double PreviewHeight { get; set; }
+        public double DevicePreviewWidth { get; set; }
+        public double DevicePreviewHeight { get; set; }
+
         internal static void LoadSettings(bool setDefaults = false)
         {
             _currentSettings = new Settings();

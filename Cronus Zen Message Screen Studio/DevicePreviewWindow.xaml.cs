@@ -25,6 +25,9 @@ namespace CronusZenMessageScreenStudio
             _backgroundWorker.DoWork += BackgroundWorkerOnDoWork;
             _backgroundWorker.RunWorkerCompleted += BackgroundWorkerOnRunWorkerCompleted;
             _backgroundWorker.RunWorkerAsync();
+
+            Width = Settings.CurrentSettings.DevicePreviewWidth;
+            Height = Settings.CurrentSettings.DevicePreviewHeight;
         }
 
         private void BackgroundWorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -86,6 +89,9 @@ namespace CronusZenMessageScreenStudio
             double aspect = MinWidth / (MinHeight - TitlebarHeight);
             if (sizeInfo.HeightChanged) Width = (sizeInfo.NewSize.Height - TitlebarHeight) * aspect;
             else Height = (sizeInfo.NewSize.Width / aspect) + TitlebarHeight;
+
+            Settings.CurrentSettings.DevicePreviewWidth = Width;
+            Settings.CurrentSettings.DevicePreviewHeight = Height;
         }
     }
 }

@@ -8,19 +8,22 @@
     Height="214"
     MinWidth="174"
     MinHeight="214"
-    RenderOptions.EdgeMode="Aliased"
     ShowMaxRestoreButton="False"
     ShowMinButton="False"
     SnapsToDevicePixels="True"
     WindowStartupLocation="CenterOwner">
-    <Grid RenderOptions.EdgeMode="Aliased" SnapsToDevicePixels="True">
-        <Viewbox RenderOptions.EdgeMode="Aliased" SnapsToDevicePixels="True">
-            <Canvas Width="971" Height="1027">
+    <Grid SnapsToDevicePixels="True">
+        <Viewbox SnapsToDevicePixels="True">
+            <Canvas
+                Width="971"
+                Height="1027"
+                SnapsToDevicePixels="True">
                 <Image
                     Canvas.Left="0"
                     Canvas.Top="0"
                     Width="971"
                     Height="1027"
+                    SnapsToDevicePixels="True"
                     Source="Cronus Zen Hardware.png" />
                 <Image
                     x:Name="ImagePreview"
@@ -28,8 +31,7 @@
                     Canvas.Top="184"
                     Width="354"
                     Height="171"
-                    RenderOptions.EdgeMode="Aliased"
-                    SnapsToDevicePixels="True" />
+                    RenderOptions.EdgeMode="Aliased" />
             </Canvas>
         </Viewbox>
     </Grid>
