@@ -203,5 +203,27 @@ namespace CronusZenMessageScreenStudio
             string extensions = string.Join(";", fileFormats);
             return $"All Imagefiles ({extensions})|{extensions}|{toReturn}";
         }
+
+        public static Bitmap DrawText(string text, Font font, bool whiteOnBlack)
+        {
+            Bitmap toReturn = new Bitmap(1, 1);
+            int width, height;
+            using (Graphics graphics = Graphics.FromImage(toReturn))
+            {
+                SizeF textSize = graphics.MeasureString(text, font);
+                width = (int)Math.Ceiling(textSize.Width);
+                height = (int)Math.Ceiling(textSize.Height);
+            }
+            toReturn = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            using (Graphics graphics = Graphics.FromImage(toReturn))
+            {
+                Brush foreground = whiteOnBlack ? Brushes.White : Brushes.Black;
+                Color background = whiteOnBlack ? Color.Black : Color.White;
+                graphics.Clear(background);
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.DrawString(text, font, foreground, 0, 0);
+            }
+            return toReturn;
+        }
     }
 }

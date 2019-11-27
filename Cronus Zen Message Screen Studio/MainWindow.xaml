@@ -24,6 +24,7 @@
             <MenuItem Header="File">
                 <MenuItem Click="Export_Click" Header="Export" />
                 <MenuItem Click="LoadImage_Click" Header="Load image" />
+                <MenuItem Click="DrawText_Click" Header="Draw text" />
             </MenuItem>
             <MenuItem Header="Tools">
                 <MenuItem Click="Clear_Click" Header="Clear" />
