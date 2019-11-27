@@ -25,6 +25,7 @@
                 x:Name="ImagePreview"
                 Width="128"
                 Height="64"
+                RenderOptions.BitmapScalingMode="NearestNeighbor"
                 RenderOptions.EdgeMode="Aliased"
                 SnapsToDevicePixels="True" />
         </Viewbox>

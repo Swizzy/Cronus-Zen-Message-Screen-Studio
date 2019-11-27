@@ -31,6 +31,7 @@
                     Canvas.Top="184"
                     Width="354"
                     Height="171"
+                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                     RenderOptions.EdgeMode="Aliased" />
             </Canvas>
         </Viewbox>
