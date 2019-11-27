@@ -84,17 +84,17 @@ namespace CronusZenMessageScreenStudio
                 Font font = new Font(fontFamily, TextFontSize, fontStyle);
                 Bitmap img = ImageProcessor.DrawText(string.IsNullOrWhiteSpace(TextBox.Text) ? " " : TextBox.Text, font, WhiteOnBlack);
                 Color backgroundColor = WhiteOnBlack ? Color.Black : Color.White;
-                img = ImageProcessor.MakeBinaryImage(img, Threshold, false);
-                _finalImage = ImageProcessor.ScaleImage(img,
-                                                        128,
-                                                        64,
-                                                        ImageProcessor.ScalingTypes.FixedSize,
-                                                        Position,
-                                                        MarginTop,
-                                                        MarginBottom,
-                                                        MarginLeft,
-                                                        MarginRight,
-                                                        backgroundColor);
+                img = ImageProcessor.ScaleImage(img,
+                                                128,
+                                                64,
+                                                ImageProcessor.ScalingTypes.FixedSize,
+                                                Position,
+                                                MarginTop,
+                                                MarginBottom,
+                                                MarginLeft,
+                                                MarginRight,
+                                                backgroundColor);
+                _finalImage = ImageProcessor.MakeBinaryImage(img, Threshold, false);
                 ImagePreview.Source = BitmapToImageSource(_finalImage);
             }
             catch
