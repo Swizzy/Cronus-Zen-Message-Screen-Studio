@@ -122,7 +122,12 @@ namespace CronusZenMessageScreenStudio
                 toReturn.AppendLine($"\t\t\tif (__{identifier}Y2 < 0 || __{identifier}Y2 >= 64) {{");
                 toReturn.AppendLine($"\t\t\t\t__{identifier}Y2 -= 64;");
                 toReturn.AppendLine("\t\t\t}");
-                toReturn.AppendLine($"\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, test_bit(__{identifier}Data, __{identifier}Bit - 1) && !invert);");
+                toReturn.AppendLine($"\t\t\tif (test_bit(__{identifier}Data, __{identifier}Bit - 1)) {{");
+                toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, !invert);");
+                toReturn.AppendLine("\t\t\t}");
+                toReturn.AppendLine("\t\t\telse {");
+                toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, invert);");
+                toReturn.AppendLine("\t\t\t}");
                 toReturn.AppendLine($"\t\t\t__{identifier}Bit--; // Decrement the bit flag, we're moving to the next bit");
                 toReturn.AppendLine($"\t\t\tif (!__{identifier}Bit) {{ // Check if we've just handled the last bit");
                 toReturn.AppendLine($"\t\t\t\t__{identifier}Bit = {bits}; // Reset the bit flag");
