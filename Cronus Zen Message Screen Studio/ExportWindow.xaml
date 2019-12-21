@@ -81,8 +81,7 @@
         <GroupBox
             Grid.Row="3"
             Margin="0,10,0,0"
-            Header="Packed format"
-            Visibility="Collapsed">
+            Header="Packed format">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

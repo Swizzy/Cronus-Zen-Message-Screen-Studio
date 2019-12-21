@@ -257,7 +257,7 @@ namespace CronusZenMessageScreenStudio
                         currentValue |= 1;
                     }
                     bit++; // Increment the bit counter, we're moving on to the next bit now...
-                    if (bit > 8)
+                    if (bit == 8)
                     {
                         data.Add((byte)currentValue);
                         currentValue = 0;
@@ -289,7 +289,7 @@ namespace CronusZenMessageScreenStudio
                         currentValue |= 1;
                     }
                     bit++; // Increment the bit counter, we're moving on to the next bit now...
-                    if (bit > 16)
+                    if (bit == 16)
                     {
                         data.Add((ushort)currentValue);
                         currentValue = 0;
