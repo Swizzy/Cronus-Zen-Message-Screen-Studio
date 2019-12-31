@@ -83,6 +83,7 @@
       <DependentUpon>PreviewWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="ZenMessageStudioProject.cs" />
     <Page Include="DrawTextWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using Microsoft.Win32;
 
 namespace CronusZenMessageScreenStudio
 {
@@ -21,6 +22,8 @@ namespace CronusZenMessageScreenStudio
         private bool _windowLoaded;
         private double previousViewBoxWidth = 0;
         private double previousViewBoxHeight = 0;
+        private string _savePath;
+        private bool _saved = true;
 
         public MainWindow()
         {
@@ -134,6 +137,8 @@ namespace CronusZenMessageScreenStudio
                         pixelControl.Color = false;
                     }
                 }
+                if (setBlack || setWhite)
+                    _saved = false;
             }
         }
 
@@ -153,6 +158,7 @@ namespace CronusZenMessageScreenStudio
                         pixel.Color = pixels[x, y];
                     }
                 }
+                _saved = false;
             }
         }
 
@@ -170,6 +176,8 @@ namespace CronusZenMessageScreenStudio
                         pixel.Color = pixels[x, y];
                     }
                 }
+
+                _saved = false;
             }
         }
 
@@ -207,6 +215,7 @@ namespace CronusZenMessageScreenStudio
                     pixel.Color = false;
                 }
             }
+            _saved = false;
         }
 
         private void Invert_Click(object sender, RoutedEventArgs e)
@@ -215,6 +224,7 @@ namespace CronusZenMessageScreenStudio
             {
                 pixel.Invert();
             }
+            _saved = false;
         }
 
         private void MainWindow_OnActivated(object sender, EventArgs eventArgs)
@@ -233,7 +243,6 @@ namespace CronusZenMessageScreenStudio
             Settings.CurrentSettings.PenThickness = (int)(e.NewValue ?? 1);
             HighlightRowAndColumn(_lastHighlight);
         }
-
 
         private void ShowAllPixels_Click(object sender, RoutedEventArgs e)
         {
@@ -292,6 +301,7 @@ namespace CronusZenMessageScreenStudio
         }
 
         private void ShowPreview_Click(object sender, RoutedEventArgs e) { PreviewWindow.ShowWindow(_pixelControls); }
+
         private void ShowDevicePreview_Click(object sender, RoutedEventArgs e) { DevicePreviewWindow.ShowWindow(_pixelControls); }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -317,6 +327,97 @@ namespace CronusZenMessageScreenStudio
                     return (IntPtr)1;
             }
             return IntPtr.Zero;
+        }
+
+        private void AlwaysExecutable_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
+
+        private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(_savePath))
+            {
+                ZenMessageStudioProject project = new ZenMessageStudioProject(_pixelControls);
+                project.SaveToFile(_savePath);
+                _saved = true;
+            }
+            else
+            {
+                SaveAs_Executed(sender, e);
+            }
+        }
+
+        private void SaveAs_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                FileName = string.IsNullOrWhiteSpace(_savePath) ? "Project.zmsp" : System.IO.Path.GetFileName(_savePath),
+                AddExtension = true,
+                DefaultExt = ".zmsp"
+            };
+            if (sfd.ShowDialog(this) == true)
+            {
+                _savePath = sfd.FileName;
+                Save_Executed(sender, e);
+            }
+        }
+
+        private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                FileName = "Project.zmsp"
+            };
+            if (ofd.ShowDialog(this) == true)
+            {
+                var project = ZenMessageStudioProject.ReadFromFile(ofd.FileName);
+                if (project == null)
+                {
+                    MessageBox.Show("Invalid file selected.");
+                }
+                else
+                {
+                    _savePath = ofd.FileName;
+                    foreach (PixelControl pixel in _pixelControls)
+                    {
+                        pixel.Color = false;
+                    }
+                    for (int x = 0; x < 128; x++)
+                    {
+                        for (int y = 0; y < 64; y++)
+                        {
+                            PixelControl control = _pixelControls.FirstOrDefault(p => p.X == x && p.Y == y);
+                            if (control != null)
+                            {
+                                control.Color = project.PixelData[x, y];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void New_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (!_saved)
+            {
+                if (MessageBox.Show("You have unsaved changes that will be lost, are you sure you want to start over?", "Are you sure?", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+            }
+            foreach (PixelControl pixel in _pixelControls)
+            {
+                pixel.Color = false;
+            }
+            _saved = true;
+            _savePath = null;
+        }
+
+        private void MainWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            if (!_saved)
+            {
+                e.Cancel = MessageBox.Show("You have unsaved changes, are you sure you want to exit?", "Unsaved changes detected", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning) != MessageBoxResult.Yes;
+            }
         }
     }
 }

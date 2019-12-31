@@ -13,7 +13,26 @@
     PreviewKeyUp="MainWindow_OnPreviewKeyDownOrUp"
     ShowIconOnTitleBar="False"
     SizeChanged="MainWindow_OnSizeChanged"
-    StateChanged="MainWindow_OnStateChanged">
+    StateChanged="MainWindow_OnStateChanged"
+    Closing="MainWindow_OnClosing">
+    <Window.CommandBindings>
+        <CommandBinding
+            CanExecute="AlwaysExecutable_CanExecute"
+            Command="Save"
+            Executed="Save_Executed" />
+        <CommandBinding
+            CanExecute="AlwaysExecutable_CanExecute"
+            Command="SaveAs"
+            Executed="SaveAs_Executed" />
+        <CommandBinding
+            CanExecute="AlwaysExecutable_CanExecute"
+            Command="Open"
+            Executed="Open_Executed" />
+        <CommandBinding
+            CanExecute="AlwaysExecutable_CanExecute"
+            Command="New"
+            Executed="New_Executed" />
+    </Window.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,6 +41,11 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="File">
+                <MenuItem Command="New" />
+                <MenuItem Command="Save" />
+                <MenuItem Command="SaveAs" />
+                <MenuItem Command="Open" />
+                <Separator />
                 <MenuItem Click="Export_Click" Header="Export" />
                 <MenuItem Click="LoadImage_Click" Header="Load image" />
                 <MenuItem Click="DrawText_Click" Header="Draw text" />
