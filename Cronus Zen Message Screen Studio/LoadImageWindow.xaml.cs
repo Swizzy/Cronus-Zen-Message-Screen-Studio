@@ -53,16 +53,21 @@ namespace CronusZenMessageScreenStudio
                 try
                 {
                     _selectedImage = ImageProcessor.LoadImage(ofd.FileName);
-                    _selectedImage = ImageProcessor.ScaleImage(_selectedImage,
-                                                               512,
-                                                               512,
-                                                               ImageProcessor.ScalingTypes.Scaled,
-                                                               ImageProcessor.Positions.Default,
-                                                               0,
-                                                               0,
-                                                               0,
-                                                               0,
-                                                               Color.Transparent);
+                    const int width = 512; // * (128 / 64);
+                    const int height = 512; // / (128 / 64);
+                    if (_selectedImage.Width > width || _selectedImage.Height > height)
+                    {
+                        _selectedImage = ImageProcessor.ScaleImage(_selectedImage,
+                                                                   width,
+                                                                   height,
+                                                                   ImageProcessor.ScalingTypes.Scaled,
+                                                                   ImageProcessor.Positions.Default,
+                                                                   0,
+                                                                   0,
+                                                                   0,
+                                                                   0,
+                                                                   Color.Transparent);
+                    }
                     UpdatePreview();
                 }
                 catch (Exception ex)
