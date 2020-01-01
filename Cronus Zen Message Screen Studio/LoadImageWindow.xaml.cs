@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows;
@@ -25,6 +26,7 @@ namespace CronusZenMessageScreenStudio
             SizeChanged += (sender, args) => System.Diagnostics.Trace.WriteLine($"Width: {ActualWidth} Height: {ActualHeight}");
             LayoutRoot.DataContext = this;
             PositionBox.ItemsSource = ImageProcessor.MakePositionSelectionList();
+            InterpolationModeBox.ItemsSource = ImageProcessor.MakeInterpolationSelectionList();
             Threshold = 200;
             MarginTop = 0;
             MarginBottom = 0;
@@ -41,6 +43,8 @@ namespace CronusZenMessageScreenStudio
         public ImageProcessor.Positions Position { get; set; }
         public bool Invert { get; set; }
         public bool InvertBackground { get; set; }
+        public InterpolationMode InterpolationMode { get; set; }
+
 
         private void SelectImage_Click(object sender, RoutedEventArgs e)
         {
@@ -57,7 +61,7 @@ namespace CronusZenMessageScreenStudio
                     const int height = 512; // / (128 / 64);
                     if (_selectedImage.Width > width || _selectedImage.Height > height)
                     {
-                        _selectedImage = ImageProcessor.ScaleImage(_selectedImage, width, height);
+                        _selectedImage = ImageProcessor.ScaleImage(_selectedImage, width, height, InterpolationMode);
                     }
                     UpdatePreview();
                 }
@@ -87,7 +91,8 @@ namespace CronusZenMessageScreenStudio
                                                            MarginBottom,
                                                            MarginLeft,
                                                            MarginRight,
-                                                           InvertBackground ? Color.White : Color.Black);
+                                                           InvertBackground ? Color.White : Color.Black,
+                                                           InterpolationMode);
             _finalImage = ImageProcessor.MakeBinaryImage(scaledImage, Threshold, Invert);
             ImagePreview.Source = BitmapToImageSource(_finalImage);
         }

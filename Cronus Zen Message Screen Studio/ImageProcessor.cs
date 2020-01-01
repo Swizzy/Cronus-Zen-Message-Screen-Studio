@@ -57,9 +57,24 @@ namespace CronusZenMessageScreenStudio
             };
         }
 
+        public static IEnumerable MakeInterpolationSelectionList()
+        {
+            return new List<SelectionData<InterpolationMode>>
+            {
+                new SelectionData<InterpolationMode>("Default", InterpolationMode.Default),
+                new SelectionData<InterpolationMode>("Low quality", InterpolationMode.Low),
+                new SelectionData<InterpolationMode>("High quality", InterpolationMode.High),
+                new SelectionData<InterpolationMode>("Bilinear", InterpolationMode.Bilinear),
+                new SelectionData<InterpolationMode>("Bicubic", InterpolationMode.Bicubic),
+                new SelectionData<InterpolationMode>("Nearest neighbor", InterpolationMode.NearestNeighbor),
+                new SelectionData<InterpolationMode>("High quality bilinear", InterpolationMode.HighQualityBilinear),
+                new SelectionData<InterpolationMode>("High quality bicubic", InterpolationMode.HighQualityBicubic)
+            };
+        }
+
         public static Bitmap LoadImage(string filename) => new Bitmap(filename);
 
-        public static Bitmap ScaleImage(Image input, int width, int height)
+        public static Bitmap ScaleImage(Image input, int width, int height, InterpolationMode interpolationMode)
         {
             return ScaleImage(input,
                               width,
@@ -70,7 +85,8 @@ namespace CronusZenMessageScreenStudio
                               0,
                               0,
                               0,
-                              Color.Transparent);
+                              Color.Transparent,
+                              interpolationMode);
         }
 
         public static Bitmap ScaleImage(Image input,
@@ -82,7 +98,8 @@ namespace CronusZenMessageScreenStudio
                                         int marginBottom,
                                         int marginLeft,
                                         int marginRight,
-                                        Color backgroundColor)
+                                        Color backgroundColor,
+                                        InterpolationMode interpolationMode)
         {
             int sourceWidth = input.Width;
             int sourceHeight = input.Height;
@@ -154,7 +171,7 @@ namespace CronusZenMessageScreenStudio
             using (Graphics graphics = Graphics.FromImage(toReturn))
             {
                 graphics.Clear(backgroundColor);
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.InterpolationMode = interpolationMode;
                 graphics.DrawImage(input, new Rectangle(destX, destY, destWidth, destHeight), new Rectangle(0, 0, sourceWidth, sourceHeight), GraphicsUnit.Pixel);
             }
             return toReturn;

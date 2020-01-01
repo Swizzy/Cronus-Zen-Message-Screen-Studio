@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
@@ -24,6 +25,7 @@ namespace CronusZenMessageScreenStudio
             LayoutRoot.DataContext = this;
             TextFontSize = 20;
             PositionBox.ItemsSource = ImageProcessor.MakePositionSelectionList();
+            InterpolationModeBox.ItemsSource = ImageProcessor.MakeInterpolationSelectionList();
             using (var installedFontCollection = new InstalledFontCollection())
             {
                 foreach (FontFamily fontFamily in installedFontCollection.Families)
@@ -47,7 +49,7 @@ namespace CronusZenMessageScreenStudio
         public int MarginLeft { get; set; }
         public int MarginRight { get; set; }
         public ImageProcessor.Positions Position { get; set; }
-
+        public InterpolationMode InterpolationMode { get; set; }
         public FontFamily TextFontFamily { get; set; }
         public int TextFontSize { get; set; }
         public bool BoldFont { get; set; }
@@ -84,7 +86,8 @@ namespace CronusZenMessageScreenStudio
                                                 MarginBottom,
                                                 MarginLeft,
                                                 MarginRight,
-                                                backgroundColor);
+                                                backgroundColor,
+                                                InterpolationMode);
                 _finalImage = ImageProcessor.MakeBinaryImage(img, Threshold, false);
                 ImagePreview.Source = BitmapToImageSource(_finalImage);
             }

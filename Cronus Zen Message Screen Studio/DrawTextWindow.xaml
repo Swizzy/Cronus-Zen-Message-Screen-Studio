@@ -32,6 +32,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -136,14 +137,14 @@
                     Grid.Column="0"
                     Margin="0,0,10,0"
                     VerticalAlignment="Center"
-                    Text="Position:" />
+                    Text="Resize Mode:" />
                 <ComboBox
-                    x:Name="PositionBox"
+                    x:Name="InterpolationModeBox"
                     Grid.Row="6"
                     Grid.Column="1"
                     Grid.ColumnSpan="4"
                     DisplayMemberPath="Name"
-                    SelectedValue="{Binding Path=Position, Mode=TwoWay}"
+                    SelectedValue="{Binding Path=InterpolationMode, Mode=TwoWay}"
                     SelectedValuePath="Value"
                     SelectionChanged="ComboBox_SelectionChanged" />
                 <TextBlock
@@ -151,9 +152,24 @@
                     Grid.Column="0"
                     Margin="0,0,10,0"
                     VerticalAlignment="Center"
+                    Text="Position:" />
+                <ComboBox
+                    x:Name="PositionBox"
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="4"
+                    DisplayMemberPath="Name"
+                    SelectedValue="{Binding Path=Position, Mode=TwoWay}"
+                    SelectedValuePath="Value"
+                    SelectionChanged="ComboBox_SelectionChanged" />
+                <TextBlock
+                    Grid.Row="8"
+                    Grid.Column="0"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
                     Text="Left margin:" />
                 <mah:NumericUpDown
-                    Grid.Row="7"
+                    Grid.Row="8"
                     Grid.Column="1"
                     Grid.ColumnSpan="4"
                     Interval="1"
@@ -162,13 +178,13 @@
                     ValueChanged="NumericUpDown_ValueChanged"
                     Value="{Binding Path=MarginLeft, Mode=TwoWay}" />
                 <TextBlock
-                    Grid.Row="8"
+                    Grid.Row="9"
                     Grid.Column="0"
                     Margin="0,0,10,0"
                     VerticalAlignment="Center"
                     Text="Right margin:" />
                 <mah:NumericUpDown
-                    Grid.Row="8"
+                    Grid.Row="9"
                     Grid.Column="1"
                     Grid.ColumnSpan="4"
                     Interval="1"
@@ -177,13 +193,13 @@
                     ValueChanged="NumericUpDown_ValueChanged"
                     Value="{Binding Path=MarginRight, Mode=TwoWay}" />
                 <TextBlock
-                    Grid.Row="9"
+                    Grid.Row="10"
                     Grid.Column="0"
                     Margin="0,0,10,0"
                     VerticalAlignment="Center"
                     Text="Top margin:" />
                 <mah:NumericUpDown
-                    Grid.Row="9"
+                    Grid.Row="10"
                     Grid.Column="1"
                     Grid.ColumnSpan="4"
                     Interval="1"
@@ -192,13 +208,13 @@
                     ValueChanged="NumericUpDown_ValueChanged"
                     Value="{Binding Path=MarginTop, Mode=TwoWay}" />
                 <TextBlock
-                    Grid.Row="10"
+                    Grid.Row="11"
                     Grid.Column="0"
                     Margin="0,0,10,0"
                     VerticalAlignment="Center"
                     Text="Bottom margin:" />
                 <mah:NumericUpDown
-                    Grid.Row="10"
+                    Grid.Row="11"
                     Grid.Column="1"
                     Grid.ColumnSpan="4"
                     Interval="1"
@@ -207,7 +223,7 @@
                     ValueChanged="NumericUpDown_ValueChanged"
                     Value="{Binding Path=MarginBottom, Mode=TwoWay}" />
                 <CheckBox
-                    Grid.Row="11"
+                    Grid.Row="12"
                     Grid.Column="1"
                     Grid.ColumnSpan="4"
                     Checked="Checkbox_StateChanged"
