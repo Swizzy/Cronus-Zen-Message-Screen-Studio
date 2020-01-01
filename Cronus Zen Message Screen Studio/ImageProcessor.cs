@@ -59,6 +59,20 @@ namespace CronusZenMessageScreenStudio
 
         public static Bitmap LoadImage(string filename) => new Bitmap(filename);
 
+        public static Bitmap ScaleImage(Image input, int width, int height)
+        {
+            return ScaleImage(input,
+                              width,
+                              height,
+                              ScalingTypes.Scaled,
+                              Positions.Default,
+                              0,
+                              0,
+                              0,
+                              0,
+                              Color.Transparent);
+        }
+
         public static Bitmap ScaleImage(Image input,
                                         int width,
                                         int height,

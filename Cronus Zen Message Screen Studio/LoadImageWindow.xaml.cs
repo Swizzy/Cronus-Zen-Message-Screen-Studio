@@ -57,16 +57,7 @@ namespace CronusZenMessageScreenStudio
                     const int height = 512; // / (128 / 64);
                     if (_selectedImage.Width > width || _selectedImage.Height > height)
                     {
-                        _selectedImage = ImageProcessor.ScaleImage(_selectedImage,
-                                                                   width,
-                                                                   height,
-                                                                   ImageProcessor.ScalingTypes.Scaled,
-                                                                   ImageProcessor.Positions.Default,
-                                                                   0,
-                                                                   0,
-                                                                   0,
-                                                                   0,
-                                                                   Color.Transparent);
+                        _selectedImage = ImageProcessor.ScaleImage(_selectedImage, width, height);
                     }
                     UpdatePreview();
                 }
