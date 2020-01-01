@@ -146,7 +146,7 @@ namespace CronusZenMessageScreenStudio
             return toReturn;
         }
 
-        public static bool[,] MakeBinaryMatrix(Bitmap img, int threshold, bool invert)
+        public static bool[,] MakeBinaryMatrix(Bitmap img, double threshold, bool invert)
         {
             bool[,] toReturn = new bool[img.Width,img.Height];
             for (int x = 0; x < img.Width; x++)
@@ -154,7 +154,7 @@ namespace CronusZenMessageScreenStudio
                 for (int y = 0; y < img.Height; y++)
                 {
                     Color pixel = img.GetPixel(x, y);
-                    List<byte> colors = new List<byte> { pixel.R, pixel.G, pixel.B };
+                    List<double> colors = new List<double> { pixel.R, pixel.G, pixel.B };
                     double avg = colors.Average(c => c);
                     if (invert)
                     {
@@ -170,7 +170,7 @@ namespace CronusZenMessageScreenStudio
             return toReturn;
         }
 
-        public static Bitmap MakeBinaryImage(Bitmap img, int threshold, bool invert)
+        public static Bitmap MakeBinaryImage(Bitmap img, double threshold, bool invert)
         {
             bool[,] pixels = MakeBinaryMatrix(img, threshold, invert);
             return MakeBinaryImage(pixels, img.Width, img.Height);

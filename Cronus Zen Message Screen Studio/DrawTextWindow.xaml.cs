@@ -41,7 +41,7 @@ namespace CronusZenMessageScreenStudio
             WhiteOnBlack = true;
         }
 
-        public int Threshold { get; set; }
+        public double Threshold { get; set; }
         public int MarginTop { get; set; }
         public int MarginBottom { get; set; }
         public int MarginLeft { get; set; }

@@ -124,9 +124,11 @@
                     Grid.Row="5"
                     Grid.Column="1"
                     Grid.ColumnSpan="4"
-                    Interval="1"
-                    Maximum="255"
-                    Minimum="1"
+                    Interval="0.01"
+                    Maximum="255.00"
+                    Minimum="0.01"
+                    Speedup="False"
+                    StringFormat="F02"
                     ValueChanged="NumericUpDown_ValueChanged"
                     Value="{Binding Path=Threshold, Mode=TwoWay}" />
                 <TextBlock
