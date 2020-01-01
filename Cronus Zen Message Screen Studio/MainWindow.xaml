@@ -8,13 +8,13 @@
     MinWidth="710"
     MinHeight="280"
     Activated="MainWindow_OnActivated"
+    Closing="MainWindow_OnClosing"
     Icon="cronus_new_icon.ico"
     PreviewKeyDown="MainWindow_OnPreviewKeyDownOrUp"
     PreviewKeyUp="MainWindow_OnPreviewKeyDownOrUp"
     ShowIconOnTitleBar="False"
     SizeChanged="MainWindow_OnSizeChanged"
-    StateChanged="MainWindow_OnStateChanged"
-    Closing="MainWindow_OnClosing">
+    StateChanged="MainWindow_OnStateChanged">
     <Window.CommandBindings>
         <CommandBinding
             CanExecute="AlwaysExecutable_CanExecute"
@@ -49,6 +49,8 @@
                 <MenuItem Click="Export_Click" Header="Export" />
                 <MenuItem Click="LoadImage_Click" Header="Load image" />
                 <MenuItem Click="DrawText_Click" Header="Draw text" />
+                <Separator />
+                <MenuItem Click="Exit_Clicked" Header="Exit" />
             </MenuItem>
             <MenuItem Header="Tools">
                 <MenuItem Click="Clear_Click" Header="Clear" />

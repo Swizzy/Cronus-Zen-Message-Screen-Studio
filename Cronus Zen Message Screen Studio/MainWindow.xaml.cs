@@ -419,5 +419,6 @@ namespace CronusZenMessageScreenStudio
                 e.Cancel = MessageBox.Show("You have unsaved changes, are you sure you want to exit?", "Unsaved changes detected", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning) != MessageBoxResult.Yes;
             }
         }
+        private void Exit_Clicked(object sender, RoutedEventArgs e) => Close();
     }
 }
