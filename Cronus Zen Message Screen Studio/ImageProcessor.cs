@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -38,6 +39,22 @@ namespace CronusZenMessageScreenStudio
             BottomLeft   = VBottom | HLeft,
             BottomCenter = VBottom | HCenter,
             BottomRight  = VBottom | HRight
+        }
+
+        public static List<SelectionData<Positions>> MakePositionSelectionList()
+        {
+            return new List<SelectionData<Positions>>
+            {
+                new SelectionData<Positions>("Top Left", Positions.TopLeft),
+                new SelectionData<Positions>("Top Center", Positions.TopCenter),
+                new SelectionData<Positions>("Top Right", Positions.TopRight),
+                new SelectionData<Positions>("Center Left", Positions.CenterLeft),
+                new SelectionData<Positions>("Center", Positions.Center),
+                new SelectionData<Positions>("Center Right", Positions.CenterRight),
+                new SelectionData<Positions>("Bottom Left", Positions.BottomLeft),
+                new SelectionData<Positions>("Bottom Center", Positions.BottomCenter),
+                new SelectionData<Positions>("Bottom Right", Positions.BottomRight)
+            };
         }
 
         public static Bitmap LoadImage(string filename) => new Bitmap(filename);

@@ -23,16 +23,7 @@ namespace CronusZenMessageScreenStudio
             SizeChanged += (sender, args) => System.Diagnostics.Trace.WriteLine($"Width: {ActualWidth} Height: {ActualHeight}");
             LayoutRoot.DataContext = this;
             TextFontSize = 20;
-            PositionBox.Items.Add(new LoadImageWindow.PositionSelection("Top Left", ImageProcessor.Positions.TopLeft));
-            PositionBox.Items.Add(new LoadImageWindow.PositionSelection("Top Center", ImageProcessor.Positions.TopCenter));
-            PositionBox.Items.Add(new LoadImageWindow.PositionSelection("Top Right", ImageProcessor.Positions.TopRight));
-            PositionBox.Items.Add(new LoadImageWindow.PositionSelection("Center Left", ImageProcessor.Positions.CenterLeft));
-            PositionBox.Items.Add(new LoadImageWindow.PositionSelection("Center", ImageProcessor.Positions.Center));
-            PositionBox.Items.Add(new LoadImageWindow.PositionSelection("Center Right", ImageProcessor.Positions.CenterRight));
-            PositionBox.Items.Add(new LoadImageWindow.PositionSelection("Bottom Left", ImageProcessor.Positions.BottomLeft));
-            PositionBox.Items.Add(new LoadImageWindow.PositionSelection("Bottom Center", ImageProcessor.Positions.BottomCenter));
-            PositionBox.Items.Add(new LoadImageWindow.PositionSelection("Bottom Right", ImageProcessor.Positions.BottomRight));
-
+            PositionBox.ItemsSource = ImageProcessor.MakePositionSelectionList();
             using (var installedFontCollection = new InstalledFontCollection())
             {
                 foreach (FontFamily fontFamily in installedFontCollection.Families)

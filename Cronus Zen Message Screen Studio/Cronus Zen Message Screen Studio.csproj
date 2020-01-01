@@ -82,6 +82,7 @@
     <Compile Include="PreviewWindow.xaml.cs">
       <DependentUpon>PreviewWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SelectionData.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ZenMessageStudioProject.cs" />
     <Page Include="DrawTextWindow.xaml">

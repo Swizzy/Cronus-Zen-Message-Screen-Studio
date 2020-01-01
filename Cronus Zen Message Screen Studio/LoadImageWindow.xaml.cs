@@ -24,15 +24,7 @@ namespace CronusZenMessageScreenStudio
             InitializeComponent();
             SizeChanged += (sender, args) => System.Diagnostics.Trace.WriteLine($"Width: {ActualWidth} Height: {ActualHeight}");
             LayoutRoot.DataContext = this;
-            PositionBox.Items.Add(new PositionSelection("Top Left", ImageProcessor.Positions.TopLeft));
-            PositionBox.Items.Add(new PositionSelection("Top Center", ImageProcessor.Positions.TopCenter));
-            PositionBox.Items.Add(new PositionSelection("Top Right", ImageProcessor.Positions.TopRight));
-            PositionBox.Items.Add(new PositionSelection("Center Left", ImageProcessor.Positions.CenterLeft));
-            PositionBox.Items.Add(new PositionSelection("Center", ImageProcessor.Positions.Center));
-            PositionBox.Items.Add(new PositionSelection("Center Right", ImageProcessor.Positions.CenterRight));
-            PositionBox.Items.Add(new PositionSelection("Bottom Left", ImageProcessor.Positions.BottomLeft));
-            PositionBox.Items.Add(new PositionSelection("Bottom Center", ImageProcessor.Positions.BottomCenter));
-            PositionBox.Items.Add(new PositionSelection("Bottom Right", ImageProcessor.Positions.BottomRight));
+            PositionBox.ItemsSource = ImageProcessor.MakePositionSelectionList();
             Threshold = 200;
             MarginTop = 0;
             MarginBottom = 0;
@@ -110,17 +102,7 @@ namespace CronusZenMessageScreenStudio
 
         private void NumericUpDown_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e) => UpdatePreview();
 
-        public class PositionSelection
-        {
-            public PositionSelection(string name, ImageProcessor.Positions value)
-            {
-                Name = name;
-                Value = value;
-            }
 
-            public string Name { get; set; }
-            public ImageProcessor.Positions Value { get; set; }
-        }
 
         private void Checkbox_Changed(object sender, RoutedEventArgs e) => UpdatePreview();
 
