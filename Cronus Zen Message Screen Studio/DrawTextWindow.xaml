@@ -121,10 +121,19 @@
                     Margin="0,0,10,0"
                     VerticalAlignment="Center"
                     Text="Threshold:" />
-                <mah:NumericUpDown
+                <Slider
                     Grid.Row="5"
                     Grid.Column="1"
-                    Grid.ColumnSpan="4"
+                    Grid.ColumnSpan="2"
+                    Maximum="255.00"
+                    Minimum="0.01"
+                    TickFrequency="0.01"
+                    ValueChanged="Slider_OnValueChanged"
+                    Value="{Binding Path=Threshold, Mode=TwoWay}" />
+                <mah:NumericUpDown
+                    Grid.Row="5"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
                     Interval="0.01"
                     Maximum="255.00"
                     Minimum="0.01"

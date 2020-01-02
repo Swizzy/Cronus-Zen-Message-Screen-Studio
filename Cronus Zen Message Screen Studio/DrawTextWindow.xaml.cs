@@ -1,8 +1,10 @@
-﻿using System.Drawing;
+﻿using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -14,9 +16,11 @@ namespace CronusZenMessageScreenStudio
     /// <summary>
     ///     Interaction logic for DrawTextWindow.xaml
     /// </summary>
-    public partial class DrawTextWindow
+    public partial class DrawTextWindow : INotifyPropertyChanged
     {
         private Bitmap _finalImage;
+        private double _threshold;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public DrawTextWindow()
         {
@@ -43,7 +47,16 @@ namespace CronusZenMessageScreenStudio
             WhiteOnBlack = true;
         }
 
-        public double Threshold { get; set; }
+        public double Threshold
+        {
+            get => _threshold;
+            set
+            {
+                _threshold = value;
+                OnPropertyChanged();
+            }
+        }
+
         public int MarginTop { get; set; }
         public int MarginBottom { get; set; }
         public int MarginLeft { get; set; }
@@ -127,5 +140,12 @@ namespace CronusZenMessageScreenStudio
         }
 
         public bool[,] GetPixels() => ImageProcessor.MakeBinaryMatrix(_finalImage, Threshold, false);
+
+        private void Slider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => RefreshPreview();
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

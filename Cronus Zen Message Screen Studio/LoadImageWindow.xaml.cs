@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -14,11 +16,12 @@ namespace CronusZenMessageScreenStudio
     /// <summary>
     ///     Interaction logic for LoadImage.xaml
     /// </summary>
-    public partial class LoadImageWindow
+    public partial class LoadImageWindow : INotifyPropertyChanged
     {
         private Bitmap _finalImage;
-
         private Bitmap _selectedImage;
+        private double _threshold;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public LoadImageWindow()
         {
@@ -35,7 +38,16 @@ namespace CronusZenMessageScreenStudio
             Position = ImageProcessor.Positions.Center;
         }
 
-        public double Threshold { get; set; }
+        public double Threshold
+        {
+            get => _threshold;
+            set
+            {
+                _threshold = value;
+                OnPropertyChanged();
+            }
+        }
+
         public int MarginTop { get; set; }
         public int MarginBottom { get; set; }
         public int MarginLeft { get; set; }
@@ -44,7 +56,6 @@ namespace CronusZenMessageScreenStudio
         public bool Invert { get; set; }
         public bool InvertBackground { get; set; }
         public InterpolationMode InterpolationMode { get; set; }
-
 
         private void SelectImage_Click(object sender, RoutedEventArgs e)
         {
@@ -103,8 +114,6 @@ namespace CronusZenMessageScreenStudio
 
         private void NumericUpDown_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e) => UpdatePreview();
 
-
-
         private void Checkbox_Changed(object sender, RoutedEventArgs e) => UpdatePreview();
 
         private static BitmapImage BitmapToImageSource(Image image)
@@ -129,6 +138,13 @@ namespace CronusZenMessageScreenStudio
                 DialogResult = true;
             }
             Close();
+        }
+
+        private void Slider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
