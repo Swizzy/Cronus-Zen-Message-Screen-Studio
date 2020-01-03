@@ -122,6 +122,7 @@
                     VerticalAlignment="Center"
                     Text="Threshold:" />
                 <Slider
+                    x:Name="RGBslider"
                     Grid.Row="5"
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
@@ -129,8 +130,9 @@
                     Minimum="0.01"
                     TickFrequency="0.01"
                     ValueChanged="Slider_OnValueChanged"
-                    Value="{Binding Path=Threshold, Mode=TwoWay}" />
+                    Value="{Binding Path=RGBThreshold, Mode=TwoWay}" />
                 <mah:NumericUpDown
+                    x:Name="RGBnupd"
                     Grid.Row="5"
                     Grid.Column="3"
                     Grid.ColumnSpan="2"
@@ -140,7 +142,29 @@
                     Speedup="False"
                     StringFormat="F02"
                     ValueChanged="NumericUpDown_ValueChanged"
-                    Value="{Binding Path=Threshold, Mode=TwoWay}" />
+                    Value="{Binding Path=RGBThreshold, Mode=TwoWay}" />
+                <Slider
+                    x:Name="HSLslider"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Maximum="100.00"
+                    Minimum="0.01"
+                    TickFrequency="0.01"
+                    ValueChanged="Slider_OnValueChanged"
+                    Value="{Binding Path=HSLThreshold, Mode=TwoWay}" />
+                <mah:NumericUpDown
+                    x:Name="HSLnupd"
+                    Grid.Row="5"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    Interval="0.01"
+                    Maximum="100.00"
+                    Minimum="0.01"
+                    Speedup="False"
+                    StringFormat="F02"
+                    ValueChanged="NumericUpDown_ValueChanged"
+                    Value="{Binding Path=HSLThreshold, Mode=TwoWay}" />
                 <TextBlock
                     Grid.Row="6"
                     Grid.Column="0"
@@ -234,10 +258,18 @@
                 <CheckBox
                     Grid.Row="12"
                     Grid.Column="1"
-                    Grid.ColumnSpan="4"
+                    Grid.ColumnSpan="2"
                     Checked="Checkbox_StateChanged"
                     Content="White text on black background"
                     IsChecked="{Binding Path=WhiteOnBlack, Mode=TwoWay}"
+                    Unchecked="Checkbox_StateChanged" />
+                <CheckBox
+                    Grid.Row="12"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    Checked="Checkbox_StateChanged"
+                    Content="Use HSL Brightness"
+                    IsChecked="{Binding Path=UseHSL, Mode=TwoWay}"
                     Unchecked="Checkbox_StateChanged" />
             </Grid>
         </GroupBox>

@@ -18,8 +18,8 @@ namespace CronusZenMessageScreenStudio
     /// </summary>
     public partial class DrawTextWindow : INotifyPropertyChanged
     {
-        private Bitmap _finalImage;
-        private double _threshold;
+        private bool[,] _finalImage;
+        private double _rgbThreshold, _hslThreshold;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public DrawTextWindow()
@@ -38,25 +38,39 @@ namespace CronusZenMessageScreenStudio
                 }
             }
             TextFontFamily = (FontFamily)FontBox.Items[0];
-            Threshold = 200;
+            RGBThreshold = 200;
+            HSLThreshold = 50;
+            UseHSL = true;
             MarginTop = 0;
             MarginBottom = 0;
             MarginLeft = 0;
             MarginRight = 0;
             Position = ImageProcessor.Positions.Center;
             WhiteOnBlack = true;
+            RefreshPreview();
         }
 
-        public double Threshold
+        public double RGBThreshold
         {
-            get => _threshold;
+            get => _rgbThreshold;
             set
             {
-                _threshold = value;
+                _rgbThreshold = value;
                 OnPropertyChanged();
             }
         }
 
+        public double HSLThreshold
+        {
+            get => _hslThreshold;
+            set
+            {
+                _hslThreshold = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool UseHSL { get; set; }
         public int MarginTop { get; set; }
         public int MarginBottom { get; set; }
         public int MarginLeft { get; set; }
@@ -74,6 +88,14 @@ namespace CronusZenMessageScreenStudio
 
         private void RefreshPreview()
         {
+            if (UseHSL)
+            {
+                SetThresholdVisibility(Visibility.Collapsed, Visibility.Visible);
+            }
+            else
+            {
+                SetThresholdVisibility(Visibility.Visible, Visibility.Collapsed);
+            }
             try
             {
                 FontStyle fontStyle = System.Drawing.FontStyle.Regular;
@@ -101,8 +123,8 @@ namespace CronusZenMessageScreenStudio
                                                 MarginRight,
                                                 backgroundColor,
                                                 InterpolationMode);
-                _finalImage = ImageProcessor.MakeBinaryImage(img, Threshold, false);
-                ImagePreview.Source = BitmapToImageSource(_finalImage);
+                _finalImage = ImageProcessor.MakeBinaryMatrix(img, UseHSL ? (HSLThreshold / 100) : RGBThreshold, false, UseHSL);
+                ImagePreview.Source = BitmapToImageSource(ImageProcessor.MakeBinaryImage(_finalImage, img.Width, img.Height));
             }
             catch
             {
@@ -111,6 +133,27 @@ namespace CronusZenMessageScreenStudio
         }
 
         private void Checkbox_StateChanged(object sender, RoutedEventArgs e) => RefreshPreview();
+
+        private void SetThresholdVisibility(Visibility rgb, Visibility hsl)
+        {
+            if (RGBslider != null)
+            {
+                RGBslider.Visibility = rgb;
+            }
+            if (RGBnupd != null)
+            {
+                RGBnupd.Visibility = rgb;
+            }
+            if (HSLslider != null)
+            {
+                HSLslider.Visibility = hsl;
+            }
+            if (HSLnupd != null)
+            {
+                HSLnupd.Visibility = hsl;
+            }
+        }
+
         private void NumericUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e) => RefreshPreview();
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) => RefreshPreview();
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e) => RefreshPreview();
@@ -139,7 +182,7 @@ namespace CronusZenMessageScreenStudio
             Close();
         }
 
-        public bool[,] GetPixels() => ImageProcessor.MakeBinaryMatrix(_finalImage, Threshold, false);
+        public bool[,] GetPixels() => _finalImage;
 
         private void Slider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => RefreshPreview();
 

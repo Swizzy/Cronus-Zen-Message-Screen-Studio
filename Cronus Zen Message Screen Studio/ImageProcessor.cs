@@ -177,7 +177,7 @@ namespace CronusZenMessageScreenStudio
             return toReturn;
         }
 
-        public static bool[,] MakeBinaryMatrix(Bitmap img, double threshold, bool invert)
+        public static bool[,] MakeBinaryMatrix(Bitmap img, double threshold, bool invert, bool useHSL)
         {
             bool[,] toReturn = new bool[img.Width,img.Height];
             for (int x = 0; x < img.Width; x++)
@@ -185,8 +185,16 @@ namespace CronusZenMessageScreenStudio
                 for (int y = 0; y < img.Height; y++)
                 {
                     Color pixel = img.GetPixel(x, y);
-                    List<double> colors = new List<double> { pixel.R, pixel.G, pixel.B };
-                    double avg = colors.Average(c => c);
+                    double avg;
+                    if (useHSL)
+                    {
+                        avg = pixel.GetBrightness();
+                    }
+                    else
+                    {
+                        List<double> colors = new List<double> { pixel.R, pixel.G, pixel.B };
+                        avg = colors.Average(c => c);
+                    }
                     if (invert)
                     {
                         toReturn[x, y] = avg < threshold;
@@ -201,9 +209,9 @@ namespace CronusZenMessageScreenStudio
             return toReturn;
         }
 
-        public static Bitmap MakeBinaryImage(Bitmap img, double threshold, bool invert)
+        public static Bitmap MakeBinaryImage(Bitmap img, double threshold, bool invert, bool useHSL)
         {
-            bool[,] pixels = MakeBinaryMatrix(img, threshold, invert);
+            bool[,] pixels = MakeBinaryMatrix(img, threshold, invert, useHSL);
             return MakeBinaryImage(pixels, img.Width, img.Height);
         }
 

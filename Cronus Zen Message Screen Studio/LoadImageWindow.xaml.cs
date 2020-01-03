@@ -18,9 +18,9 @@ namespace CronusZenMessageScreenStudio
     /// </summary>
     public partial class LoadImageWindow : INotifyPropertyChanged
     {
-        private Bitmap _finalImage;
+        private bool[,] _finalImage;
         private Bitmap _selectedImage;
-        private double _threshold;
+        private double _rgbThreshold, _hslThreshold;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public LoadImageWindow()
@@ -30,24 +30,38 @@ namespace CronusZenMessageScreenStudio
             LayoutRoot.DataContext = this;
             PositionBox.ItemsSource = ImageProcessor.MakePositionSelectionList();
             InterpolationModeBox.ItemsSource = ImageProcessor.MakeInterpolationSelectionList();
-            Threshold = 200;
+            RGBThreshold = 200;
+            HSLThreshold = 50;
+            UseHSL = true;
             MarginTop = 0;
             MarginBottom = 0;
             MarginLeft = 0;
             MarginRight = 0;
             Position = ImageProcessor.Positions.Center;
+            UpdatePreview();
         }
 
-        public double Threshold
+        public double RGBThreshold
         {
-            get => _threshold;
+            get => _rgbThreshold;
             set
             {
-                _threshold = value;
+                _rgbThreshold = value;
                 OnPropertyChanged();
             }
         }
 
+        public double HSLThreshold
+        {
+            get => _hslThreshold;
+            set
+            {
+                _hslThreshold = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool UseHSL { get; set; }
         public int MarginTop { get; set; }
         public int MarginBottom { get; set; }
         public int MarginLeft { get; set; }
@@ -88,6 +102,15 @@ namespace CronusZenMessageScreenStudio
 
         private void UpdatePreview()
         {
+            if (UseHSL)
+            {
+                SetThresholdVisibility(Visibility.Collapsed, Visibility.Visible);
+            }
+            else
+            {
+                SetThresholdVisibility(Visibility.Visible, Visibility.Collapsed);
+            }
+
             if (_selectedImage == null)
             {
                 return;
@@ -104,17 +127,37 @@ namespace CronusZenMessageScreenStudio
                                                            MarginRight,
                                                            InvertBackground ? Color.White : Color.Black,
                                                            InterpolationMode);
-            _finalImage = ImageProcessor.MakeBinaryImage(scaledImage, Threshold, Invert);
-            ImagePreview.Source = BitmapToImageSource(_finalImage);
+            _finalImage = ImageProcessor.MakeBinaryMatrix(scaledImage, UseHSL ? (HSLThreshold / 100) : RGBThreshold, Invert, UseHSL);
+            ImagePreview.Source = BitmapToImageSource(ImageProcessor.MakeBinaryImage(_finalImage, scaledImage.Width, scaledImage.Height));
         }
 
-        public bool[,] GetPixels() => ImageProcessor.MakeBinaryMatrix(_finalImage, Threshold, false);
+        public bool[,] GetPixels() => _finalImage;
 
         private void PositionBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => UpdatePreview();
 
         private void NumericUpDown_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e) => UpdatePreview();
 
         private void Checkbox_Changed(object sender, RoutedEventArgs e) => UpdatePreview();
+
+        private void SetThresholdVisibility(Visibility rgb, Visibility hsl)
+        {
+            if (RGBslider != null)
+            {
+                RGBslider.Visibility = rgb;
+            }
+            if (RGBnupd != null)
+            {
+                RGBnupd.Visibility = rgb;
+            }
+            if (HSLslider != null)
+            {
+                HSLslider.Visibility = hsl;
+            }
+            if (HSLnupd != null)
+            {
+                HSLnupd.Visibility = hsl;
+            }
+        }
 
         private static BitmapImage BitmapToImageSource(Image image)
         {

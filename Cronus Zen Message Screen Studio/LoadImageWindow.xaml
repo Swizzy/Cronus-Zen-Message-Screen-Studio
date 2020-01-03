@@ -30,7 +30,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Button
                     Grid.Row="0"
@@ -75,14 +76,16 @@
                     VerticalAlignment="Center"
                     Text="Threshold:" />
                 <Slider
+                    x:Name="RGBslider"
                     Grid.Row="3"
                     Grid.Column="1"
                     Maximum="255.00"
                     Minimum="0.01"
                     TickFrequency="0.01"
                     ValueChanged="Slider_OnValueChanged"
-                    Value="{Binding Path=Threshold, Mode=TwoWay}" />
+                    Value="{Binding Path=RGBThreshold, Mode=TwoWay}" />
                 <mah:NumericUpDown
+                    x:Name="RGBnupd"
                     Grid.Row="3"
                     Grid.Column="2"
                     Interval="0.01"
@@ -91,7 +94,27 @@
                     Speedup="False"
                     StringFormat="F02"
                     ValueChanged="NumericUpDown_OnValueChanged"
-                    Value="{Binding Path=Threshold, Mode=TwoWay}" />
+                    Value="{Binding Path=RGBThreshold, Mode=TwoWay}" />
+                <Slider
+                    x:Name="HSLslider"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Maximum="100.00"
+                    Minimum="0.01"
+                    TickFrequency="0.01"
+                    ValueChanged="Slider_OnValueChanged"
+                    Value="{Binding Path=HSLThreshold, Mode=TwoWay}" />
+                <mah:NumericUpDown
+                    x:Name="HSLnupd"
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Interval="0.01"
+                    Maximum="100.00"
+                    Minimum="0.01"
+                    Speedup="False"
+                    StringFormat="F02"
+                    ValueChanged="NumericUpDown_OnValueChanged"
+                    Value="{Binding Path=HSLThreshold, Mode=TwoWay}" />
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="0"
@@ -166,6 +189,13 @@
                     Checked="Checkbox_Changed"
                     Content="Invert Background"
                     IsChecked="{Binding Path=InvertBackground, Mode=TwoWay}"
+                    Unchecked="Checkbox_Changed" />
+                <CheckBox
+                    Grid.Row="9"
+                    Grid.Column="1"
+                    Checked="Checkbox_Changed"
+                    Content="Use HSL Brightness"
+                    IsChecked="{Binding Path=UseHSL, Mode=TwoWay}"
                     Unchecked="Checkbox_Changed" />
             </Grid>
         </GroupBox>
