@@ -109,36 +109,31 @@ namespace CronusZenMessageScreenStudio
                 {
                     bits = 16;
                 }
-                toReturn.AppendLine($"\t__{identifier}Offset = 2; // Reset the starting point");
-                toReturn.AppendLine($"\t__{identifier}Bit = {bits}; // Reset bit flag");
+                toReturn.AppendLine($"\t__{identifier}Offset = 1; // Reset the starting point");
+                toReturn.AppendLine($"\t__{identifier}Bit = 0; // Reset bit flag");
                 toReturn.AppendLine($"\tfor (__{identifier}Y = 0; __{identifier}Y < {identifier}[1]; __{identifier}Y++) {{ // Loop the Y axis");
+                toReturn.AppendLine($"\t\t__{identifier}Y2 = y + __{identifier}Y;");
+                toReturn.AppendLine($"\t\tif (__{identifier}Y2 < 0 || __{identifier}Y2 >= 64) {{");
+                toReturn.AppendLine($"\t\t\t__{identifier}Y2 -= 64;");
+                toReturn.AppendLine("\t\t}");
                 toReturn.AppendLine($"\t\tfor (__{identifier}X = 0; __{identifier}X < {identifier}[0]; __{identifier}X++) {{ // Loop the X axis");
-                toReturn.AppendLine($"\t\t\t__{identifier}Data = {identifier}[__{identifier}Offset]");
+                toReturn.AppendLine($"\t\t\tif (!__{identifier}Bit) {{ // Check if we've already handled the last bit");
+                toReturn.AppendLine($"\t\t\t\t__{identifier}Bit = {bits}; // Reset the bit flag");
+                toReturn.AppendLine($"\t\t\t\t__{identifier}Offset++; // Move to the next value");
+                toReturn.AppendLine($"\t\t\t\t__{identifier}Data = {identifier}[__{identifier}Offset]; // Fetch the value");
+                toReturn.AppendLine("\t\t\t}");
+                toReturn.AppendLine($"\t\t\t__{identifier}Bit--; // Decrement the bit flag, we're moving to the next bit");
                 toReturn.AppendLine($"\t\t\t__{identifier}X2 = x + __{identifier}X;");
-                toReturn.AppendLine($"\t\t\t__{identifier}Y2 = y + __{identifier}Y;");
                 toReturn.AppendLine($"\t\t\tif (__{identifier}X2 < 0 || __{identifier}X2 >= 128) {{");
                 toReturn.AppendLine($"\t\t\t\t__{identifier}X2 -= 128;");
                 toReturn.AppendLine("\t\t\t}");
-                toReturn.AppendLine($"\t\t\tif (__{identifier}Y2 < 0 || __{identifier}Y2 >= 64) {{");
-                toReturn.AppendLine($"\t\t\t\t__{identifier}Y2 -= 64;");
-                toReturn.AppendLine("\t\t\t}");
-                toReturn.AppendLine($"\t\t\tif (test_bit(__{identifier}Data, __{identifier}Bit - 1)) {{");
+                toReturn.AppendLine($"\t\t\tif (test_bit(__{identifier}Data, __{identifier}Bit)) {{");
                 toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, !invert);");
                 toReturn.AppendLine("\t\t\t}");
                 toReturn.AppendLine("\t\t\telse {");
                 toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, invert);");
                 toReturn.AppendLine("\t\t\t}");
-                toReturn.AppendLine($"\t\t\t__{identifier}Bit--; // Decrement the bit flag, we're moving to the next bit");
-                toReturn.AppendLine($"\t\t\tif (!__{identifier}Bit) {{ // Check if we've just handled the last bit");
-                toReturn.AppendLine($"\t\t\t\t__{identifier}Bit = {bits}; // Reset the bit flag");
-                toReturn.AppendLine($"\t\t\t\t__{identifier}Offset++; // Move to the next value");
-                toReturn.AppendLine("\t\t\t}");
                 toReturn.AppendLine("\t\t}");
-                // This might be needed, we'll see... this would be needed if we pad the last value with 0's
-                //toReturn.AppendLine($"\t\tif (__{identifier}Bit != {bits}) {{");
-                //toReturn.AppendLine($"\t\t\t__{identifier}Bit = {bits};");
-                //toReturn.AppendLine($"\t\t\t__{identifier}Offset++;");
-                //toReturn.AppendLine("\t\t}");
                 toReturn.AppendLine("\t}");
                 toReturn.AppendLine("}");
             }
