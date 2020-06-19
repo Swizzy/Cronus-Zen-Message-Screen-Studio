@@ -96,7 +96,7 @@ namespace CronusZenMessageScreenStudio
         private string GeneratePackedFunction(ExportSettings settings, string identifier)
         {
             var toReturn = new StringBuilder();
-            toReturn.AppendLine($"int __{identifier}X, __{identifier}X2, __{identifier}Y, __{identifier}Y2, __{identifier}Bit, __{identifier}Offset, __{identifier}Data;");
+            toReturn.AppendLine($"int __{identifier}Width, __{identifier}X, __{identifier}X2, __{identifier}Height, __{identifier}Y, __{identifier}Y2, __{identifier}Bit, __{identifier}Offset, __{identifier}Data;");
             toReturn.AppendLine($"function draw_{identifier}(x, y, invert) {{");
             if ((settings & ExportSettings.Packed1DArray) == ExportSettings.Packed1DArray)
             {
@@ -111,12 +111,14 @@ namespace CronusZenMessageScreenStudio
                 }
                 toReturn.AppendLine($"\t__{identifier}Offset = 1; // Reset the starting point");
                 toReturn.AppendLine($"\t__{identifier}Bit = 0; // Reset bit flag");
-                toReturn.AppendLine($"\tfor (__{identifier}Y = 0; __{identifier}Y < {identifier}[1]; __{identifier}Y++) {{ // Loop the Y axis");
+                toReturn.AppendLine($"\t__{identifier}Width = {identifier}[0]; // Fetch the width of what to draw");
+                toReturn.AppendLine($"\t__{identifier}Height = {identifier}[1]; // Fetch the height of what to draw");
+                toReturn.AppendLine($"\tfor (__{identifier}Y = 0; __{identifier}Y < __{identifier}Height; __{identifier}Y++) {{ // Loop the Y axis");
                 toReturn.AppendLine($"\t\t__{identifier}Y2 = y + __{identifier}Y;");
                 toReturn.AppendLine($"\t\tif (__{identifier}Y2 < 0 || __{identifier}Y2 >= 64) {{");
                 toReturn.AppendLine($"\t\t\t__{identifier}Y2 -= 64;");
                 toReturn.AppendLine("\t\t}");
-                toReturn.AppendLine($"\t\tfor (__{identifier}X = 0; __{identifier}X < {identifier}[0]; __{identifier}X++) {{ // Loop the X axis");
+                toReturn.AppendLine($"\t\tfor (__{identifier}X = 0; __{identifier}X < __{identifier}Width; __{identifier}X++) {{ // Loop the X axis");
                 toReturn.AppendLine($"\t\t\tif (!__{identifier}Bit) {{ // Check if we've already handled the last bit");
                 toReturn.AppendLine($"\t\t\t\t__{identifier}Bit = {bits}; // Reset the bit flag");
                 toReturn.AppendLine($"\t\t\t\t__{identifier}Offset++; // Move to the next value");
