@@ -137,8 +137,8 @@ namespace CronusZenMessageScreenStudio
                 toReturn.AppendLine("\t\t\t}");
                 toReturn.AppendLine("\t\t}");
                 toReturn.AppendLine("\t}");
-                toReturn.AppendLine("}");
             }
+            toReturn.AppendLine("}");
             return toReturn.ToString().Trim();
         }
 
