@@ -14,18 +14,19 @@ namespace CronusZenMessageScreenStudio
         [Flags]
         internal enum ExportSettings
         {
-            ForceWhite       = 1 << 0,
-            ForceBlack       = 1 << 1,
-            IndividualPixels = 1 << 2,
-            Packed16Bit      = 1 << 3,
-            Packed8Bit       = 1 << 4,
-            Packed1DArray    = 1 << 5,
-            FixedWidth       = 1 << 6,
-            IncludeClear     = 1 << 7,
-            IncludeFunction  = 1 << 8,
-            SampleScript     = 1 << 9,
-
-            Packed = Packed8Bit | Packed16Bit
+            ForceWhite          = 1 << 0,
+            ForceBlack          = 1 << 1,
+            IndividualPixels    = 1 << 2,
+            Packed16Bit         = 1 << 3,
+            Packed8Bit          = 1 << 4,
+            Packed1DArray       = 1 << 5,
+            FixedWidth          = 1 << 6,
+            IncludeClear        = 1 << 7,
+            IncludeFunction     = 1 << 8,
+            SampleScript        = 1 << 9,
+            PackedStatic        = 1 << 10,
+            PackedInvertSupport = 1 << 11,
+            Packed = Packed8Bit | Packed16Bit,
         }
 
         private readonly List<PixelControl> _pixelControls;
@@ -66,10 +67,21 @@ namespace CronusZenMessageScreenStudio
                 toReturn.AppendLine("\tif (get_val(XB1_A)) {");
                 if ((settings & ExportSettings.Packed) != 0)
                 {
-                    toReturn.AppendLine($"\t\tdraw_{identifier}(0, 0, 0);");
-                    toReturn.AppendLine("\t}");
-                    toReturn.AppendLine("\telse if (get_val(XB1_B)) {");
-                    toReturn.AppendLine($"\t\tdraw_{identifier}(0, 0, 1);");
+                    if ((settings & ExportSettings.PackedStatic) == ExportSettings.PackedStatic)
+                    {
+                        toReturn.AppendLine($"\t\tdraw_{identifier}({((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport ? "0" : "")});");
+                    }
+                    else
+                    {
+                        toReturn.AppendLine($"\t\tdraw_{identifier}(0, 0{((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport ? ", 0" : "")});");
+                    }
+
+                    if ((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport)
+                    {
+                        toReturn.AppendLine("\t}");
+                        toReturn.AppendLine("\telse if (get_val(XB1_B)) {");
+                        toReturn.AppendLine($"\t\tdraw_{identifier}({((settings & ExportSettings.PackedStatic) == ExportSettings.PackedStatic ? "" : "0, 0, ")}1);");
+                    }
                 }
             }
 
@@ -96,8 +108,19 @@ namespace CronusZenMessageScreenStudio
         private string GeneratePackedFunction(ExportSettings settings, string identifier)
         {
             var toReturn = new StringBuilder();
-            toReturn.AppendLine($"int __{identifier}Width, __{identifier}X, __{identifier}X2, __{identifier}Height, __{identifier}Y, __{identifier}Y2, __{identifier}Bit, __{identifier}Offset, __{identifier}Data;");
-            toReturn.AppendLine($"function draw_{identifier}(x, y, invert) {{");
+            toReturn.AppendLine($"int __{identifier}Width, __{identifier}X, __{identifier}Height, __{identifier}Y, __{identifier}Bit, __{identifier}Offset, __{identifier}Data;");
+            if ((settings & ExportSettings.PackedStatic) != ExportSettings.PackedStatic)
+            {
+                toReturn.AppendLine($"int __{identifier}X2, __{identifier}Y2;");
+            }
+            if ((settings & ExportSettings.PackedStatic) == ExportSettings.PackedStatic)
+            {
+                toReturn.AppendLine($"function draw_{identifier}({((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport ? "invert" : "")}) {{");
+            }
+            else
+            {
+                toReturn.AppendLine($"function draw_{identifier}(x, y{((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport ? ", invert" : "")}) {{");
+            }
             if ((settings & ExportSettings.Packed1DArray) == ExportSettings.Packed1DArray)
             {
                 int bits = 0;
@@ -114,10 +137,13 @@ namespace CronusZenMessageScreenStudio
                 toReturn.AppendLine($"\t__{identifier}Width = {identifier}[0]; // Fetch the width of what to draw");
                 toReturn.AppendLine($"\t__{identifier}Height = {identifier}[1]; // Fetch the height of what to draw");
                 toReturn.AppendLine($"\tfor (__{identifier}Y = 0; __{identifier}Y < __{identifier}Height; __{identifier}Y++) {{ // Loop the Y axis");
-                toReturn.AppendLine($"\t\t__{identifier}Y2 = y + __{identifier}Y;");
-                toReturn.AppendLine($"\t\tif (__{identifier}Y2 < 0 || __{identifier}Y2 >= 64) {{");
-                toReturn.AppendLine($"\t\t\t__{identifier}Y2 -= 64;");
-                toReturn.AppendLine("\t\t}");
+                if ((settings & ExportSettings.PackedStatic) != ExportSettings.PackedStatic)
+                {
+                    toReturn.AppendLine($"\t\t__{identifier}Y2 = y + __{identifier}Y;");
+                    toReturn.AppendLine($"\t\tif (__{identifier}Y2 < 0 || __{identifier}Y2 >= 64) {{");
+                    toReturn.AppendLine($"\t\t\t__{identifier}Y2 -= 64;");
+                    toReturn.AppendLine("\t\t}");
+                }
                 toReturn.AppendLine($"\t\tfor (__{identifier}X = 0; __{identifier}X < __{identifier}Width; __{identifier}X++) {{ // Loop the X axis");
                 toReturn.AppendLine($"\t\t\tif (!__{identifier}Bit) {{ // Check if we've already handled the last bit");
                 toReturn.AppendLine($"\t\t\t\t__{identifier}Bit = {bits}; // Reset the bit flag");
@@ -125,16 +151,48 @@ namespace CronusZenMessageScreenStudio
                 toReturn.AppendLine($"\t\t\t\t__{identifier}Data = {identifier}[__{identifier}Offset]; // Fetch the value");
                 toReturn.AppendLine("\t\t\t}");
                 toReturn.AppendLine($"\t\t\t__{identifier}Bit--; // Decrement the bit flag, we're moving to the next bit");
-                toReturn.AppendLine($"\t\t\t__{identifier}X2 = x + __{identifier}X;");
-                toReturn.AppendLine($"\t\t\tif (__{identifier}X2 < 0 || __{identifier}X2 >= 128) {{");
-                toReturn.AppendLine($"\t\t\t\t__{identifier}X2 -= 128;");
-                toReturn.AppendLine("\t\t\t}");
-                toReturn.AppendLine($"\t\t\tif (test_bit(__{identifier}Data, __{identifier}Bit)) {{");
-                toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, !invert);");
-                toReturn.AppendLine("\t\t\t}");
-                toReturn.AppendLine("\t\t\telse {");
-                toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, invert);");
-                toReturn.AppendLine("\t\t\t}");
+
+                if ((settings & ExportSettings.PackedStatic) != ExportSettings.PackedStatic)
+                {
+                    toReturn.AppendLine($"\t\t\t__{identifier}X2 = x + __{identifier}X;");
+                    toReturn.AppendLine($"\t\t\tif (__{identifier}X2 < 0 || __{identifier}X2 >= 128) {{");
+                    toReturn.AppendLine($"\t\t\t\t__{identifier}X2 -= 128;");
+                    toReturn.AppendLine("\t\t\t}");
+                }
+                if ((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport)
+                {
+                    toReturn.AppendLine($"\t\t\tif (test_bit(__{identifier}Data, __{identifier}Bit)) {{");
+                    if ((settings & ExportSettings.PackedStatic) == ExportSettings.PackedStatic)
+                    {
+                        toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X, __{identifier}Y, !invert);");
+                    }
+                    else
+                    {
+                        toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, !invert);");
+                    }
+                    toReturn.AppendLine("\t\t\t}");
+                    toReturn.AppendLine("\t\t\telse {");
+                    if ((settings & ExportSettings.PackedStatic) == ExportSettings.PackedStatic)
+                    {
+                        toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X, __{identifier}Y, invert);");
+                    }
+                    else
+                    {
+                        toReturn.AppendLine($"\t\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, invert);");
+                    }
+                    toReturn.AppendLine("\t\t\t}");
+                }
+                else
+                {
+                    if ((settings & ExportSettings.PackedStatic) == ExportSettings.PackedStatic)
+                    {
+                        toReturn.AppendLine($"\t\t\tpixel_oled(__{identifier}X, __{identifier}Y, test_bit(__{identifier}Data, __{identifier}Bit));");
+                    }
+                    else
+                    {
+                        toReturn.AppendLine($"\t\t\tpixel_oled(__{identifier}X2, __{identifier}Y2, test_bit(__{identifier}Data, __{identifier}Bit));");
+                    }
+                }
                 toReturn.AppendLine("\t\t}");
                 toReturn.AppendLine("\t}");
             }

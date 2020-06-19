@@ -45,7 +45,18 @@ namespace CronusZenMessageScreenStudio
             if (IncludeFunction.IsChecked == true)
             {
                 settings |= ExportProcessor.ExportSettings.IncludeFunction;
+
+                if (PackedStatic.IsChecked == true)
+                {
+                    settings |= ExportProcessor.ExportSettings.PackedStatic;
+                }
+                if (PackedInvertSupport.IsChecked == true)
+                {
+                    settings |= ExportProcessor.ExportSettings.PackedInvertSupport;
+                }
+
             }
+
             PerformExport(settings);
         }
 
