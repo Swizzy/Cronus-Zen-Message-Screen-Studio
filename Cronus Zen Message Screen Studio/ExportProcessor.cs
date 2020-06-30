@@ -26,6 +26,7 @@ namespace CronusZenMessageScreenStudio
             SampleScript        = 1 << 9,
             PackedStatic        = 1 << 10,
             PackedInvertSupport = 1 << 11,
+            PackedExcalibur     = 1 << 12,
             Packed = Packed8Bit | Packed16Bit,
         }
 
@@ -200,11 +201,34 @@ namespace CronusZenMessageScreenStudio
             return toReturn.ToString().Trim();
         }
 
+        private IEnumerable<List<ushort>> Partition(ushort[] input, int count)
+        {
+            for (int i = 0; i < input.Length; i += count)
+            {
+                yield return input.Skip(i).Take(count).ToList();
+            }
+        }
+
         private string GeneratePacked(ExportSettings settings, string identifier, bool whitePixels)
         {
             var toReturn = new StringBuilder();
             bool isFixed = (settings & ExportSettings.FixedWidth) == ExportSettings.FixedWidth;
-            if ((settings & ExportSettings.Packed1DArray) == ExportSettings.Packed1DArray)
+            if ((settings & ExportSettings.PackedExcalibur) == ExportSettings.PackedExcalibur)
+            {
+                (int width, int height, ushort[] data) = Pack16(isFixed, whitePixels);
+                toReturn.AppendLine($"{width}, {height},");
+                int count = 0;
+                foreach (List<ushort> group in Partition(data, 32))
+                {
+                    toReturn.Append("    " + string.Join(",", group.Select(d => $"0x{d:X04}")));
+                    count += group.Count;
+                    if (count < data.Length)
+                    {
+                        toReturn.AppendLine(",");
+                    }
+                }
+            }
+            else if ((settings & ExportSettings.Packed1DArray) == ExportSettings.Packed1DArray)
             {
                 int dwidth = 0, dheight = 0;
                 var dataType = "";

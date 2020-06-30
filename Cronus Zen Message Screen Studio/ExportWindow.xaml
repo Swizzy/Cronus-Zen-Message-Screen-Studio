@@ -94,6 +94,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
@@ -136,6 +137,12 @@
                     Grid.ColumnSpan="3"
                     Click="Packed8_Click"
                     Content="Export 8-bit Packed" />
+                <Button
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Click="PackedExcalibur_Click"
+                    Content="Export Excalibur Packed" />
             </Grid>
         </GroupBox>
     </Grid>

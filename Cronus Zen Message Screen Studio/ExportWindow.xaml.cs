@@ -83,5 +83,21 @@ namespace CronusZenMessageScreenStudio
         }
 
         private void ImgButton_Click(object sender, RoutedEventArgs e) { _exportProcessor.GenerateAndSaveImage(); }
+
+        private void PackedExcalibur_Click(object sender, RoutedEventArgs e)
+        {
+            ExportProcessor.ExportSettings settings = ExportProcessor.ExportSettings.Packed1DArray | ExportProcessor.ExportSettings.PackedExcalibur;
+            if (ForceWhitePixels.IsChecked == true)
+            {
+                settings |= ExportProcessor.ExportSettings.ForceWhite;
+            }
+            else if (ForceBlackPixels.IsChecked == true)
+            {
+                settings |= ExportProcessor.ExportSettings.ForceBlack;
+            }
+
+            string data = _exportProcessor.GenerateExportData(settings, "");
+            _exportProcessor.Savefile(data);
+        }
     }
 }
