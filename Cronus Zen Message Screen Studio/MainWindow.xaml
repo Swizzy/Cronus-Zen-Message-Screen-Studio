@@ -115,7 +115,15 @@
                         Minimum="1"
                         ValueChanged="PenThickness_OnValueChanged"
                         Value="1" />
-                    <CheckBox x:Name="EllipsePen" Content="Ellipse pen" />
+                    <TextBlock
+                        Margin="10,0"
+                        VerticalAlignment="Center"
+                        Text="Pen shape:" />
+                    <ComboBox
+                        x:Name="PenShapeBox"
+                        DisplayMemberPath="Name"
+                        SelectedValuePath="Value"
+                        SelectionChanged="PenShapeBox_OnSelectionChanged" />
                 </StackPanel>
             </StatusBarItem>
             <StatusBarItem Grid.Column="3">

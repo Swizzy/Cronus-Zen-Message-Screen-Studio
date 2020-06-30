@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -10,6 +11,12 @@ namespace CronusZenMessageScreenStudio
 {
     internal class Settings
     {
+        internal enum PenShapes
+        {
+            Square,
+            Ellipse
+        }
+
         #region Settings
 
         public int PenThickness
@@ -64,6 +71,7 @@ namespace CronusZenMessageScreenStudio
         public double PreviewHeight { get; set; }
         public double DevicePreviewWidth { get; set; }
         public double DevicePreviewHeight { get; set; }
+        public PenShapes PenShape { get; set; }
 
         internal static void LoadSettings(bool setDefaults = false)
         {
@@ -118,7 +126,8 @@ namespace CronusZenMessageScreenStudio
                                  {typeof(bool), BoolParser },
                                  {typeof(double), DoubleParser },
                                  {typeof(int), IntegerParser },
-                                 {typeof(string), StringParser }
+                                 {typeof(string), StringParser },
+                                 {typeof(PenShapes), PenShapesParser }
                              };
         }
 
@@ -152,8 +161,23 @@ namespace CronusZenMessageScreenStudio
             int.TryParse(arg, NumberStyles.Integer, null, out int toReturn);
             return toReturn;
         }
+
+        private static object PenShapesParser(string arg)
+        {
+            Enum.TryParse(arg, true, out PenShapes toReturn);
+            return toReturn;
+        }
         private static object StringParser(string arg) => arg;
 
         #endregion
+
+        public static List<SelectionData<PenShapes>> MakePenShapeSelectionList()
+        {
+            return new List<SelectionData<PenShapes>>
+            {
+                new SelectionData<PenShapes>("Square", PenShapes.Square),
+                new SelectionData<PenShapes>("Ellipse (Circle)", PenShapes.Ellipse),
+            };
+        }
     }
 }

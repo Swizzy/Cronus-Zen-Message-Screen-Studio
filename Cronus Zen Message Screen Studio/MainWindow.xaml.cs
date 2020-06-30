@@ -36,6 +36,9 @@ namespace CronusZenMessageScreenStudio
             HighlightFullColumnAndRowBox.IsChecked = Settings.CurrentSettings.HighlightFullColumnAndRow;
             Width = Math.Max(MinWidth, Settings.CurrentSettings.WindowWidth);
             Height = Math.Max(MinHeight, Settings.CurrentSettings.WindowHeight);
+            List<SelectionData<Settings.PenShapes>> penShapeList = Settings.MakePenShapeSelectionList();
+            PenShapeBox.ItemsSource = penShapeList;
+            PenShapeBox.SelectedItem = penShapeList.FirstOrDefault(o => o.Value == Settings.CurrentSettings.PenShape);
 
             // Setup the pixel controls and line/column numbers
             for (int x = 0; x < 129; x++)
@@ -94,15 +97,25 @@ namespace CronusZenMessageScreenStudio
             int y = control.Y;
             CursorPosition.Text = control.Highlighted ? $"X: {x} Y: {y}" : "";
             int thickness = Settings.CurrentSettings.PenThickness - 1;
-            bool square = EllipsePen.IsChecked != true;
+            Settings.PenShapes shape = Settings.CurrentSettings.PenShape;
             if (Settings.CurrentSettings.HighlightColumnAndRow || Settings.CurrentSettings.HighlightFullColumnAndRow || thickness > 0)
             {
 
                 foreach (PixelControl pixelControl in _pixelControls)
                 {
-                    bool isWithinDrawing = (square && pixelControl.IsWithinSquare(x, y, thickness))
-                                           ||
-                                           (square == false && pixelControl.IsWithinEllipse(x, y, thickness));
+                    bool isWithinDrawing;
+                    switch (shape)
+                    {
+                        case Settings.PenShapes.Square:
+                            isWithinDrawing = pixelControl.IsWithinSquare(x, y, thickness);
+                            break;
+                        case Settings.PenShapes.Ellipse:
+                            isWithinDrawing = pixelControl.IsWithinEllipse(x, y, thickness);
+                            break;
+                        default:
+                            isWithinDrawing = false;
+                            break;
+                    }
 
                     pixelControl.Highlighted = control.Highlighted
                                                &&
@@ -435,5 +448,10 @@ namespace CronusZenMessageScreenStudio
             }
         }
         private void Exit_Clicked(object sender, RoutedEventArgs e) => Close();
+
+        private void PenShapeBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Settings.CurrentSettings.PenShape = PenShapeBox.SelectedValue as Settings.PenShapes? ?? Settings.PenShapes.Square;
+        }
     }
 }
