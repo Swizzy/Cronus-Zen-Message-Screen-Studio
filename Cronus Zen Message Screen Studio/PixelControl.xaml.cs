@@ -156,7 +156,7 @@ namespace CronusZenMessageScreenStudio
             double xLimit = Math.Pow(X - inputX, 2) / radiusDivider;
             double yLimit = Math.Pow(Y - inputY, 2) / radiusDivider;
 
-            return xLimit + yLimit < 1.5;
+            return xLimit + yLimit <= 1.0;
         }
 
         public bool IsWithinCross(int inputX, int inputY, int size)
