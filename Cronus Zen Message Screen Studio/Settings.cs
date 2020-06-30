@@ -11,12 +11,6 @@ namespace CronusZenMessageScreenStudio
 {
     internal class Settings
     {
-        internal enum PenShapes
-        {
-            Square,
-            Ellipse
-        }
-
         #region Settings
 
         public int PenThickness
@@ -171,12 +165,20 @@ namespace CronusZenMessageScreenStudio
 
         #endregion
 
+        internal enum PenShapes
+        {
+            Square,
+            Ellipse,
+            Cross
+        }
+
         public static List<SelectionData<PenShapes>> MakePenShapeSelectionList()
         {
             return new List<SelectionData<PenShapes>>
             {
                 new SelectionData<PenShapes>("Square", PenShapes.Square),
                 new SelectionData<PenShapes>("Ellipse (Circle)", PenShapes.Ellipse),
+                new SelectionData<PenShapes>("Cross (+)", PenShapes.Cross),
             };
         }
     }

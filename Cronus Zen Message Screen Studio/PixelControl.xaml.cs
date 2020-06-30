@@ -158,5 +158,19 @@ namespace CronusZenMessageScreenStudio
 
             return xLimit + yLimit < 1.5;
         }
+
+        public bool IsWithinCross(int inputX, int inputY, int size)
+        {
+            int offset = size / 2;
+            if (inputY == Y)
+            {
+                return X <= inputX + offset && X >= inputX - offset;
+            }
+            if (inputX == X)
+            {
+                return Y <= inputY + offset && Y >= inputY - offset;
+            }
+            return false;
+        }
     }
 }

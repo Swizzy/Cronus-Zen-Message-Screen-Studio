@@ -112,6 +112,9 @@ namespace CronusZenMessageScreenStudio
                         case Settings.PenShapes.Ellipse:
                             isWithinDrawing = pixelControl.IsWithinEllipse(x, y, thickness);
                             break;
+                        case Settings.PenShapes.Cross:
+                            isWithinDrawing = pixelControl.IsWithinCross(x, y, thickness);
+                            break;
                         default:
                             isWithinDrawing = false;
                             break;
