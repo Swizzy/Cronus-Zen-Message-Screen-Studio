@@ -48,6 +48,7 @@
                 <Separator />
                 <MenuItem Click="Export_Click" Header="Export" />
                 <MenuItem Click="LoadImage_Click" Header="Load image" />
+                <MenuItem Click="ImportPackedData_Click" Header="Import packed data" />
                 <MenuItem Click="DrawText_Click" Header="Draw text" />
                 <Separator />
                 <MenuItem Click="Exit_Clicked" Header="Exit" />

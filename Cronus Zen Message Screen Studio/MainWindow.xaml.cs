@@ -159,6 +159,24 @@ namespace CronusZenMessageScreenStudio
             }
         }
 
+        private void ImportPackedData_Click(object sender, RoutedEventArgs e)
+        {
+            var importWindow = new ImportPackedWindow { Owner = this };
+            if (importWindow.ShowDialog() == true)
+            {
+                var pixels = importWindow.GetPixels();
+                for (int y = 0; y < 64; y++)
+                {
+                    for (var x = 0; x < 128; x++)
+                    {
+                        PixelControl pixel = _pixelControls.First(p => p.X == x && p.Y == y);
+                        pixel.Color = pixels[x, y];
+                    }
+                }
+                _saved = false;
+            }
+        }
+
         private void DrawText_Click(object sender, RoutedEventArgs e)
         {
             var drawTextWindow = new DrawTextWindow { Owner = this };

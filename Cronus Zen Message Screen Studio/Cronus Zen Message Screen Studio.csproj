@@ -94,6 +94,9 @@
     <Compile Include="DrawTextWindow.xaml.cs">
       <DependentUpon>DrawTextWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ImportPackedWindow.xaml.cs">
+      <DependentUpon>ImportPackedWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PreviewWindow.xaml.cs">
       <DependentUpon>PreviewWindow.xaml</DependentUpon>
     </Compile>
@@ -109,6 +112,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DevicePreviewWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ImportPackedWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
