@@ -21,14 +21,9 @@ namespace CronusZenMessageScreenStudio
                     return 1;
                 }
 
-                if (_penThickness >= 62)
+                if (_penThickness >= 63)
                 {
                     return 63;
-                }
-
-                if ((_penThickness - 1) % 2 > 0)
-                {
-                    return _penThickness + 1;
                 }
                 return _penThickness;
             }
