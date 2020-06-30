@@ -52,7 +52,7 @@ namespace CronusZenMessageScreenStudio
 
         private bool[,] TryParseInput(string inputText)
         {
-            if (inputText.Any(c => c == '{'))
+            if (inputText.Any(c => c == '{' || c == '}'))
             {
                 return ParsePacked(ExtractData(inputText));
             }
@@ -61,7 +61,9 @@ namespace CronusZenMessageScreenStudio
 
         private string ExtractData(string inputText)
         {
-            throw new NotImplementedException();
+            int dataStart = inputText.IndexOf('{');
+            int dataEnd = inputText.IndexOf('}');
+            return inputText.Substring(dataStart + 1, dataEnd - (dataStart + 1)).Trim();
         }
 
         private bool[,] ParsePacked(string inputText)
