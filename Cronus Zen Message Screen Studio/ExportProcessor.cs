@@ -27,7 +27,7 @@ namespace CronusZenMessageScreenStudio
             PackedStatic        = 1 << 10,
             PackedInvertSupport = 1 << 11,
             PackedExcalibur     = 1 << 12,
-            Packed = Packed8Bit | Packed16Bit,
+            Packed = Packed8Bit | Packed16Bit | PackedExcalibur,
         }
 
         private readonly List<PixelControl> _pixelControls;
