@@ -172,5 +172,25 @@ namespace CronusZenMessageScreenStudio
             }
             return false;
         }
+
+        public bool IsWithinHorizontalLine(int inputX, int inputY, int size)
+        {
+            int offset = size / 2;
+            if (inputY == Y)
+            {
+                return X <= inputX + offset && X >= inputX - offset;
+            }
+            return false;
+        }
+
+        public bool IsWithinVerticalLine(int inputX, int inputY, int size)
+        {
+            int offset = size / 2;
+            if (inputX == X)
+            {
+                return Y <= inputY + offset && Y >= inputY - offset;
+            }
+            return false;
+        }
     }
 }

@@ -169,7 +169,9 @@ namespace CronusZenMessageScreenStudio
         {
             Square,
             Ellipse,
-            Cross
+            Cross,
+            HorizontalLine,
+            VerticalLine
         }
 
         public static List<SelectionData<PenShapes>> MakePenShapeSelectionList()
@@ -179,6 +181,8 @@ namespace CronusZenMessageScreenStudio
                 new SelectionData<PenShapes>("Square", PenShapes.Square),
                 new SelectionData<PenShapes>("Ellipse (Circle)", PenShapes.Ellipse),
                 new SelectionData<PenShapes>("Cross (+)", PenShapes.Cross),
+                new SelectionData<PenShapes>("Horizontal Line (-)", PenShapes.HorizontalLine),
+                new SelectionData<PenShapes>("Vertical Line (|)", PenShapes.VerticalLine),
             };
         }
     }

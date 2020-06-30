@@ -115,6 +115,12 @@ namespace CronusZenMessageScreenStudio
                         case Settings.PenShapes.Cross:
                             isWithinDrawing = pixelControl.IsWithinCross(x, y, thickness);
                             break;
+                        case Settings.PenShapes.HorizontalLine:
+                            isWithinDrawing = pixelControl.IsWithinHorizontalLine(x, y, thickness);
+                            break;
+                        case Settings.PenShapes.VerticalLine:
+                            isWithinDrawing = pixelControl.IsWithinVerticalLine(x, y, thickness);
+                            break;
                         default:
                             isWithinDrawing = false;
                             break;
