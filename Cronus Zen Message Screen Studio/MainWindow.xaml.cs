@@ -94,14 +94,16 @@ namespace CronusZenMessageScreenStudio
             int y = control.Y;
             CursorPosition.Text = control.Highlighted ? $"X: {x} Y: {y}" : "";
             int thickness = Settings.CurrentSettings.PenThickness - 1;
+            bool square = EllipsePen.IsChecked != true;
             if (Settings.CurrentSettings.HighlightColumnAndRow || Settings.CurrentSettings.HighlightFullColumnAndRow || thickness > 0)
             {
-                int xMin = x - (thickness / 2);
-                int xMax = x + (thickness / 2);
-                int yMin = y - (thickness / 2);
-                int yMax = y + (thickness / 2);
+
                 foreach (PixelControl pixelControl in _pixelControls)
                 {
+                    bool isWithinDrawing = (square && pixelControl.IsWithinSquare(x, y, thickness))
+                                           ||
+                                           (square == false && pixelControl.IsWithinEllipse(x, y, thickness));
+
                     pixelControl.Highlighted = control.Highlighted
                                                &&
                                                (
@@ -121,17 +123,13 @@ namespace CronusZenMessageScreenStudio
                                                        pixelControl.X == x
                                                    )
                                                    ||
-                                                   (
-                                                       (pixelControl.Y >= yMin && pixelControl.Y <= yMax)
-                                                       &&
-                                                       (pixelControl.X >= xMin && pixelControl.X <= xMax)
-                                                    )
+                                                   isWithinDrawing
                                                );
-                    if (setWhite && ((pixelControl.X >= xMin && pixelControl.X <= xMax) && (pixelControl.Y >= yMin && pixelControl.Y <= yMax)))
+                    if (setWhite && isWithinDrawing)
                     {
                         pixelControl.Color = true;
                     }
-                    else if (setBlack && ((pixelControl.X >= xMin && pixelControl.X <= xMax) && (pixelControl.Y >= yMin && pixelControl.Y <= yMax)))
+                    else if (setBlack && isWithinDrawing)
                     {
                         pixelControl.Color = false;
                     }

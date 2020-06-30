@@ -143,5 +143,20 @@ namespace CronusZenMessageScreenStudio
             }
             return System.Drawing.Color.Black;
         }
+
+        internal bool IsWithinSquare(int inputX, int inputY, int thickness)
+        {
+            int offset = thickness / 2;
+            return Y >= inputY - offset && Y <= inputY + offset && X >= inputX - offset && X <= inputX + offset;
+        }
+
+        public bool IsWithinEllipse(int inputX, int inputY, int radius)
+        {
+            double radiusDivider = Math.Pow(radius, 2);
+            double xLimit = Math.Pow(X - inputX, 2) / radiusDivider;
+            double yLimit = Math.Pow(Y - inputY, 2) / radiusDivider;
+
+            return xLimit + yLimit < 1.5;
+        }
     }
 }

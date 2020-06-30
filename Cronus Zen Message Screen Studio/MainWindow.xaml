@@ -105,15 +105,16 @@
                     <TextBlock
                         Margin="10,0"
                         VerticalAlignment="Center"
-                        Text="Pen thickness:" />
+                        Text="Pen thickness/radius:" />
                     <controls:NumericUpDown
                         x:Name="PenThickness"
                         Width="80"
-                        Interval="2"
+                        Interval="1"
                         Maximum="63"
                         Minimum="1"
                         ValueChanged="PenThickness_OnValueChanged"
                         Value="1" />
+                    <CheckBox x:Name="EllipsePen" Content="Ellipse pen" />
                 </StackPanel>
             </StatusBarItem>
             <StatusBarItem Grid.Column="3">
