@@ -461,6 +461,7 @@ namespace CronusZenMessageScreenStudio
         private void PenShapeBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Settings.CurrentSettings.PenShape = PenShapeBox.SelectedValue as Settings.PenShapes? ?? Settings.PenShapes.Square;
+            HighlightRowAndColumn(_lastHighlight);
         }
     }
 }
