@@ -15,6 +15,45 @@
     ShowIconOnTitleBar="False"
     SizeChanged="MainWindow_OnSizeChanged"
     StateChanged="MainWindow_OnStateChanged">
+    <controls:MetroWindow.Flyouts>
+        <controls:FlyoutsControl>
+            <controls:Flyout
+                x:Name="PenFlyout"
+                Header="Pen Settings"
+                Position="Left">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,10"
+                        VerticalAlignment="Center"
+                        Text="Pen width" />
+                    <controls:NumericUpDown
+                        x:Name="PenWidth"
+                        Interval="1"
+                        Maximum="128"
+                        Minimum="1"
+                        ValueChanged="PenWidth_OnValueChanged"
+                        Value="1" />
+                    <TextBlock
+                        Margin="0,10"
+                        VerticalAlignment="Center"
+                        Text="Pen height" />
+                    <controls:NumericUpDown
+                        x:Name="PenHeight"
+                        Interval="1"
+                        Maximum="64"
+                        Minimum="1"
+                        ValueChanged="PenHeight_OnValueChanged"
+                        Value="1" />
+                    <TextBlock Margin="0,10" Text="Pen shape:" />
+                    <ComboBox
+                        x:Name="PenShapeBox"
+                        DisplayMemberPath="Name"
+                        SelectedValuePath="Value"
+                        SelectionChanged="PenShapeBox_OnSelectionChanged" />
+                </StackPanel>
+            </controls:Flyout>
+        </controls:FlyoutsControl>
+    </controls:MetroWindow.Flyouts>
     <Window.CommandBindings>
         <CommandBinding
             CanExecute="AlwaysExecutable_CanExecute"
@@ -94,45 +133,22 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <StatusBarItem Grid.Column="2">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        Margin="10,0"
-                        VerticalAlignment="Center"
-                        Text="Pen thickness/radius:" />
-                    <controls:NumericUpDown
-                        x:Name="PenThickness"
-                        Width="80"
-                        Interval="1"
-                        Maximum="63"
-                        Minimum="1"
-                        ValueChanged="PenThickness_OnValueChanged"
-                        Value="1" />
-                    <TextBlock
-                        Margin="10,0"
-                        VerticalAlignment="Center"
-                        Text="Pen shape:" />
-                    <ComboBox
-                        x:Name="PenShapeBox"
-                        DisplayMemberPath="Name"
-                        SelectedValuePath="Value"
-                        SelectionChanged="PenShapeBox_OnSelectionChanged" />
-                </StackPanel>
+            <StatusBarItem Grid.Column="0">
+                <Button Click="ShowPenSettings_Click" Content="Show pen options" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="3">
+            <StatusBarItem Grid.Column="1">
                 <Button
                     x:Name="ShowAllPixelsBtn"
                     Click="ShowAllPixels_Click"
                     Content="Show all pixels" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="4">
+            <StatusBarItem Grid.Column="3">
                 <TextBlock Name="CursorPosition" />
             </StatusBarItem>
         </StatusBar>

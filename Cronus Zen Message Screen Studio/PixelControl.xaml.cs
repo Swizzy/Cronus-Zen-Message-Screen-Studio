@@ -144,51 +144,35 @@ namespace CronusZenMessageScreenStudio
             return System.Drawing.Color.Black;
         }
 
-        internal bool IsWithinSquare(int inputX, int inputY, int thickness)
+        internal bool IsWithinSquare(int inputX, int inputY, int width, int height)
         {
-            int offset = thickness / 2;
-            return Y >= inputY - offset && Y <= inputY + offset && X >= inputX - offset && X <= inputX + offset;
+            width /= 2;
+            height /= 2;
+            return Y >= inputY - height && Y <= inputY + height && X >= inputX - width && X <= inputX + width;
         }
 
-        public bool IsWithinEllipse(int inputX, int inputY, int radius)
+        public bool IsWithinEllipse(int inputX, int inputY, int width, int height)
         {
-            double radiusDivider = Math.Pow(radius, 2);
-            double xLimit = Math.Pow(X - inputX, 2) / radiusDivider;
-            double yLimit = Math.Pow(Y - inputY, 2) / radiusDivider;
+            width = Math.Max(width / 2, 1);
+            height = Math.Max(height / 2, 1);
+
+            double xLimit = Math.Pow(X - inputX, 2) / Math.Pow(width, 2);
+            double yLimit = Math.Pow(Y - inputY, 2) / Math.Pow(height, 2);
 
             return xLimit + yLimit <= 1.0;
         }
 
-        public bool IsWithinCross(int inputX, int inputY, int size)
+        public bool IsWithinCross(int inputX, int inputY, int width, int height)
         {
-            int offset = size / 2;
             if (inputY == Y)
             {
-                return X <= inputX + offset && X >= inputX - offset;
+                width /= 2;
+                return X <= inputX + width && X >= inputX - width;
             }
             if (inputX == X)
             {
-                return Y <= inputY + offset && Y >= inputY - offset;
-            }
-            return false;
-        }
-
-        public bool IsWithinHorizontalLine(int inputX, int inputY, int size)
-        {
-            int offset = size / 2;
-            if (inputY == Y)
-            {
-                return X <= inputX + offset && X >= inputX - offset;
-            }
-            return false;
-        }
-
-        public bool IsWithinVerticalLine(int inputX, int inputY, int size)
-        {
-            int offset = size / 2;
-            if (inputX == X)
-            {
-                return Y <= inputY + offset && Y >= inputY - offset;
+                height /= 2;
+                return Y <= inputY + height && Y >= inputY - height;
             }
             return false;
         }

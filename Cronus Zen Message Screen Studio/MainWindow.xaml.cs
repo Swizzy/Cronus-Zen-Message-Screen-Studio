@@ -31,7 +31,8 @@ namespace CronusZenMessageScreenStudio
 
             // Setup settings in the view
             Settings.LoadSettings();
-            PenThickness.Value = Settings.CurrentSettings.PenThickness;
+            PenWidth.Value = Settings.CurrentSettings.PenWidth;
+            PenHeight.Value = Settings.CurrentSettings.PenHeight;
             HighlightColumnAndRowBox.IsChecked = Settings.CurrentSettings.HighlightColumnAndRow;
             HighlightFullColumnAndRowBox.IsChecked = Settings.CurrentSettings.HighlightFullColumnAndRow;
             Width = Math.Max(MinWidth, Settings.CurrentSettings.WindowWidth);
@@ -96,9 +97,8 @@ namespace CronusZenMessageScreenStudio
             int x = control.X;
             int y = control.Y;
             CursorPosition.Text = control.Highlighted ? $"X: {x} Y: {y}" : "";
-            int thickness = Settings.CurrentSettings.PenThickness - 1;
             Settings.PenShapes shape = Settings.CurrentSettings.PenShape;
-            if (Settings.CurrentSettings.HighlightColumnAndRow || Settings.CurrentSettings.HighlightFullColumnAndRow || thickness > 0)
+            if (Settings.CurrentSettings.HighlightColumnAndRow || Settings.CurrentSettings.HighlightFullColumnAndRow || Settings.CurrentSettings.PenWidth > 1 || Settings.CurrentSettings.PenHeight > 1)
             {
 
                 foreach (PixelControl pixelControl in _pixelControls)
@@ -107,19 +107,13 @@ namespace CronusZenMessageScreenStudio
                     switch (shape)
                     {
                         case Settings.PenShapes.Square:
-                            isWithinDrawing = pixelControl.IsWithinSquare(x, y, thickness);
+                            isWithinDrawing = pixelControl.IsWithinSquare(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
                             break;
                         case Settings.PenShapes.Ellipse:
-                            isWithinDrawing = pixelControl.IsWithinEllipse(x, y, thickness);
+                            isWithinDrawing = pixelControl.IsWithinEllipse(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
                             break;
                         case Settings.PenShapes.Cross:
-                            isWithinDrawing = pixelControl.IsWithinCross(x, y, thickness);
-                            break;
-                        case Settings.PenShapes.HorizontalLine:
-                            isWithinDrawing = pixelControl.IsWithinHorizontalLine(x, y, thickness);
-                            break;
-                        case Settings.PenShapes.VerticalLine:
-                            isWithinDrawing = pixelControl.IsWithinVerticalLine(x, y, thickness);
+                            isWithinDrawing = pixelControl.IsWithinCross(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
                             break;
                         default:
                             isWithinDrawing = false;
@@ -275,9 +269,15 @@ namespace CronusZenMessageScreenStudio
             _windowLoaded = true;
         }
 
-        private void PenThickness_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        private void PenWidth_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            Settings.CurrentSettings.PenThickness = (int)(e.NewValue ?? 1);
+            Settings.CurrentSettings.PenWidth = (int)(e.NewValue ?? 1);
+            HighlightRowAndColumn(_lastHighlight);
+        }
+
+        private void PenHeight_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            Settings.CurrentSettings.PenHeight = (int)(e.NewValue ?? 1);
             HighlightRowAndColumn(_lastHighlight);
         }
 
@@ -462,6 +462,11 @@ namespace CronusZenMessageScreenStudio
         {
             Settings.CurrentSettings.PenShape = PenShapeBox.SelectedValue as Settings.PenShapes? ?? Settings.PenShapes.Square;
             HighlightRowAndColumn(_lastHighlight);
+        }
+
+        private void ShowPenSettings_Click(object sender, RoutedEventArgs e)
+        {
+            PenFlyout.IsOpen = true;
         }
     }
 }

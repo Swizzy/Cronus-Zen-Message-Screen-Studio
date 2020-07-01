@@ -13,22 +13,40 @@ namespace CronusZenMessageScreenStudio
     {
         #region Settings
 
-        public int PenThickness
+        public int PenWidth
         {
             get
             {
-                if (_penThickness <= 1)
+                if (_penWidth <= 1)
                 {
                     return 1;
                 }
 
-                if (_penThickness >= 63)
+                if (_penWidth >= 128)
                 {
-                    return 63;
+                    return 128;
                 }
-                return _penThickness;
+                return _penWidth;
             }
-            set => _penThickness = value;
+            set => _penWidth = value;
+        }
+
+        public int PenHeight
+        {
+            get
+            {
+                if (_penHeight <= 1)
+                {
+                    return 1;
+                }
+
+                if (_penHeight >= 64)
+                {
+                    return 64;
+                }
+                return _penHeight;
+            }
+            set => _penHeight = value;
         }
 
         public bool HighlightColumnAndRow { get; set; }
@@ -127,7 +145,8 @@ namespace CronusZenMessageScreenStudio
 
         private static readonly object Locker = new object();
         private static Settings _currentSettings;
-        private int _penThickness;
+        private int _penWidth;
+        private int _penHeight;
 
         private static void ParseSetting(XElement xml)
         {
@@ -169,9 +188,7 @@ namespace CronusZenMessageScreenStudio
         {
             Square,
             Ellipse,
-            Cross,
-            HorizontalLine,
-            VerticalLine
+            Cross
         }
 
         public static List<SelectionData<PenShapes>> MakePenShapeSelectionList()
@@ -181,8 +198,6 @@ namespace CronusZenMessageScreenStudio
                 new SelectionData<PenShapes>("Square", PenShapes.Square),
                 new SelectionData<PenShapes>("Ellipse (Circle)", PenShapes.Ellipse),
                 new SelectionData<PenShapes>("Cross (+)", PenShapes.Cross),
-                new SelectionData<PenShapes>("Horizontal Line (-)", PenShapes.HorizontalLine),
-                new SelectionData<PenShapes>("Vertical Line (|)", PenShapes.VerticalLine),
             };
         }
     }
