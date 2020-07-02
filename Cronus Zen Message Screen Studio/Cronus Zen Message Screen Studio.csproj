@@ -103,6 +103,7 @@
     <Compile Include="SelectionData.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ZenMessageStudioProject.cs" />
+    <Compile Include="ZenStudioCommands.cs" />
     <Page Include="DrawTextWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

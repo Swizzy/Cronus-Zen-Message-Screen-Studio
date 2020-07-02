@@ -67,6 +67,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <CheckBox
                     x:Name="IncludeClearScreen"
@@ -76,6 +77,10 @@
                     Grid.Row="1"
                     Click="Individual_Click"
                     Content="Export individual pixels" />
+                <Button
+                    Grid.Row="2"
+                    Click="IndividualZenStudio_Click"
+                    Content="Export individual pixels to Zen Studio" />
             </Grid>
         </GroupBox>
         <GroupBox
@@ -128,15 +133,25 @@
                 <Button
                     Grid.Row="3"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="2"
                     Click="Packed16_Click"
                     Content="Export 16-bit Packed" />
                 <Button
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Click="Packed16ZenStudio_Click"
+                    Content="Export 16-bit Packed to Zen Studio" />
+                <Button
                     Grid.Row="4"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="2"
                     Click="Packed8_Click"
                     Content="Export 8-bit Packed" />
+                <Button
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Click="Packed8ZenStudio_Click"
+                    Content="Export 16-bit Packed to Zen Studio" />
                 <Button
                     Grid.Row="5"
                     Grid.Column="0"

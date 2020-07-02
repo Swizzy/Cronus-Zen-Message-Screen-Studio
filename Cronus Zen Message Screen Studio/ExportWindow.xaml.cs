@@ -23,14 +23,28 @@ namespace CronusZenMessageScreenStudio
             {
                 settings |= ExportProcessor.ExportSettings.IncludeClear;
             }
-            PerformExport(settings);
+            PerformExport(settings, false);
+        }
+
+        private void IndividualZenStudio_Click(object sender, RoutedEventArgs e)
+        {
+            ExportProcessor.ExportSettings settings = ExportProcessor.ExportSettings.IndividualPixels;
+            if (IncludeClearScreen.IsChecked == true)
+            {
+                settings |= ExportProcessor.ExportSettings.IncludeClear;
+            }
+            PerformExport(settings, true);
         }
 
         private void Packed16_Click(object sender, RoutedEventArgs e) => PerformPackedExport(true);
 
+        private void Packed16ZenStudio_Click(object sender, RoutedEventArgs e) => PerformPackedExport(true, true);
+
         private void Packed8_Click(object sender, RoutedEventArgs e) => PerformPackedExport(false);
 
-        private void PerformPackedExport(bool use16Bit)
+        private void Packed8ZenStudio_Click(object sender, RoutedEventArgs e) => PerformPackedExport(false, true);
+
+        private void PerformPackedExport(bool use16Bit, bool sendToZenStudio = false)
         {
             ExportProcessor.ExportSettings settings = ExportProcessor.ExportSettings.Packed1DArray;
             if (use16Bit)
@@ -57,10 +71,10 @@ namespace CronusZenMessageScreenStudio
 
             }
 
-            PerformExport(settings);
+            PerformExport(settings, sendToZenStudio);
         }
 
-        private void PerformExport(ExportProcessor.ExportSettings settings)
+        private void PerformExport(ExportProcessor.ExportSettings settings, bool sendToZenStudio)
         {
             if (SampleScriptBox.IsChecked == true)
             {
@@ -79,7 +93,14 @@ namespace CronusZenMessageScreenStudio
             string identifier = Identifier.Text.Trim();
             identifier = Regex.Replace(identifier, "[^a-zA-Z0-9_]", "_");
             string data = _exportProcessor.GenerateExportData(settings, identifier);
-            _exportProcessor.Savefile(data);
+            if (sendToZenStudio == false)
+            {
+                _exportProcessor.Savefile(data);
+            }
+            else
+            {
+                ZenStudioCommands.SendOpenCompilerTab(data);
+            }
         }
 
         private void ImgButton_Click(object sender, RoutedEventArgs e) { _exportProcessor.GenerateAndSaveImage(); }
