@@ -254,5 +254,111 @@ namespace CronusZenMessageScreenStudio
             int y3 = inputY + height / 2;
             return InsideTriangle(x1, y1, x2, y2, x3, y3, X, Y);
         }
+
+        public bool IsOnLineLTR(int inputX, int inputY, int width, int height)
+        {
+            if (width > height)
+            {
+                var x0 = inputX;
+                var y0 = inputY;
+                var x1 = inputX + width;
+                var y1 = inputY + height;
+                var dx = x1 - x0;
+                var dy = y1 - y0;
+                var D = 2 * dy - dx;
+                var y = y0;
+                for (var x = x0; x < x1; x++)
+                {
+                    if (X == x && Y == y)
+                    {
+                        return true;
+                    }
+                    if (D > 0)
+                    {
+                        y = y + 1;
+                        D = D - 2 * dx;
+                    }
+                    D = D + 2 * dy;
+                }
+            }
+            else
+            {
+                var y0 = inputX;
+                var x0 = inputY;
+                var y1 = inputX + width;
+                var x1 = inputY + height;
+                var dx = x1 - x0;
+                var dy = y1 - y0;
+                var D = 2 * dy - dx;
+                var y = y0;
+                for (var x = x0; x < x1; x++)
+                {
+                    if (X == y && Y == x)
+                    {
+                        return true;
+                    }
+                    if (D > 0)
+                    {
+                        y = y + 1;
+                        D = D - 2 * dx;
+                    }
+                    D = D + 2 * dy;
+                }
+            }
+            return false;
+        }
+
+        public bool IsOnLineRTL(int inputX, int inputY, int width, int height)
+        {
+            //if (width > height)
+            {
+                var x0 = inputX;
+                var y0 = inputY;
+                var x1 = inputX - width;
+                var y1 = inputY + height;
+                var dx = x0 - x1;
+                var dy = y1 - y0;
+                var D = 2 * dy - dx;
+                var y = y0;
+                for (var x = x1; x < x0; x++)
+                {
+                    if (X == x && Y == y)
+                    {
+                        return true;
+                    }
+                    if (D > 0)
+                    {
+                        y = y + 1;
+                        D = D - 2 * dx;
+                    }
+                    D = D + 2 * dy;
+                }
+            }
+            //else
+            //{
+            //    var y0 = inputX;
+            //    var x0 = inputY;
+            //    var y1 = inputX + width;
+            //    var x1 = inputY + height;
+            //    var dx = x1 - x0;
+            //    var dy = y1 - y0;
+            //    var D = 2 * dy - dx;
+            //    var y = y0;
+            //    for (var x = x0; x < x1; x++)
+            //    {
+            //        if (X == y && Y == x)
+            //        {
+            //            return true;
+            //        }
+            //        if (D > 0)
+            //        {
+            //            y = y + 1;
+            //            D = D - 2 * dx;
+            //        }
+            //        D = D + 2 * dy;
+            //    }
+            //}
+            return false;
+        }
     }
 }

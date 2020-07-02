@@ -193,7 +193,10 @@ namespace CronusZenMessageScreenStudio
             TriangleDown,
             TriangleLeft,
             TriangleRight,
-            Diamond
+            Diamond,
+            LineLTR,
+            LineRTL
+
         }
 
         public static List<SelectionData<PenShapes>> MakePenShapeSelectionList()
@@ -208,6 +211,8 @@ namespace CronusZenMessageScreenStudio
                 new SelectionData<PenShapes>("Triangle Left (<)", PenShapes.TriangleLeft),
                 new SelectionData<PenShapes>("Triangle Right (>)", PenShapes.TriangleRight),
                 new SelectionData<PenShapes>("Diamond (♦)", PenShapes.Diamond),
+                new SelectionData<PenShapes>("Diagonal line (\\)", PenShapes.LineLTR),
+                new SelectionData<PenShapes>("Diagonal line (/)", PenShapes.LineRTL),
             };
         }
     }

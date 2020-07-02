@@ -131,6 +131,12 @@ namespace CronusZenMessageScreenStudio
                             isWithinDrawing  = pixelControl.IsWithinTriangleUp(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
                             isWithinDrawing |= pixelControl.IsWithinTriangleDown(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
                             break;
+                        case Settings.PenShapes.LineLTR:
+                            isWithinDrawing = pixelControl.IsOnLineLTR(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
+                            break;
+                        case Settings.PenShapes.LineRTL:
+                            isWithinDrawing = pixelControl.IsOnLineRTL(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
+                            break;
                         default:
                             isWithinDrawing = false;
                             break;
