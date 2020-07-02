@@ -176,5 +176,83 @@ namespace CronusZenMessageScreenStudio
             }
             return false;
         }
+
+        private double TriangleArea(int x1, int y1, int x2, int y2, int x3, int y3) => Math.Abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0);
+
+        private bool InsideTriangle(int x1, int y1, int x2,
+            int y2, int x3, int y3,
+            int x, int y)
+        {
+            /* Calculate area of triangle ABC */
+            double a = TriangleArea(x1, y1, x2, y2, x3, y3);
+
+            /* Calculate area of triangle PBC */
+            double a1 = TriangleArea(x, y, x2, y2, x3, y3);
+
+            /* Calculate area of triangle PAC */
+            double a2 = TriangleArea(x1, y1, x, y, x3, y3);
+
+            /* Calculate area of triangle PAB */
+            double a3 = TriangleArea(x1, y1, x2, y2, x, y);
+
+            /* Check if sum of A1, A2 and A3 is same as A */
+            return (a == a1 + a2 + a3);
+        }
+
+        public bool IsWithinTriangleUp(int inputX, int inputY, int width, int height)
+        {
+            // Right Corner
+            int x1 = inputX + width / 2;
+            int y1 = inputY;
+            // Left corner
+            int x2 = inputX - width / 2;
+            int y2 = inputY;
+            // Top corner
+            int x3 = inputX;
+            int y3 = inputY - height;
+            return InsideTriangle(x1, y1, x2, y2, x3, y3, X, Y);
+        }
+
+        public bool IsWithinTriangleDown(int inputX, int inputY, int width, int height)
+        {
+            // Right Corner
+            int x1 = inputX + width / 2;
+            int y1 = inputY;
+            // Left corner
+            int x2 = inputX - width / 2;
+            int y2 = inputY;
+            // Bottom corner
+            int x3 = inputX;
+            int y3 = inputY + height;
+            return InsideTriangle(x1, y1, x2, y2, x3, y3, X, Y);
+        }
+
+        public bool IsWithinTriangleLeft(int inputX, int inputY, int width, int height)
+        {
+            // Top corner
+            int x1 = inputX;
+            int y1 = inputY - height / 2;
+            // Left corner
+            int x2 = inputX - width;
+            int y2 = inputY;
+            // Bottom corner
+            int x3 = inputX;
+            int y3 = inputY + height / 2;
+            return InsideTriangle(x1, y1, x2, y2, x3, y3, X, Y);
+        }
+
+        public bool IsWithinTriangleRight(int inputX, int inputY, int width, int height)
+        {
+            // Top corner
+            int x1 = inputX;
+            int y1 = inputY - height / 2;
+            // Left corner
+            int x2 = inputX + width;
+            int y2 = inputY;
+            // Bottom corner
+            int x3 = inputX;
+            int y3 = inputY + height / 2;
+            return InsideTriangle(x1, y1, x2, y2, x3, y3, X, Y);
+        }
     }
 }

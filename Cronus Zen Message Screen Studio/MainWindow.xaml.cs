@@ -103,7 +103,7 @@ namespace CronusZenMessageScreenStudio
 
                 foreach (PixelControl pixelControl in _pixelControls)
                 {
-                    bool isWithinDrawing;
+                    bool isWithinDrawing = false;
                     switch (shape)
                     {
                         case Settings.PenShapes.Square:
@@ -114,6 +114,22 @@ namespace CronusZenMessageScreenStudio
                             break;
                         case Settings.PenShapes.Cross:
                             isWithinDrawing = pixelControl.IsWithinCross(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
+                            break;
+                        case Settings.PenShapes.TriangleUp:
+                            isWithinDrawing = pixelControl.IsWithinTriangleUp(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
+                            break;
+                        case Settings.PenShapes.TriangleDown:
+                            isWithinDrawing = pixelControl.IsWithinTriangleDown(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
+                            break;
+                        case Settings.PenShapes.TriangleLeft:
+                            isWithinDrawing = pixelControl.IsWithinTriangleLeft(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
+                            break;
+                        case Settings.PenShapes.TriangleRight:
+                            isWithinDrawing = pixelControl.IsWithinTriangleRight(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
+                            break;
+                        case Settings.PenShapes.Diamond:
+                            isWithinDrawing  = pixelControl.IsWithinTriangleUp(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
+                            isWithinDrawing |= pixelControl.IsWithinTriangleDown(x, y, Settings.CurrentSettings.PenWidth, Settings.CurrentSettings.PenHeight);
                             break;
                         default:
                             isWithinDrawing = false;

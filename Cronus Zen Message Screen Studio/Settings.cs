@@ -188,7 +188,12 @@ namespace CronusZenMessageScreenStudio
         {
             Square,
             Ellipse,
-            Cross
+            Cross,
+            TriangleUp,
+            TriangleDown,
+            TriangleLeft,
+            TriangleRight,
+            Diamond
         }
 
         public static List<SelectionData<PenShapes>> MakePenShapeSelectionList()
@@ -198,6 +203,11 @@ namespace CronusZenMessageScreenStudio
                 new SelectionData<PenShapes>("Square", PenShapes.Square),
                 new SelectionData<PenShapes>("Ellipse (Circle)", PenShapes.Ellipse),
                 new SelectionData<PenShapes>("Cross (+)", PenShapes.Cross),
+                new SelectionData<PenShapes>("Triangle Up (^)", PenShapes.TriangleUp),
+                new SelectionData<PenShapes>("Triangle Down (v)", PenShapes.TriangleDown),
+                new SelectionData<PenShapes>("Triangle Left (<)", PenShapes.TriangleLeft),
+                new SelectionData<PenShapes>("Triangle Right (>)", PenShapes.TriangleRight),
+                new SelectionData<PenShapes>("Diamond (♦)", PenShapes.Diamond),
             };
         }
     }
