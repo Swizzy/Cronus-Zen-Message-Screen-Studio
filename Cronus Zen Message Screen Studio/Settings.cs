@@ -211,7 +211,7 @@ namespace CronusZenMessageScreenStudio
                 new SelectionData<PenShapes>("Triangle Right (>)", PenShapes.TriangleRight),
                 new SelectionData<PenShapes>("Diamond (♦)", PenShapes.Diamond),
                 new SelectionData<PenShapes>("Diagonal line (\\)", PenShapes.LineLTR),
-                new SelectionData<PenShapes>("Diagonal line (/)", PenShapes.LineRTL),
+                //new SelectionData<PenShapes>("Diagonal line (/)", PenShapes.LineRTL)
             };
         }
     }
