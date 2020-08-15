@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace CronusZenMessageScreenStudio
 {
@@ -36,7 +37,7 @@ namespace CronusZenMessageScreenStudio
             COPYDATASTRUCT cds;
             cds.dwData = messageType;
             cds.lpData = Marshal.StringToHGlobalAnsi(message);
-            cds.cbData = message.Length;
+            cds.cbData = Encoding.Default.GetByteCount(message) + 1;
             foreach (Process zenProc in Process.GetProcessesByName("ZenStudio"))
             {
                 SendMessage(zenProc.MainWindowHandle, WM_COPYDATA, 0, ref cds);
