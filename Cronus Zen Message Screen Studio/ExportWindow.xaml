@@ -100,6 +100,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
@@ -151,9 +152,20 @@
                     Grid.Row="4"
                     Grid.Column="2"
                     Click="Packed8ZenStudio_Click"
-                    Content="Export 16-bit Packed to Zen Studio" />
+                    Content="Export 8-bit Packed to Zen Studio" />
                 <Button
                     Grid.Row="5"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Click="PackedImage_Click"
+                    Content="Export Image Packed" />
+                <Button
+                    Grid.Row="5"
+                    Grid.Column="2"
+                    Click="PackedImageZenStudio_Click"
+                    Content="Export Image Packed to Zen Studio" />
+                <Button
+                    Grid.Row="6"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
                     Click="PackedExcalibur_Click"

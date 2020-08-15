@@ -44,6 +44,10 @@ namespace CronusZenMessageScreenStudio
 
         private void Packed8ZenStudio_Click(object sender, RoutedEventArgs e) => PerformPackedExport(false, true);
 
+        private void PackedImage_Click(object sender, RoutedEventArgs e) => PerformExport(ExportProcessor.ExportSettings.Packed1DArray | ExportProcessor.ExportSettings.PackedImage, false);
+
+        private void PackedImageZenStudio_Click(object sender, RoutedEventArgs e) => PerformExport(ExportProcessor.ExportSettings.Packed1DArray | ExportProcessor.ExportSettings.PackedImage, true);
+
         private void PerformPackedExport(bool use16Bit, bool sendToZenStudio = false)
         {
             ExportProcessor.ExportSettings settings = ExportProcessor.ExportSettings.Packed1DArray;

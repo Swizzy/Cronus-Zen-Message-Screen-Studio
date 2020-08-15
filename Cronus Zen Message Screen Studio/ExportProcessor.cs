@@ -27,7 +27,8 @@ namespace CronusZenMessageScreenStudio
             PackedStatic        = 1 << 10,
             PackedInvertSupport = 1 << 11,
             PackedExcalibur     = 1 << 12,
-            Packed = Packed8Bit | Packed16Bit | PackedExcalibur,
+            PackedImage         = 1 << 13,
+            Packed = Packed8Bit | Packed16Bit | PackedExcalibur | PackedImage,
         }
 
         private readonly List<PixelControl> _pixelControls;
@@ -68,20 +69,33 @@ namespace CronusZenMessageScreenStudio
                 toReturn.AppendLine("\tif (get_val(XB1_A)) {");
                 if ((settings & ExportSettings.Packed) != 0)
                 {
-                    if ((settings & ExportSettings.PackedStatic) == ExportSettings.PackedStatic)
+                    if ((settings & ExportSettings.PackedImage) == ExportSettings.PackedImage)
                     {
-                        toReturn.AppendLine($"\t\tdraw_{identifier}({((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport ? "0" : "")});");
+                        toReturn.AppendLine($"\t\timage_oled(0, 0, TRUE, TRUE, {identifier}[0]);");
+                        if ((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport)
+                        {
+                            toReturn.AppendLine("\t}");
+                            toReturn.AppendLine("\telse if (get_val(XB1_B)) {");
+                            toReturn.AppendLine($"\t\timage_oled(0, 0, FALSE, TRUE, {identifier}[0]);");
+                        }
                     }
                     else
                     {
-                        toReturn.AppendLine($"\t\tdraw_{identifier}(0, 0{((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport ? ", 0" : "")});");
-                    }
+                        if ((settings & ExportSettings.PackedStatic) == ExportSettings.PackedStatic)
+                        {
+                            toReturn.AppendLine($"\t\tdraw_{identifier}({((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport ? "0" : "")});");
+                        }
+                        else
+                        {
+                            toReturn.AppendLine($"\t\tdraw_{identifier}(0, 0{((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport ? ", 0" : "")});");
+                        }
 
-                    if ((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport)
-                    {
-                        toReturn.AppendLine("\t}");
-                        toReturn.AppendLine("\telse if (get_val(XB1_B)) {");
-                        toReturn.AppendLine($"\t\tdraw_{identifier}({((settings & ExportSettings.PackedStatic) == ExportSettings.PackedStatic ? "" : "0, 0, ")}1);");
+                        if ((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport)
+                        {
+                            toReturn.AppendLine("\t}");
+                            toReturn.AppendLine("\telse if (get_val(XB1_B)) {");
+                            toReturn.AppendLine($"\t\tdraw_{identifier}({((settings & ExportSettings.PackedStatic) == ExportSettings.PackedStatic ? "" : "0, 0, ")}1);");
+                        }
                     }
                 }
             }
@@ -233,12 +247,12 @@ namespace CronusZenMessageScreenStudio
                 int dwidth = 0, dheight = 0;
                 var dataType = "";
                 var dataString = "";
-                if ((settings & ExportSettings.Packed8Bit) == ExportSettings.Packed8Bit)
+                if ((settings & ExportSettings.Packed8Bit) == ExportSettings.Packed8Bit || (settings & ExportSettings.PackedImage) == ExportSettings.PackedImage)
                 {
                     (int width, int height, byte[] data) = Pack8(isFixed, whitePixels);
                     dwidth = width;
                     dheight = height;
-                    dataType = "byte";
+                    dataType = (settings & ExportSettings.PackedImage) == ExportSettings.PackedImage ? "image" : "byte";
                     dataString = string.Join(",", data.Select(d => $" 0x{d:X02}")).Trim();
                 }
                 else if ((settings & ExportSettings.Packed16Bit) == ExportSettings.Packed16Bit)
