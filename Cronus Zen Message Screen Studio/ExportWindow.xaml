@@ -32,6 +32,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <CheckBox
                     x:Name="SampleScriptBox"
@@ -57,6 +59,32 @@
                     Margin="10,0,10,0"
                     Content="Use black pixels"
                     GroupName="PixelSelection" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Margin="0,0,10,0"
+                    Text="Minimum Width:" />
+                <mah:NumericUpDown
+                    x:Name="MinimumWidthNumericUpDown"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Maximum="128"
+                    Minimum="1"
+                    Value="1" />
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Margin="0,0,10,0"
+                    Text="Minimum Height:" />
+                <mah:NumericUpDown
+                    x:Name="MinimumHeightNumericUpDown"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Maximum="64"
+                    Minimum="1"
+                    Value="1" />
             </Grid>
         </GroupBox>
         <GroupBox

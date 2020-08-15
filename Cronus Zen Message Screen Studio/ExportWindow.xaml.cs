@@ -96,7 +96,7 @@ namespace CronusZenMessageScreenStudio
 
             string identifier = Identifier.Text.Trim();
             identifier = Regex.Replace(identifier, "[^a-zA-Z0-9_]", "_");
-            string data = _exportProcessor.GenerateExportData(settings, identifier);
+            string data = _exportProcessor.GenerateExportData(settings, identifier, (int)(MinimumWidthNumericUpDown.Value ?? 1), (int)(MinimumHeightNumericUpDown.Value ?? 1));
             if (sendToZenStudio == false)
             {
                 _exportProcessor.Savefile(data);
@@ -107,7 +107,7 @@ namespace CronusZenMessageScreenStudio
             }
         }
 
-        private void ImgButton_Click(object sender, RoutedEventArgs e) { _exportProcessor.GenerateAndSaveImage(); }
+        private void ImgButton_Click(object sender, RoutedEventArgs e) { _exportProcessor.GenerateAndSaveImage((int)(MinimumWidthNumericUpDown.Value ?? 1), (int)(MinimumHeightNumericUpDown.Value ?? 1)); }
 
         private void PackedExcalibur_Click(object sender, RoutedEventArgs e)
         {

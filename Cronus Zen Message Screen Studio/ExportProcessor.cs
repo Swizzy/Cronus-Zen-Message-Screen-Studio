@@ -46,7 +46,7 @@ namespace CronusZenMessageScreenStudio
             }
         }
 
-        public string GenerateExportData(ExportSettings settings, string identifier)
+        public string GenerateExportData(ExportSettings settings, string identifier, int minimumWidth = 0, int minimumHeight = 0)
         {
             StringBuilder toReturn = new StringBuilder();
             bool whitePixels = (settings & ExportSettings.ForceWhite) == ExportSettings.ForceWhite;
@@ -60,7 +60,7 @@ namespace CronusZenMessageScreenStudio
 
             if ((settings & ExportSettings.Packed) != 0)
             {
-                toReturn.AppendLine(GeneratePacked(settings, identifier, whitePixels));
+                toReturn.AppendLine(GeneratePacked(settings, identifier, whitePixels, minimumWidth, minimumHeight));
             }
 
             if ((settings & ExportSettings.SampleScript) == ExportSettings.SampleScript)
@@ -223,13 +223,13 @@ namespace CronusZenMessageScreenStudio
             }
         }
 
-        private string GeneratePacked(ExportSettings settings, string identifier, bool whitePixels)
+        private string GeneratePacked(ExportSettings settings, string identifier, bool whitePixels, int minimumWidth, int minimumHeight)
         {
             var toReturn = new StringBuilder();
             bool isFixed = (settings & ExportSettings.FixedWidth) == ExportSettings.FixedWidth;
             if ((settings & ExportSettings.PackedExcalibur) == ExportSettings.PackedExcalibur)
             {
-                (int width, int height, ushort[] data) = Pack16(isFixed, whitePixels);
+                (int width, int height, ushort[] data) = Pack16(isFixed, whitePixels, minimumWidth, minimumHeight);
                 toReturn.AppendLine($"{width}, {height},");
                 int count = 0;
                 foreach (List<ushort> group in Partition(data, 32))
@@ -249,7 +249,7 @@ namespace CronusZenMessageScreenStudio
                 var dataString = "";
                 if ((settings & ExportSettings.Packed8Bit) == ExportSettings.Packed8Bit || (settings & ExportSettings.PackedImage) == ExportSettings.PackedImage)
                 {
-                    (int width, int height, byte[] data) = Pack8(isFixed, whitePixels);
+                    (int width, int height, byte[] data) = Pack8(isFixed, whitePixels, minimumWidth, minimumHeight);
                     dwidth = width;
                     dheight = height;
                     dataType = (settings & ExportSettings.PackedImage) == ExportSettings.PackedImage ? "image" : "byte";
@@ -257,7 +257,7 @@ namespace CronusZenMessageScreenStudio
                 }
                 else if ((settings & ExportSettings.Packed16Bit) == ExportSettings.Packed16Bit)
                 {
-                    (int width, int height, ushort[] data) = Pack16(isFixed, whitePixels);
+                    (int width, int height, ushort[] data) = Pack16(isFixed, whitePixels, minimumWidth, minimumHeight);
                     dwidth = width;
                     dheight = height;
                     dataType = "int";
@@ -278,7 +278,7 @@ namespace CronusZenMessageScreenStudio
             }
         }
 
-        private (int width, int height, bool[,] matrix) GetPixelMatrix(bool allPixels, bool whitePixels)
+        private (int width, int height, bool[,] matrix) GetPixelMatrix(bool allPixels, bool whitePixels, int minimumWidth, int minimumHeight)
         {
             int width;
             int height;
@@ -295,6 +295,9 @@ namespace CronusZenMessageScreenStudio
                 width = pixels.Max(p => p.X) + 1;
                 height = pixels.Max(p => p.Y) + 1;
             }
+
+            width = Math.Max(width, minimumWidth);
+            height = Math.Max(height, minimumHeight);
             bool[,] matrix = new bool[width, height];
             for (int y = 0; y < height; y++)
             {
@@ -336,9 +339,9 @@ namespace CronusZenMessageScreenStudio
             return (width, height, matrix);
         }
 
-        private (int width, int height, byte[] data) Pack8(bool allPixels, bool whitePixels)
+        private (int width, int height, byte[] data) Pack8(bool allPixels, bool whitePixels, int minimumWidth, int minimumHeight)
         {
-            (int width, int height, bool[,] matrix) = GetPixelMatrix(allPixels, whitePixels);
+            (int width, int height, bool[,] matrix) = GetPixelMatrix(allPixels, whitePixels, minimumWidth, minimumHeight);
             List<byte> data = new List<byte>();
             int currentValue = 0;
             int bit = 0;
@@ -368,9 +371,9 @@ namespace CronusZenMessageScreenStudio
             return (width, height, data.ToArray());
         }
 
-        private (int width, int height, ushort[] data) Pack16(bool allPixels, bool whitePixels)
+        private (int width, int height, ushort[] data) Pack16(bool allPixels, bool whitePixels, int minimumWidth, int minimumHeight)
         {
-            (int width, int height, bool[,] matrix) = GetPixelMatrix(allPixels, whitePixels);
+            (int width, int height, bool[,] matrix) = GetPixelMatrix(allPixels, whitePixels, minimumWidth, minimumHeight);
             List<ushort> data = new List<ushort>();
             int currentValue = 0;
             int bit = 0;
@@ -417,9 +420,9 @@ namespace CronusZenMessageScreenStudio
 
         private string GeneratePixelOled(PixelControl pixel, string prefix) => $"{prefix}pixel_oled({pixel.X}, {pixel.Y}, {(pixel.Color ? 1 : 0)});";
 
-        public Image GenerateImage()
+        public Image GenerateImage(int minimumWidth, int minimumHeight)
         {
-            (int width, int height, bool[,] matrix) = GetPixelMatrix(true, true);
+            (int width, int height, bool[,] matrix) = GetPixelMatrix(true, true, minimumWidth, minimumHeight);
             Bitmap img = ImageProcessor.MakeBinaryImage(matrix, width, height);
             return img;
         }
@@ -431,9 +434,9 @@ namespace CronusZenMessageScreenStudio
             return img;
         }
 
-        public void GenerateAndSaveImage()
+        public void GenerateAndSaveImage(int minimumWidth, int minimumHeight)
         {
-            Image img = GenerateImage();
+            Image img = GenerateImage(minimumWidth, minimumHeight);
             SaveFileDialog sfd = new SaveFileDialog()
                       {
                           FileName = "image.bmp",
