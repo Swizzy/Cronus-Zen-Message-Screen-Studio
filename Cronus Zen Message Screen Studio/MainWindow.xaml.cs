@@ -490,5 +490,87 @@ namespace CronusZenMessageScreenStudio
         {
             PenFlyout.IsOpen = true;
         }
+
+        private void MainWindow_OnKeyUp(object sender, KeyEventArgs e)
+        {
+            if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
+            {
+                int horizontalAxis = 0;
+                int verticalAxis = 0;
+                switch (e.Key)
+                {
+                    case Key.Left:
+                        horizontalAxis = 1;
+                        break;
+                    case Key.Right:
+                        horizontalAxis = -1;
+                        break;
+                    case Key.Up:
+                        verticalAxis = 1;
+                        break;
+                    case Key.Down:
+                        verticalAxis = -1;
+                        break;
+                }
+                ShiftPixels(horizontalAxis, verticalAxis, (Keyboard.Modifiers & ModifierKeys.Shift) != 0);
+            }
+        }
+
+        private void ShiftPixels(int horizontalAxis, int verticalAxis, bool truncate)
+        {
+            bool[,] matrix = new bool[128, 64];
+            foreach (PixelControl pixelControl in _pixelControls)
+            {
+                matrix[pixelControl.X, pixelControl.Y] = pixelControl.Color;
+            }
+
+            foreach (PixelControl pixelControl in _pixelControls)
+            {
+                int x = pixelControl.X + horizontalAxis;
+                if (x < 0 || x >= 128)
+                {
+                    if (truncate)
+                    {
+                        x = -1;
+                    }
+                    else
+                    {
+                        if (x < 0)
+                        {
+                            x += 128;
+                        }
+                        else
+                        {
+                            x -= 128;
+                        }
+                    }
+                }
+                int y = pixelControl.Y + verticalAxis;
+                if (y < 0 || y >= 64)
+                {
+                    if (truncate)
+                    {
+                        y = -1;
+                    }
+                    else
+                    {
+                        if (y < 0)
+                        {
+                            y += 64;
+                        }
+                        else
+                        {
+                            y -= 64;
+                        }
+                    }
+                }
+                bool color = false;
+                if (x >= 0 && y >= 0)
+                {
+                    color = matrix[x, y];
+                }
+                pixelControl.Color = color;
+            }
+        }
     }
 }

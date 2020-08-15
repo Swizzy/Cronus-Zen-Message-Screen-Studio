@@ -10,6 +10,7 @@
     Activated="MainWindow_OnActivated"
     Closing="MainWindow_OnClosing"
     Icon="cronus_new_icon.ico"
+    KeyUp="MainWindow_OnKeyUp"
     PreviewKeyDown="MainWindow_OnPreviewKeyDownOrUp"
     PreviewKeyUp="MainWindow_OnPreviewKeyDownOrUp"
     ShowIconOnTitleBar="False"
