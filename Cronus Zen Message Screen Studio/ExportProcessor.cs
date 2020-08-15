@@ -247,12 +247,21 @@ namespace CronusZenMessageScreenStudio
                 int dwidth = 0, dheight = 0;
                 var dataType = "";
                 var dataString = "";
+                var identifierAddon = "[]";
                 if ((settings & ExportSettings.Packed8Bit) == ExportSettings.Packed8Bit || (settings & ExportSettings.PackedImage) == ExportSettings.PackedImage)
                 {
                     (int width, int height, byte[] data) = Pack8(isFixed, whitePixels, minimumWidth, minimumHeight);
                     dwidth = width;
                     dheight = height;
-                    dataType = (settings & ExportSettings.PackedImage) == ExportSettings.PackedImage ? "image" : "byte";
+                    if ((settings & ExportSettings.PackedImage) == ExportSettings.PackedImage)
+                    {
+                        dataType =  "image";
+                        identifierAddon = "";
+                    }
+                    else
+                    {
+                        dataType = "byte";
+                    }
                     dataString = string.Join(",", data.Select(d => $" 0x{d:X02}")).Trim();
                 }
                 else if ((settings & ExportSettings.Packed16Bit) == ExportSettings.Packed16Bit)
@@ -263,7 +272,7 @@ namespace CronusZenMessageScreenStudio
                     dataType = "int";
                     dataString = string.Join(",", data.Select(d => $" 0x{d:X04}")).Trim();
                 }
-                toReturn.AppendLine($"const {dataType} {identifier}[] = {{{dwidth}, {dheight}, {dataString}}};");
+                toReturn.AppendLine($"const {dataType} {identifier}{identifierAddon} = {{{dwidth}, {dheight}, {dataString}}};");
             }
             return toReturn.ToString();
         }
