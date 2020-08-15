@@ -8,10 +8,17 @@ namespace CronusZenMessageScreenStudio
     {
         private const int WM_COPYDATA = 0x4A;
 
+        public enum ZenStudioCommand
+        {
+            GpcTab = 1,
+            BuildAndRun = 2
+        }
+
+
         [StructLayout(LayoutKind.Sequential)]
         private struct COPYDATASTRUCT
         {
-            public int dwData;
+            public ZenStudioCommand dwData;
             public int cbData;
             public IntPtr lpData;
         }
@@ -20,11 +27,11 @@ namespace CronusZenMessageScreenStudio
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         static extern int SendMessage(IntPtr hwnd, int wMsg, int wParam, ref COPYDATASTRUCT lParam);
 
-        public static void SendBuildAndRun(string script) => SendCommand(2, script);
+        public static void SendBuildAndRun(string script) => SendCommand(ZenStudioCommand.BuildAndRun, script);
 
-        public static void SendOpenCompilerTab(string script) => SendCommand(1, script);
+        public static void SendOpenCompilerTab(string script) => SendCommand(ZenStudioCommand.GpcTab, script);
 
-        private static void SendCommand(int messageType, string message)
+        private static void SendCommand(ZenStudioCommand messageType, string message)
         {
             COPYDATASTRUCT cds;
             cds.dwData = messageType;
