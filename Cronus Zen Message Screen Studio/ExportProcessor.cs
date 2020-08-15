@@ -110,7 +110,8 @@ namespace CronusZenMessageScreenStudio
             }
 
             if ((settings & ExportSettings.Packed) != 0 &&
-                (settings & (ExportSettings.IncludeFunction | ExportSettings.SampleScript)) != 0)
+                (settings & (ExportSettings.IncludeFunction | ExportSettings.SampleScript)) != 0 &&
+                (settings & ExportSettings.PackedImage) == 0)
             {
                 toReturn.AppendLine(GeneratePackedFunction(settings, identifier));
             }
