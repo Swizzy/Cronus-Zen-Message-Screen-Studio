@@ -72,12 +72,9 @@ namespace CronusZenMessageScreenStudio
                     if ((settings & ExportSettings.PackedImage) == ExportSettings.PackedImage)
                     {
                         toReturn.AppendLine($"\t\timage_oled(0, 0, TRUE, TRUE, {identifier}[0]);");
-                        if ((settings & ExportSettings.PackedInvertSupport) == ExportSettings.PackedInvertSupport)
-                        {
-                            toReturn.AppendLine("\t}");
-                            toReturn.AppendLine("\telse if (get_val(XB1_B)) {");
-                            toReturn.AppendLine($"\t\timage_oled(0, 0, FALSE, TRUE, {identifier}[0]);");
-                        }
+                        toReturn.AppendLine("\t}");
+                        toReturn.AppendLine("\telse if (get_val(XB1_B)) {");
+                        toReturn.AppendLine($"\t\timage_oled(0, 0, FALSE, TRUE, {identifier}[0]);");
                     }
                     else
                     {
