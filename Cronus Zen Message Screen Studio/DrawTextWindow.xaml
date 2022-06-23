@@ -33,6 +33,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -270,6 +271,22 @@
                     Checked="Checkbox_StateChanged"
                     Content="Use HSL Brightness"
                     IsChecked="{Binding Path=UseHSL, Mode=TwoWay}"
+                    Unchecked="Checkbox_StateChanged" />
+                <CheckBox
+                    Grid.Row="13"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Checked="Checkbox_StateChanged"
+                    Content="Merge whites"
+                    IsChecked="{Binding Path=MergeWhites, Mode=TwoWay}"
+                    Unchecked="Checkbox_StateChanged" />
+                <CheckBox
+                    Grid.Row="13"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    Checked="Checkbox_StateChanged"
+                    Content="Merge blacks"
+                    IsChecked="{Binding Path=MergeBlacks, Mode=TwoWay}"
                     Unchecked="Checkbox_StateChanged" />
             </Grid>
         </GroupBox>

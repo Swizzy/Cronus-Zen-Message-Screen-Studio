@@ -281,5 +281,40 @@ namespace CronusZenMessageScreenStudio
             }
             return toReturn;
         }
+
+        public static bool[,] MergeWhites(bool[,] current, bool[,] toMerge)
+        {
+            var toReturn = new bool[128, 64];
+            for (int y = 0; y < 64; y++)
+            {
+                for (int x = 0; x < 128; x++)
+                {
+                    toReturn[x, y] = current[x, y] || toMerge[x, y];
+                }
+            }
+
+            return toReturn;
+        }
+
+        public static bool[,] MergeBlacks(bool[,] current, bool[,] toMerge)
+        {
+            var toReturn = new bool[128, 64];
+            for (int y = 0; y < 64; y++)
+            {
+                for (int x = 0; x < 128; x++)
+                {
+                    if (toMerge[x, y])
+                    {
+                        toReturn[x, y] = current[x, y];
+                    }
+                    else
+                    {
+                        toReturn[x, y] = toMerge[x, y];
+                    }
+                }
+            }
+
+            return toReturn;
+        }
     }
 }

@@ -19,11 +19,13 @@ namespace CronusZenMessageScreenStudio
     public partial class DrawTextWindow : INotifyPropertyChanged
     {
         private bool[,] _finalImage;
+        private bool[,] _currentImage;
         private double _rgbThreshold, _hslThreshold;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public DrawTextWindow()
+        public DrawTextWindow(bool[,] currentImage)
         {
+            _currentImage = currentImage;
             InitializeComponent();
             SizeChanged += (sender, args) => System.Diagnostics.Trace.WriteLine($"Width: {ActualWidth} Height: {ActualHeight}");
             LayoutRoot.DataContext = this;
@@ -86,6 +88,9 @@ namespace CronusZenMessageScreenStudio
 
         public bool WhiteOnBlack { get; set; }
 
+        public bool MergeWhites { get; set; }
+        public bool MergeBlacks { get; set; }
+
         private void RefreshPreview()
         {
             if (UseHSL)
@@ -124,6 +129,14 @@ namespace CronusZenMessageScreenStudio
                                                 backgroundColor,
                                                 InterpolationMode);
                 _finalImage = ImageProcessor.MakeBinaryMatrix(img, UseHSL ? (HSLThreshold / 100) : RGBThreshold, false, UseHSL);
+                if (MergeWhites)
+                {
+                    _finalImage = ImageProcessor.MergeWhites(_currentImage, _finalImage);
+                }
+                else if (MergeBlacks)
+                {
+                    _finalImage = ImageProcessor.MergeBlacks(_currentImage, _finalImage);
+                }
                 ImagePreview.Source = BitmapToImageSource(ImageProcessor.MakeBinaryImage(_finalImage, img.Width, img.Height));
             }
             catch

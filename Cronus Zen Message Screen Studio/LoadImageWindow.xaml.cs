@@ -19,12 +19,14 @@ namespace CronusZenMessageScreenStudio
     public partial class LoadImageWindow : INotifyPropertyChanged
     {
         private bool[,] _finalImage;
+        private bool[,] _currentImage;
         private Bitmap _selectedImage;
         private double _rgbThreshold, _hslThreshold;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public LoadImageWindow()
+        public LoadImageWindow(bool[,] currentImage)
         {
+            _currentImage = currentImage;
             InitializeComponent();
             SizeChanged += (sender, args) => System.Diagnostics.Trace.WriteLine($"Width: {ActualWidth} Height: {ActualHeight}");
             LayoutRoot.DataContext = this;
@@ -70,6 +72,9 @@ namespace CronusZenMessageScreenStudio
         public bool Invert { get; set; }
         public bool InvertBackground { get; set; }
         public InterpolationMode InterpolationMode { get; set; }
+
+        public bool MergeWhites { get; set; }
+        public bool MergeBlacks { get; set; }
 
         private void SelectImage_Click(object sender, RoutedEventArgs e)
         {
@@ -128,6 +133,14 @@ namespace CronusZenMessageScreenStudio
                                                            InvertBackground ? Color.White : Color.Black,
                                                            InterpolationMode);
             _finalImage = ImageProcessor.MakeBinaryMatrix(scaledImage, UseHSL ? (HSLThreshold / 100) : RGBThreshold, Invert, UseHSL);
+            if (MergeWhites)
+            {
+                _finalImage = ImageProcessor.MergeWhites(_currentImage, _finalImage);
+            }
+            else if (MergeBlacks)
+            {
+                _finalImage = ImageProcessor.MergeBlacks(_currentImage, _finalImage);
+            }
             ImagePreview.Source = BitmapToImageSource(ImageProcessor.MakeBinaryImage(_finalImage, scaledImage.Width, scaledImage.Height));
         }
 
