@@ -159,7 +159,7 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Content="Add invert support" />
-                <Button
+                <!--<Button
                     Grid.Row="3"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
@@ -180,7 +180,7 @@
                     Grid.Row="4"
                     Grid.Column="2"
                     Click="Packed8ZenStudio_Click"
-                    Content="Export 8-bit Packed to Zen Studio" />
+                    Content="Export 8-bit Packed to Zen Studio" />-->
                 <Button
                     Grid.Row="5"
                     Grid.Column="0"
