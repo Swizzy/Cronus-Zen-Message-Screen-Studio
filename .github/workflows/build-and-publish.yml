@@ -5,6 +5,10 @@ on:
     branches:
       - master
       - dev
+  pull_request:
+    branches:
+      - master
+      - dev
 
 jobs:
   build:
@@ -14,44 +18,52 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.11.0
+        with:
+          versionSpec: '5.x'
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.11.0
+
       - name: Restore dependencies
         run: dotnet restore "Cronus Zen Message Screen Studio/Cronus Zen Message Screen Studio.csproj"
+
       - name: Build
         run: dotnet build "Cronus Zen Message Screen Studio/Cronus Zen Message Screen Studio.csproj" --configuration Release --no-restore
+
       - name: Publish single file executable
         run: dotnet publish "Cronus Zen Message Screen Studio/Cronus Zen Message Screen Studio.csproj" --configuration Release --self-contained true -p:PublishSingleFile=true -p:RuntimeIdentifier=win-x64 -o ./publish
+
       - name: Rename exe to include version
         run: |
           $exe = Get-ChildItem ./publish/*.exe | Select-Object -First 1
-          $newName = "CronusZenMessageScreenStudio-v${{ env.GitVersion_SemVer }}.exe"
+          $newName = "CronusZenMessageScreenStudio-v${{ steps.gitversion.outputs.semVer }}.exe"
           Rename-Item $exe.FullName -NewName $newName
+
       - name: Get published exe name
         id: get_exe
-        run: |
-          echo "exe_name=CronusZenMessageScreenStudio-v${{ env.GitVersion_SemVer }}.exe" >> $env:GITHUB_OUTPUT
+        run: echo "exe_name=CronusZenMessageScreenStudio-v${{ steps.gitversion.outputs.semVer }}.exe" >> $env:GITHUB_OUTPUT
+
       - name: Create GitHub Release
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ env.GitVersion_SemVer }}
-          release_name: Release v${{ env.GitVersion_SemVer }}
+          files: ./publish/${{ steps.get_exe.outputs.exe_name }}
+          tag_name: v${{ steps.gitversion.outputs.semVer }}
+          name: Release v${{ steps.gitversion.outputs.semVer }}
           draft: false
-          prerelease: false
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+          prerelease: ${{ github.ref != 'refs/heads/master' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./publish/${{ steps.get_exe.outputs.exe_name }}
-          asset_name: ${{ steps.get_exe.outputs.exe_name }}
-          asset_content_type: application/octet-stream
+
       - name: Upload published artifact
         uses: actions/upload-artifact@v4
         with:
