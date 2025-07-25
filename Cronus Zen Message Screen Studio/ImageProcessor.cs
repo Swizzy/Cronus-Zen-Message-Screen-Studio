@@ -20,7 +20,7 @@ namespace CronusZenMessageScreenStudio
         [Flags]
         public enum Positions
         {
-            Default    = 0 << 0,
+            Default = 0 << 0,
             HLeft   = 1 << 0,
             HCenter = 1 << 1,
             HRight  = 1 << 2,
@@ -73,6 +73,33 @@ namespace CronusZenMessageScreenStudio
         }
 
         public static Bitmap LoadImage(string filename) => new Bitmap(filename);
+
+        public static int GetFrameCount(Bitmap img)
+        {
+            if (img.RawFormat.Equals(ImageFormat.Gif) && img.FrameDimensionsList.Contains(FrameDimension.Time.Guid))
+            {
+                return img.GetFrameCount(FrameDimension.Time) - 1;
+            }
+            return 0;
+        }
+
+        public static Bitmap SetFrame(Bitmap img, int frame)
+        {
+            var toReturn = (Bitmap)img.Clone();
+            if (img.RawFormat.Equals(ImageFormat.Gif) && img.FrameDimensionsList.Contains(FrameDimension.Time.Guid))
+            {
+                if (toReturn.GetFrameCount(FrameDimension.Time) > frame)
+                {
+                    toReturn.SelectActiveFrame(FrameDimension.Time, frame);
+                }
+                else
+                {
+                    toReturn.SelectActiveFrame(FrameDimension.Time, toReturn.GetFrameCount(FrameDimension.Time) - 1);
+                }
+            }
+
+            return toReturn;
+        }
 
         public static Bitmap ScaleImage(Image input, int width, int height, InterpolationMode interpolationMode)
         {

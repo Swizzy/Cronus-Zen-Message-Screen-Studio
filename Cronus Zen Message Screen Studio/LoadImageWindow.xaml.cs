@@ -20,8 +20,9 @@ namespace CronusZenMessageScreenStudio
     {
         private bool[,] _finalImage;
         private bool[,] _currentImage;
-        private Bitmap _selectedImage;
+        private Bitmap _selectedImage, _originalSelectedImage;
         private double _rgbThreshold, _hslThreshold;
+        private int _selectedFrame;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public LoadImageWindow(bool[,] currentImage)
@@ -73,6 +74,18 @@ namespace CronusZenMessageScreenStudio
         public bool InvertBackground { get; set; }
         public InterpolationMode InterpolationMode { get; set; }
 
+        public int SelectedFrame
+        {
+            get => _selectedFrame;
+            set
+            {
+                _selectedFrame = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int MaxFrames { get; set; }
+
         public bool MergeWhites { get; set; }
         public bool MergeBlacks { get; set; }
 
@@ -86,13 +99,10 @@ namespace CronusZenMessageScreenStudio
             {
                 try
                 {
-                    _selectedImage = ImageProcessor.LoadImage(ofd.FileName);
-                    const int width = 512; // * (128 / 64);
-                    const int height = 512; // / (128 / 64);
-                    if (_selectedImage.Width > width || _selectedImage.Height > height)
-                    {
-                        _selectedImage = ImageProcessor.ScaleImage(_selectedImage, width, height, InterpolationMode);
-                    }
+                    _originalSelectedImage = _selectedImage = ImageProcessor.LoadImage(ofd.FileName);
+                    SelectedFrame = 0;
+                    MaxFrames = ImageProcessor.GetFrameCount(_selectedImage);
+                    OnPropertyChanged(nameof(MaxFrames));
                     UpdatePreview();
                 }
                 catch (Exception ex)
@@ -120,6 +130,8 @@ namespace CronusZenMessageScreenStudio
             {
                 return;
             }
+
+            _selectedImage = ImageProcessor.SetFrame(_originalSelectedImage, SelectedFrame);
 
             Bitmap scaledImage = ImageProcessor.ScaleImage(_selectedImage,
                                                            128,
@@ -198,9 +210,6 @@ namespace CronusZenMessageScreenStudio
 
         private void Slider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
