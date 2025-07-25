@@ -128,7 +128,7 @@ namespace CronusZenMessageScreenStudio
                                                 MarginRight,
                                                 backgroundColor,
                                                 InterpolationMode);
-                _finalImage = ImageProcessor.MakeBinaryMatrix(img, UseHSL ? (HSLThreshold / 100) : RGBThreshold, false, UseHSL);
+                _finalImage = ImageProcessor.MakeBinaryMatrix(img, UseHSL ? (HSLThreshold / 100) : RGBThreshold, false, UseHSL, ImageProcessor.DitheringAlgorithms.Binary);
                 if (MergeWhites)
                 {
                     _finalImage = ImageProcessor.MergeWhites(_currentImage, _finalImage);

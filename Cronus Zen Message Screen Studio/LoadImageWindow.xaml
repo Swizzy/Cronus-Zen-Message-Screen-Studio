@@ -33,6 +33,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Click="SelectImage_Click" Content="Select image" />
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Image position:" />
@@ -53,9 +54,20 @@
                           SelectedValue="{Binding Path=InterpolationMode, Mode=TwoWay}"
                           SelectedValuePath="Value"
                           SelectionChanged="PositionBox_OnSelectionChanged" />
-                <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Threshold:" />
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Dithering Algorithm:" />
+                <ComboBox x:Name="DitheringAlgorithmBox"
+                          Grid.Row="3"
+                          Grid.Column="1"
+                          Grid.ColumnSpan="2"
+                          DisplayMemberPath="Name"
+                          SelectedValue="{Binding Path=DitheringAlgorithm, Mode=TwoWay}"
+                          SelectedValuePath="Value"
+                          SelectionChanged="PositionBox_OnSelectionChanged" />
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Threshold:" />
                 <Slider x:Name="RGBslider"
-                        Grid.Row="3"
+                        Grid.Row="4"
                         Grid.Column="1"
                         Maximum="255.00"
                         Minimum="0.01"
@@ -63,7 +75,7 @@
                         ValueChanged="Slider_OnValueChanged"
                         Value="{Binding Path=RGBThreshold, Mode=TwoWay}" />
                 <mah:NumericUpDown x:Name="RGBnupd"
-                                   Grid.Row="3"
+                                   Grid.Row="4"
                                    Grid.Column="2"
                                    Interval="0.01"
                                    Maximum="255.00"
@@ -73,7 +85,7 @@
                                    ValueChanged="NumericUpDown_OnValueChanged"
                                    Value="{Binding Path=RGBThreshold, Mode=TwoWay}" />
                 <Slider x:Name="HSLslider"
-                        Grid.Row="3"
+                        Grid.Row="4"
                         Grid.Column="1"
                         Maximum="100.00"
                         Minimum="0.01"
@@ -81,7 +93,7 @@
                         ValueChanged="Slider_OnValueChanged"
                         Value="{Binding Path=HSLThreshold, Mode=TwoWay}" />
                 <mah:NumericUpDown x:Name="HSLnupd"
-                                   Grid.Row="3"
+                                   Grid.Row="4"
                                    Grid.Column="2"
                                    Interval="0.01"
                                    Maximum="100.00"
@@ -90,16 +102,7 @@
                                    StringFormat="F02"
                                    ValueChanged="NumericUpDown_OnValueChanged"
                                    Value="{Binding Path=HSLThreshold, Mode=TwoWay}" />
-                <TextBlock Grid.Row="4" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Left margin:" />
-                <mah:NumericUpDown Grid.Row="4"
-                                   Grid.Column="1"
-                                   Grid.ColumnSpan="2"
-                                   Interval="1"
-                                   Maximum="127"
-                                   Minimum="0"
-                                   ValueChanged="NumericUpDown_OnValueChanged"
-                                   Value="{Binding Path=MarginLeft, Mode=TwoWay}" />
-                <TextBlock Grid.Row="5" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Right margin:" />
+                <TextBlock Grid.Row="5" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Left margin:" />
                 <mah:NumericUpDown Grid.Row="5"
                                    Grid.Column="1"
                                    Grid.ColumnSpan="2"
@@ -107,17 +110,17 @@
                                    Maximum="127"
                                    Minimum="0"
                                    ValueChanged="NumericUpDown_OnValueChanged"
-                                   Value="{Binding Path=MarginRight, Mode=TwoWay}" />
-                <TextBlock Grid.Row="6" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Top margin:" />
+                                   Value="{Binding Path=MarginLeft, Mode=TwoWay}" />
+                <TextBlock Grid.Row="6" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Right margin:" />
                 <mah:NumericUpDown Grid.Row="6"
                                    Grid.Column="1"
                                    Grid.ColumnSpan="2"
                                    Interval="1"
-                                   Maximum="63"
+                                   Maximum="127"
                                    Minimum="0"
                                    ValueChanged="NumericUpDown_OnValueChanged"
-                                   Value="{Binding Path=MarginTop, Mode=TwoWay}" />
-                <TextBlock Grid.Row="7" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Bottom margin:" />
+                                   Value="{Binding Path=MarginRight, Mode=TwoWay}" />
+                <TextBlock Grid.Row="7" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Top margin:" />
                 <mah:NumericUpDown Grid.Row="7"
                                    Grid.Column="1"
                                    Grid.ColumnSpan="2"
@@ -125,48 +128,57 @@
                                    Maximum="63"
                                    Minimum="0"
                                    ValueChanged="NumericUpDown_OnValueChanged"
+                                   Value="{Binding Path=MarginTop, Mode=TwoWay}" />
+                <TextBlock Grid.Row="8" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Bottom margin:" />
+                <mah:NumericUpDown Grid.Row="8"
+                                   Grid.Column="1"
+                                   Grid.ColumnSpan="2"
+                                   Interval="1"
+                                   Maximum="63"
+                                   Minimum="0"
+                                   ValueChanged="NumericUpDown_OnValueChanged"
                                    Value="{Binding Path=MarginBottom, Mode=TwoWay}" />
-                <CheckBox Grid.Row="8"
+                <CheckBox Grid.Row="9"
                           Grid.Column="1"
                           Checked="Checkbox_Changed"
                           Content="Invert black and white"
                           IsChecked="{Binding Path=Invert, Mode=TwoWay}"
                           Unchecked="Checkbox_Changed" />
-                <CheckBox Grid.Row="8"
+                <CheckBox Grid.Row="9"
                           Grid.Column="2"
                           Margin="10,0,0,0"
                           Checked="Checkbox_Changed"
                           Content="Invert Background"
                           IsChecked="{Binding Path=InvertBackground, Mode=TwoWay}"
                           Unchecked="Checkbox_Changed" />
-                <CheckBox Grid.Row="9"
+                <CheckBox Grid.Row="10"
                           Grid.Column="1"
                           Checked="Checkbox_Changed"
                           Content="Use HSL Brightness"
                           IsChecked="{Binding Path=UseHSL, Mode=TwoWay}"
                           Unchecked="Checkbox_Changed" />
-                <CheckBox Grid.Row="10"
+                <CheckBox Grid.Row="11"
                           Grid.Column="1"
                           Checked="Checkbox_Changed"
                           Content="Merge whites"
                           IsChecked="{Binding Path=MergeWhites, Mode=TwoWay}"
                           Unchecked="Checkbox_Changed" />
-                <CheckBox Grid.Row="10"
+                <CheckBox Grid.Row="11"
                           Grid.Column="2"
                           Checked="Checkbox_Changed"
                           Content="Merge blacks"
                           IsChecked="{Binding Path=MergeBlacks, Mode=TwoWay}"
                           Unchecked="Checkbox_Changed" />
 
-                <TextBlock Grid.Row="11" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Animated Frame:" />
-                <Slider Grid.Row="11"
+                <TextBlock Grid.Row="12" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Animated Frame:" />
+                <Slider Grid.Row="12"
                         Grid.Column="1"
                         Maximum="{Binding Path=MaxFrames}"
                         Minimum="0"
                         TickFrequency="1"
                         ValueChanged="Slider_OnValueChanged"
                         Value="{Binding Path=SelectedFrame, Mode=TwoWay}" />
-                <mah:NumericUpDown Grid.Row="11"
+                <mah:NumericUpDown Grid.Row="12"
                                    Grid.Column="2"
                                    Interval="1"
                                    Maximum="{Binding Path=MaxFrames}"

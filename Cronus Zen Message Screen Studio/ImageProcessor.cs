@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
+using static CronusZenMessageScreenStudio.ImageProcessor;
 
 namespace CronusZenMessageScreenStudio
 {
@@ -57,6 +58,32 @@ namespace CronusZenMessageScreenStudio
             };
         }
 
+        public enum DitheringAlgorithms
+        {
+            Binary,
+            FloydSteinberg,
+            JarvisJudiceNinke,
+            Stucki,
+            Atkinson,
+            Burkes,
+            Sierra,
+            SierraTwoRow,
+            SierraLite
+        }
+
+        public static IEnumerable MakeDitheringSelectionList()
+        {
+            yield return new SelectionData<DitheringAlgorithms>("Binary", DitheringAlgorithms.Binary);
+            yield return new SelectionData<DitheringAlgorithms>("Floyd-Steinberg", DitheringAlgorithms.FloydSteinberg);
+            yield return new SelectionData<DitheringAlgorithms>("Jarvis-Judice-Ninke", DitheringAlgorithms.JarvisJudiceNinke);
+            yield return new SelectionData<DitheringAlgorithms>("Stucki", DitheringAlgorithms.Stucki);
+            yield return new SelectionData<DitheringAlgorithms>("Atkinson", DitheringAlgorithms.Atkinson);
+            yield return new SelectionData<DitheringAlgorithms>("Burkes", DitheringAlgorithms.Burkes);
+            yield return new SelectionData<DitheringAlgorithms>("Sierra", DitheringAlgorithms.Sierra);
+            yield return new SelectionData<DitheringAlgorithms>("Sierra Two Row", DitheringAlgorithms.SierraTwoRow);
+            yield return new SelectionData<DitheringAlgorithms>("Sierra Lite", DitheringAlgorithms.SierraLite);
+        }
+
         public static IEnumerable MakeInterpolationSelectionList()
         {
             return new List<SelectionData<InterpolationMode>>
@@ -101,19 +128,20 @@ namespace CronusZenMessageScreenStudio
             return toReturn;
         }
 
-        public static Bitmap ScaleImage(Image input, int width, int height, InterpolationMode interpolationMode)
+        private static byte[,,] ReadBitmapToColorBytes(Bitmap bitmap)
         {
-            return ScaleImage(input,
-                              width,
-                              height,
-                              ScalingTypes.Scaled,
-                              Positions.Default,
-                              0,
-                              0,
-                              0,
-                              0,
-                              Color.Transparent,
-                              interpolationMode);
+            byte[,,] bytes = new byte[bitmap.Width, bitmap.Height, 3];
+            for (int x = 0; x < bitmap.Width; x++)
+            {
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    Color pixel = bitmap.GetPixel(x, y);
+                    bytes[x, y, 0] = pixel.R;
+                    bytes[x, y, 1] = pixel.G;
+                    bytes[x, y, 2] = pixel.B;
+                }
+            }
+            return bytes;
         }
 
         public static Bitmap ScaleImage(Image input,
@@ -204,6 +232,68 @@ namespace CronusZenMessageScreenStudio
             return toReturn;
         }
 
+        public static bool[,] MakeBinaryMatrix(Bitmap img, double threshold, bool invert, bool useHSL, DitheringAlgorithms algorithm)
+        {
+            var colorFunction = CreateColorFunction(threshold, invert, useHSL);
+
+            // Apply dithering
+            DitheringBase<byte> dithering = algorithm switch
+            {
+                DitheringAlgorithms.Atkinson => new AtkinsonDitheringRGB<byte>(colorFunction),
+                DitheringAlgorithms.Burkes => new BurkesDitheringRGB<byte>(colorFunction),
+                DitheringAlgorithms.FloydSteinberg => new FloydSteinbergDitheringRGB<byte>(colorFunction),
+                DitheringAlgorithms.JarvisJudiceNinke => new JarvisJudiceNinkeDitheringRGB<byte>(colorFunction),
+                DitheringAlgorithms.Stucki => new StuckiDitheringRGB<byte>(colorFunction),
+                DitheringAlgorithms.Sierra => new SierraDitheringRGB<byte>(colorFunction),
+                DitheringAlgorithms.SierraLite => new SierraLiteDitheringRGB<byte>(colorFunction),
+                DitheringAlgorithms.SierraTwoRow => new SierraTwoRowDitheringRGB<byte>(colorFunction),
+                DitheringAlgorithms.Binary => new FakeDitheringRGB<byte>(colorFunction),
+                _ => throw new ArgumentOutOfRangeException(nameof(algorithm), algorithm, null)
+            };
+
+            byte[,,] bytes = ReadBitmapToColorBytes(img);
+            TempByteImageFormat temp = new TempByteImageFormat(bytes);
+            dithering.DoDithering(temp);
+
+            // Convert dithered result to bool matrix
+            bool[,] result = new bool[img.Width, img.Height];
+            for (int x = 0; x < img.Width; x++)
+            {
+                for (int y = 0; y < img.Height; y++)
+                {
+                    byte[] rgb = temp.GetPixelChannels(x, y);
+                    result[x, y] = rgb[0] == 255; // true if white, false if black
+                }
+            }
+
+            return result;
+        }
+
+        private static DitheringBase<byte>.ColorFunction CreateColorFunction(double threshold, bool invert, bool useHSL)
+        {
+            return (in byte[] input, ref byte[] output) =>
+            {
+                double avg;
+                if (useHSL)
+                {
+                    Color pixel = Color.FromArgb(input[0], input[1], input[2]);
+                    avg = pixel.GetBrightness();
+                }
+                else
+                {
+                    // RGB average
+                    avg = (input[0] + input[1] + input[2]) / 3.0;
+                }
+
+                bool shouldBeWhite = invert ? avg < threshold : avg >= threshold;
+                byte value = (byte)(shouldBeWhite ? 255 : 0);
+
+                output[0] = value; // R
+                output[1] = value; // G
+                output[2] = value; // B
+            };
+        }
+
         public static bool[,] MakeBinaryMatrix(Bitmap img, double threshold, bool invert, bool useHSL)
         {
             bool[,] toReturn = new bool[img.Width,img.Height];
@@ -234,12 +324,6 @@ namespace CronusZenMessageScreenStudio
             }
 
             return toReturn;
-        }
-
-        public static Bitmap MakeBinaryImage(Bitmap img, double threshold, bool invert, bool useHSL)
-        {
-            bool[,] pixels = MakeBinaryMatrix(img, threshold, invert, useHSL);
-            return MakeBinaryImage(pixels, img.Width, img.Height);
         }
 
         public static Bitmap MakeBinaryImage(bool[,] pixels, int width, int height)

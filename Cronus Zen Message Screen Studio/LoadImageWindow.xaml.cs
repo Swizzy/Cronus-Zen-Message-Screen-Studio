@@ -33,6 +33,7 @@ namespace CronusZenMessageScreenStudio
             LayoutRoot.DataContext = this;
             PositionBox.ItemsSource = ImageProcessor.MakePositionSelectionList();
             InterpolationModeBox.ItemsSource = ImageProcessor.MakeInterpolationSelectionList();
+            DitheringAlgorithmBox.ItemsSource = ImageProcessor.MakeDitheringSelectionList();
             RGBThreshold = 200;
             HSLThreshold = 50;
             UseHSL = true;
@@ -73,6 +74,7 @@ namespace CronusZenMessageScreenStudio
         public bool Invert { get; set; }
         public bool InvertBackground { get; set; }
         public InterpolationMode InterpolationMode { get; set; }
+        public ImageProcessor.DitheringAlgorithms DitheringAlgorithm { get; set; }
 
         public int SelectedFrame
         {
