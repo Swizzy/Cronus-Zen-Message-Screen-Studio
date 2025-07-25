@@ -275,7 +275,7 @@ namespace CronusZenMessageScreenStudio
             string sep = "";
             foreach (ImageCodecInfo codec in ImageCodecInfo.GetImageDecoders())
             {
-                string name = codec.CodecName.Substring(8).Replace("Codec", "Files").Trim();
+                string name = codec.CodecName?.Replace("Built-in", "").Replace("Codec", "Files").Trim() ?? $"{codec.FilenameExtension} Files";
                 string ext = codec.FilenameExtension;
                 toReturn.AppendFormat("{0}{1} ({2})|{2}", sep, name, ext);
                 sep = "|";
@@ -284,7 +284,7 @@ namespace CronusZenMessageScreenStudio
             toReturn.Append(sep + "All files (*.*)|*.*");
 
             string extensions = string.Join(";", fileFormats);
-            return $"All Imagefiles ({extensions})|{extensions}|{toReturn}";
+            return $"All supported image files ({extensions})|{extensions}|{toReturn}";
         }
 
         public static Bitmap DrawText(string text, Font font, bool whiteOnBlack)
