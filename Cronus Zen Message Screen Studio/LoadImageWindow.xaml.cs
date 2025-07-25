@@ -146,7 +146,7 @@ namespace CronusZenMessageScreenStudio
                                                            MarginRight,
                                                            InvertBackground ? Color.White : Color.Black,
                                                            InterpolationMode);
-            _finalImage = ImageProcessor.MakeBinaryMatrix(scaledImage, UseHSL ? (HSLThreshold / 100) : RGBThreshold, Invert, UseHSL);
+            _finalImage = ImageProcessor.MakeBinaryMatrix(scaledImage, UseHSL ? (HSLThreshold / 100) : RGBThreshold, Invert, UseHSL, DitheringAlgorithm);
             if (MergeWhites)
             {
                 _finalImage = ImageProcessor.MergeWhites(_currentImage, _finalImage);

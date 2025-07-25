@@ -294,38 +294,6 @@ namespace CronusZenMessageScreenStudio
             };
         }
 
-        public static bool[,] MakeBinaryMatrix(Bitmap img, double threshold, bool invert, bool useHSL)
-        {
-            bool[,] toReturn = new bool[img.Width,img.Height];
-            for (int x = 0; x < img.Width; x++)
-            {
-                for (int y = 0; y < img.Height; y++)
-                {
-                    Color pixel = img.GetPixel(x, y);
-                    double avg;
-                    if (useHSL)
-                    {
-                        avg = pixel.GetBrightness();
-                    }
-                    else
-                    {
-                        List<double> colors = new List<double> { pixel.R, pixel.G, pixel.B };
-                        avg = colors.Average(c => c);
-                    }
-                    if (invert)
-                    {
-                        toReturn[x, y] = avg < threshold;
-                    }
-                    else
-                    {
-                        toReturn[x, y] = avg >= threshold;
-                    }
-                }
-            }
-
-            return toReturn;
-        }
-
         public static Bitmap MakeBinaryImage(bool[,] pixels, int width, int height)
         {
             Bitmap toReturn = new Bitmap(width, height);
