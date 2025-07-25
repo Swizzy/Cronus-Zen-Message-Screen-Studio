@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using System.Windows;
+﻿using System.Windows;
 
 namespace CronusZenMessageScreenStudio
 {
@@ -12,24 +10,12 @@ namespace CronusZenMessageScreenStudio
         {
             get
             {
-                Assembly assembly = typeof(App).Assembly;
-                try
+                if (string.IsNullOrWhiteSpace(GitVersionInformation.PreReleaseLabel) == false)
                 {
-                    Type infoType = assembly.GetType("GitVersionInformation");
-                    var major = infoType.GetField("Major").GetValue(null);
-                    var minor = infoType.GetField("Minor").GetValue(null);
-                    var preReleaseLabel = infoType.GetField("PreReleaseLabel").GetValue(null)?.ToString();
-                    if (preReleaseLabel != "")
-                    {
-                        preReleaseLabel += " " + infoType.GetField("PreReleaseNumber").GetValue(null);
-                    }
-                    return (major + "." + minor + " " + preReleaseLabel).Trim();
+                    return $"{GitVersionInformation.MajorMinorPatch} {GitVersionInformation.PreReleaseLabel} {GitVersionInformation.PreReleaseNumber}";
                 }
-                catch
-                {
-                    Version ver = assembly.GetName().Version;
-                    return ver.Major + "." + ver.Minor;
-                }
+
+                return GitVersionInformation.MajorMinorPatch;
             }
         }
 

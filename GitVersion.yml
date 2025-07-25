@@ -1,9 +1,23 @@
 assembly-versioning-scheme: MajorMinorPatch
-mode: Mainline
+mode: ContinuousDelivery
 next-version: 1.2.0
 commit-message-incrementing: Enabled
 branches:
+  main:
+    regex: ^master$|^main$
+    mode: ContinuousDelivery
+    tag: ''
+    increment: Patch
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: false
+    tracks-release-branches: false
+    is-release-branch: false
   dev:
     regex: dev(elop)?(ment)?$
+    mode: ContinuousDelivery
     tag: beta
-    source-branches: ['master']
+    increment: Inherit
+    track-merge-target: true
+    tracks-release-branches: true
+    is-release-branch: false
+    source-branches: ['main']
