@@ -24,23 +24,19 @@ jobs:
         run: dotnet build "Cronus Zen Message Screen Studio/Cronus Zen Message Screen Studio.csproj" --configuration Release --no-restore
       - name: Publish single file executable
         run: dotnet publish "Cronus Zen Message Screen Studio/Cronus Zen Message Screen Studio.csproj" --configuration Release --self-contained true -p:PublishSingleFile=true -p:RuntimeIdentifier=win-x64 -o ./publish
-      - name: Get published exe name and product version
+      - name: Get published exe name
         id: get_exe
         run: |
           $exe = Get-ChildItem ./publish/*.exe | Select-Object -First 1
-          $version = (Get-Item $exe.FullName).VersionInfo.ProductVersion
-          if ($version -match "^(.*?)\+") { $version = $matches[1] }
-          $version = "v$version"
-          echo "exe_name=$($exe.Name)" >> $GITHUB_OUTPUT
-          echo "exe_version=$version" >> $GITHUB_OUTPUT
+          echo "exe_name=$($exe.Name)" >> $env:GITHUB_OUTPUT
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.get_exe.outputs.exe_version }}
-          release_name: Release ${{ steps.get_exe.outputs.exe_version }}
+          tag_name: v${{ env.GitVersion_SemVer }}
+          release_name: Release v${{ env.GitVersion_SemVer }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
