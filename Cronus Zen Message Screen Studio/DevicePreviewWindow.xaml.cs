@@ -86,9 +86,9 @@ namespace CronusZenMessageScreenStudio
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
-            double aspect = MinWidth / (MinHeight - TitlebarHeight);
-            if (sizeInfo.HeightChanged) Width = (sizeInfo.NewSize.Height - TitlebarHeight) * aspect;
-            else Height = (sizeInfo.NewSize.Width / aspect) + TitlebarHeight;
+            double aspect = MinWidth / (MinHeight - TitleBarHeight);
+            if (sizeInfo.HeightChanged) Width = (sizeInfo.NewSize.Height - TitleBarHeight) * aspect;
+            else Height = (sizeInfo.NewSize.Width / aspect) + TitleBarHeight;
 
             Settings.CurrentSettings.DevicePreviewWidth = Width;
             Settings.CurrentSettings.DevicePreviewHeight = Height;
