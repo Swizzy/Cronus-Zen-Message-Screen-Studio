@@ -3,7 +3,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  Title="Load image"
-                 Width="408"
+                 Width="415"
                  Height="556"
                  ResizeMode="NoResize"
                  WindowStartupLocation="CenterOwner">
@@ -18,7 +18,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -32,8 +32,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Click="SelectImage_Click" Content="Select image" />
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Image position:" />
@@ -165,6 +165,7 @@
                           Unchecked="Checkbox_Changed" />
                 <CheckBox Grid.Row="11"
                           Grid.Column="2"
+                          Margin="10,0,0,0"
                           Checked="Checkbox_Changed"
                           Content="Merge blacks"
                           IsChecked="{Binding Path=MergeBlacks, Mode=TwoWay}"
