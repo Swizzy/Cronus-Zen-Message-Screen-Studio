@@ -33,6 +33,7 @@ namespace CronusZenMessageScreenStudio
             TextFontSize = 20;
             PositionBox.ItemsSource = ImageProcessor.MakePositionSelectionList();
             InterpolationModeBox.ItemsSource = ImageProcessor.MakeInterpolationSelectionList();
+            DitheringAlgorithmBox.ItemsSource = ImageProcessor.MakeDitheringSelectionList();
             using (var installedFontCollection = new InstalledFontCollection())
             {
                 foreach (FontFamily fontFamily in installedFontCollection.Families)
@@ -80,6 +81,7 @@ namespace CronusZenMessageScreenStudio
         public int MarginRight { get; set; }
         public ImageProcessor.Positions Position { get; set; }
         public InterpolationMode InterpolationMode { get; set; }
+        public ImageProcessor.DitheringAlgorithms DitheringAlgorithm { get; set; }
         public FontFamily TextFontFamily { get; set; }
         public int TextFontSize { get; set; }
         public bool BoldFont { get; set; }
@@ -129,7 +131,7 @@ namespace CronusZenMessageScreenStudio
                                                 MarginRight,
                                                 backgroundColor,
                                                 InterpolationMode);
-                _finalImage = ImageProcessor.MakeBinaryMatrix(img, UseHSL ? (HSLThreshold / 100) : RGBThreshold, false, UseHSL, ImageProcessor.DitheringAlgorithms.Binary);
+                _finalImage = ImageProcessor.MakeBinaryMatrix(img, UseHSL ? (HSLThreshold / 100) : RGBThreshold, false, UseHSL, DitheringAlgorithm);
                 if (MergeWhites)
                 {
                     _finalImage = ImageProcessor.MergeWhites(_currentImage, _finalImage);

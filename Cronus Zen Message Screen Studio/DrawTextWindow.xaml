@@ -38,6 +38,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -165,25 +166,27 @@
                           SelectedValue="{Binding Path=InterpolationMode, Mode=TwoWay}"
                           SelectedValuePath="Value"
                           SelectionChanged="ComboBox_SelectionChanged" />
-                <TextBlock Grid.Row="7" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Position:" />
-                <ComboBox x:Name="PositionBox"
+
+                <TextBlock Grid.Row="7" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Dithering Algorithm:" />
+                <ComboBox x:Name="DitheringAlgorithmBox"
                           Grid.Row="7"
+                          Grid.Column="1"
+                          Grid.ColumnSpan="4"
+                          DisplayMemberPath="Name"
+                          SelectedValue="{Binding Path=DitheringAlgorithm, Mode=TwoWay}"
+                          SelectedValuePath="Value"
+                          SelectionChanged="ComboBox_SelectionChanged" />
+
+                <TextBlock Grid.Row="8" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Position:" />
+                <ComboBox x:Name="PositionBox"
+                          Grid.Row="8"
                           Grid.Column="1"
                           Grid.ColumnSpan="4"
                           DisplayMemberPath="Name"
                           SelectedValue="{Binding Path=Position, Mode=TwoWay}"
                           SelectedValuePath="Value"
                           SelectionChanged="ComboBox_SelectionChanged" />
-                <TextBlock Grid.Row="8" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Left margin:" />
-                <mah:NumericUpDown Grid.Row="8"
-                                   Grid.Column="1"
-                                   Grid.ColumnSpan="4"
-                                   Interval="1"
-                                   Maximum="127"
-                                   Minimum="0"
-                                   ValueChanged="NumericUpDown_ValueChanged"
-                                   Value="{Binding Path=MarginLeft, Mode=TwoWay}" />
-                <TextBlock Grid.Row="9" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Right margin:" />
+                <TextBlock Grid.Row="9" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Left margin:" />
                 <mah:NumericUpDown Grid.Row="9"
                                    Grid.Column="1"
                                    Grid.ColumnSpan="4"
@@ -191,17 +194,17 @@
                                    Maximum="127"
                                    Minimum="0"
                                    ValueChanged="NumericUpDown_ValueChanged"
-                                   Value="{Binding Path=MarginRight, Mode=TwoWay}" />
-                <TextBlock Grid.Row="10" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Top margin:" />
+                                   Value="{Binding Path=MarginLeft, Mode=TwoWay}" />
+                <TextBlock Grid.Row="10" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Right margin:" />
                 <mah:NumericUpDown Grid.Row="10"
                                    Grid.Column="1"
                                    Grid.ColumnSpan="4"
                                    Interval="1"
-                                   Maximum="63"
+                                   Maximum="127"
                                    Minimum="0"
                                    ValueChanged="NumericUpDown_ValueChanged"
-                                   Value="{Binding Path=MarginTop, Mode=TwoWay}" />
-                <TextBlock Grid.Row="11" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Bottom margin:" />
+                                   Value="{Binding Path=MarginRight, Mode=TwoWay}" />
+                <TextBlock Grid.Row="11" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Top margin:" />
                 <mah:NumericUpDown Grid.Row="11"
                                    Grid.Column="1"
                                    Grid.ColumnSpan="4"
@@ -209,15 +212,24 @@
                                    Maximum="63"
                                    Minimum="0"
                                    ValueChanged="NumericUpDown_ValueChanged"
+                                   Value="{Binding Path=MarginTop, Mode=TwoWay}" />
+                <TextBlock Grid.Row="12" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" Text="Bottom margin:" />
+                <mah:NumericUpDown Grid.Row="12"
+                                   Grid.Column="1"
+                                   Grid.ColumnSpan="4"
+                                   Interval="1"
+                                   Maximum="63"
+                                   Minimum="0"
+                                   ValueChanged="NumericUpDown_ValueChanged"
                                    Value="{Binding Path=MarginBottom, Mode=TwoWay}" />
-                <CheckBox Grid.Row="12"
+                <CheckBox Grid.Row="13"
                           Grid.Column="1"
                           Grid.ColumnSpan="2"
                           Checked="Checkbox_StateChanged"
                           Content="White text on black background"
                           IsChecked="{Binding Path=WhiteOnBlack, Mode=TwoWay}"
                           Unchecked="Checkbox_StateChanged" />
-                <CheckBox Grid.Row="12"
+                <CheckBox Grid.Row="13"
                           Grid.Column="3"
                           Grid.ColumnSpan="2"
                           Margin="10,0,0,0"
@@ -225,14 +237,14 @@
                           Content="Use HSL Brightness"
                           IsChecked="{Binding Path=UseHSL, Mode=TwoWay}"
                           Unchecked="Checkbox_StateChanged" />
-                <CheckBox Grid.Row="13"
+                <CheckBox Grid.Row="14"
                           Grid.Column="1"
                           Grid.ColumnSpan="2"
                           Checked="Checkbox_StateChanged"
                           Content="Merge whites"
                           IsChecked="{Binding Path=MergeWhites, Mode=TwoWay}"
                           Unchecked="Checkbox_StateChanged" />
-                <CheckBox Grid.Row="13"
+                <CheckBox Grid.Row="14"
                           Grid.Column="3"
                           Grid.ColumnSpan="2"
                           Margin="10,0,0,0"
