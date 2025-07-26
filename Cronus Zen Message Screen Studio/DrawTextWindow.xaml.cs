@@ -21,7 +21,7 @@ namespace CronusZenMessageScreenStudio
     {
         private bool[,] _finalImage;
         private bool[,] _currentImage;
-        private double _rgbThreshold, _hslThreshold;
+        private double _rgbThreshold, _hslThreshold, _rotationDegrees;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public DrawTextWindow(bool[,] currentImage)
@@ -34,6 +34,10 @@ namespace CronusZenMessageScreenStudio
             PositionBox.ItemsSource = ImageProcessor.MakePositionSelectionList();
             InterpolationModeBox.ItemsSource = ImageProcessor.MakeInterpolationSelectionList();
             DitheringAlgorithmBox.ItemsSource = ImageProcessor.MakeDitheringSelectionList();
+            RotationInterpolationModeBox.ItemsSource = ImageProcessor.MakeInterpolationSelectionList();
+            RotationPixelOffsetModeBox.ItemsSource = ImageProcessor.MakePixelOffsetSelectionList();
+            RotationSmoothingModeBox.ItemsSource = ImageProcessor.MakeSmoothingSelectionList();
+            RotationCompositingQualityBox.ItemsSource = ImageProcessor.MakeCompositingQualitySelectionList();
             using (var installedFontCollection = new InstalledFontCollection())
             {
                 foreach (FontFamily fontFamily in installedFontCollection.Families)
@@ -74,6 +78,16 @@ namespace CronusZenMessageScreenStudio
             }
         }
 
+        public double RotationDegrees
+        {
+            get => _rotationDegrees;
+            set
+            {
+                _rotationDegrees = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool UseHSL { get; set; }
         public int MarginTop { get; set; }
         public int MarginBottom { get; set; }
@@ -82,6 +96,10 @@ namespace CronusZenMessageScreenStudio
         public ImageProcessor.Positions Position { get; set; }
         public InterpolationMode InterpolationMode { get; set; }
         public ImageProcessor.DitheringAlgorithms DitheringAlgorithm { get; set; }
+        public CompositingQuality RotationCompositingQuality { get; set; }
+        public SmoothingMode RotationSmoothingMode { get; set; }
+        public PixelOffsetMode RotationPixelOffsetMode { get; set; }
+        public InterpolationMode RotationInterpolationMode { get; set; }
         public FontFamily TextFontFamily { get; set; }
         public int TextFontSize { get; set; }
         public bool BoldFont { get; set; }
@@ -93,6 +111,9 @@ namespace CronusZenMessageScreenStudio
 
         public bool MergeWhites { get; set; }
         public bool MergeBlacks { get; set; }
+
+        public bool FlipVertically { get; set; }
+        public bool FlipHorizontally { get; set; }
 
         private void RefreshPreview()
         {
@@ -120,6 +141,17 @@ namespace CronusZenMessageScreenStudio
                 Font font = new Font(fontFamily, TextFontSize, fontStyle);
                 Bitmap img = ImageProcessor.DrawText(string.IsNullOrWhiteSpace(TextBox.Text) ? " " : TextBox.Text, font, WhiteOnBlack);
                 Color backgroundColor = WhiteOnBlack ? Color.Black : Color.White;
+
+                if (FlipHorizontally || FlipVertically)
+                {
+                    img = ImageProcessor.FlipImage(img, FlipHorizontally, FlipVertically);
+                }
+
+                if (RotationDegrees != 0)
+                {
+                    img = ImageProcessor.RotateImage(img, RotationDegrees, RotationInterpolationMode, RotationPixelOffsetMode, RotationSmoothingMode, RotationCompositingQuality, backgroundColor);
+                }
+
                 img = ImageProcessor.ScaleImage(img,
                                                 128,
                                                 64,
@@ -131,6 +163,7 @@ namespace CronusZenMessageScreenStudio
                                                 MarginRight,
                                                 backgroundColor,
                                                 InterpolationMode);
+
                 _finalImage = ImageProcessor.MakeBinaryMatrix(img, UseHSL ? (HSLThreshold / 100) : RGBThreshold, false, UseHSL, DitheringAlgorithm);
                 if (MergeWhites)
                 {
