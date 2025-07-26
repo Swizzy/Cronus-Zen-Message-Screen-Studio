@@ -3,7 +3,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  Title="Load image"
-                 Width="415"
+                 Width="425"
                  Height="556"
                  ResizeMode="NoResize"
                  WindowStartupLocation="CenterOwner">
