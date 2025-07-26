@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -203,5 +204,7 @@ namespace CronusZenMessageScreenStudio
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private void DrawTextWindow_OnSizeChanged(object sender, SizeChangedEventArgs e) => Trace.WriteLine($"Width: {ActualWidth}");
     }
 }
