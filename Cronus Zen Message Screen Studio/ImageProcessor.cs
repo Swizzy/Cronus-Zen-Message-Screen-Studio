@@ -99,6 +99,33 @@ namespace CronusZenMessageScreenStudio
             };
         }
 
+        public static IEnumerable MakePixelOffsetSelectionList()
+        {
+            yield return new SelectionData<PixelOffsetMode>("Default", PixelOffsetMode.Default);
+            yield return new SelectionData<PixelOffsetMode>("None", PixelOffsetMode.None);
+            yield return new SelectionData<PixelOffsetMode>("Half", PixelOffsetMode.Half);
+            yield return new SelectionData<PixelOffsetMode>("High speed", PixelOffsetMode.HighSpeed);
+            yield return new SelectionData<PixelOffsetMode>("High quality", PixelOffsetMode.HighQuality);
+        }
+
+        public static IEnumerable MakeSmoothingSelectionList()
+        {
+            yield return new SelectionData<SmoothingMode>("Default", SmoothingMode.Default);
+            yield return new SelectionData<SmoothingMode>("None", SmoothingMode.None);
+            yield return new SelectionData<SmoothingMode>("High speed", SmoothingMode.HighSpeed);
+            yield return new SelectionData<SmoothingMode>("High quality", SmoothingMode.HighQuality);
+            yield return new SelectionData<SmoothingMode>("Anti-alias", SmoothingMode.AntiAlias);
+        }
+
+        public static IEnumerable MakeCompositingQualitySelectionList()
+        {
+            yield return new SelectionData<CompositingQuality>("Default", CompositingQuality.Default);
+            yield return new SelectionData<CompositingQuality>("High speed", CompositingQuality.HighSpeed);
+            yield return new SelectionData<CompositingQuality>("High quality", CompositingQuality.HighQuality);
+            yield return new SelectionData<CompositingQuality>("Gamma Corrected", CompositingQuality.GammaCorrected);
+            yield return new SelectionData<CompositingQuality>("Assume linear", CompositingQuality.AssumeLinear);
+        }
+
         public static Bitmap LoadImage(string filename) => new Bitmap(filename);
 
         public static int GetFrameCount(Bitmap img)
@@ -230,6 +257,71 @@ namespace CronusZenMessageScreenStudio
                 graphics.DrawImage(input, new Rectangle(destX, destY, destWidth, destHeight), new Rectangle(0, 0, sourceWidth, sourceHeight), GraphicsUnit.Pixel);
             }
             return toReturn;
+        }
+
+
+        public static Bitmap FlipImage(Bitmap input, bool flipHorizontal, bool flipVertical)
+        {
+            if (!flipHorizontal && !flipVertical)
+            {
+                return input;
+            }
+
+            var flipType = flipHorizontal switch
+                           {
+                               true when flipVertical => RotateFlipType.RotateNoneFlipXY, // Flip both Vertical and Horizontal at the same time
+                               true                   => RotateFlipType.RotateNoneFlipX,  // Flip just Horizontal
+                               _                      => RotateFlipType.RotateNoneFlipY   // Flip just Vertical
+                           };
+
+            var flippedImage = (Bitmap)input.Clone();
+            flippedImage.RotateFlip(flipType);
+            return flippedImage;
+        }
+
+        public static Bitmap RotateImage(Bitmap input, double angleDegrees, InterpolationMode interpolationMode, PixelOffsetMode pixelOffsetMode, SmoothingMode smoothingMode, CompositingQuality compositingQuality, Color backgroundColor)
+        {
+            if (Math.Abs(angleDegrees) < 0.01) // If no rotation is needed, just pass it back as-is
+            {
+                return input;
+            }
+
+            var angleRadians = angleDegrees * (Math.PI / 180);
+            var cos = Math.Abs(Math.Cos(angleRadians));
+            var sin = Math.Abs(Math.Sin(angleRadians));
+
+            var srcWidth = input.Width;
+            var srcHeight = input.Height;
+
+            var newWidth = (int)Math.Round(srcWidth * cos + srcHeight * sin);
+            var newHeight = (int)Math.Round(srcHeight * cos + srcWidth * sin);
+
+            var rotatedBmp = new Bitmap(newWidth, newHeight, input.PixelFormat);
+            rotatedBmp.SetResolution(input.HorizontalResolution, input.VerticalResolution);
+
+            using (var g = Graphics.FromImage(rotatedBmp))
+            {
+                g.InterpolationMode = interpolationMode;
+                g.PixelOffsetMode = pixelOffsetMode;
+                g.SmoothingMode = smoothingMode;
+                g.CompositingQuality = compositingQuality;
+
+                g.Clear(backgroundColor);
+
+                // Set the rotation point to the center of the image
+                g.TranslateTransform(newWidth / 2f, newHeight / 2f);
+
+                // Rotate
+                g.RotateTransform((float)angleDegrees);
+
+                // Move the image back
+                g.TranslateTransform(-srcWidth / 2f, -srcHeight / 2f);
+
+                // Draw the rotated image
+                g.DrawImage(input, new PointF(0, 0));
+            }
+
+            return rotatedBmp;
         }
 
         public static bool[,] MakeBinaryMatrix(Bitmap img, double threshold, bool invert, bool useHSL, DitheringAlgorithms algorithm)

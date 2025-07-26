@@ -21,7 +21,7 @@ namespace CronusZenMessageScreenStudio
         private bool[,] _finalImage;
         private bool[,] _currentImage;
         private Bitmap _selectedImage, _originalSelectedImage;
-        private double _rgbThreshold, _hslThreshold;
+        private double _rgbThreshold, _hslThreshold, _rotationDegrees;
         private int _selectedFrame;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -34,6 +34,12 @@ namespace CronusZenMessageScreenStudio
             PositionBox.ItemsSource = ImageProcessor.MakePositionSelectionList();
             InterpolationModeBox.ItemsSource = ImageProcessor.MakeInterpolationSelectionList();
             DitheringAlgorithmBox.ItemsSource = ImageProcessor.MakeDitheringSelectionList();
+
+            RotationInterpolationModeBox.ItemsSource = ImageProcessor.MakeInterpolationSelectionList();
+            RotationPixelOffsetModeBox.ItemsSource = ImageProcessor.MakePixelOffsetSelectionList();
+            RotationSmoothingModeBox.ItemsSource = ImageProcessor.MakeSmoothingSelectionList();
+            RotationCompositingQualityBox.ItemsSource = ImageProcessor.MakeCompositingQualitySelectionList();
+
             RGBThreshold = 200;
             HSLThreshold = 50;
             UseHSL = true;
@@ -65,6 +71,16 @@ namespace CronusZenMessageScreenStudio
             }
         }
 
+        public double RotationDegrees
+        {
+            get => _rotationDegrees;
+            set
+            {
+                _rotationDegrees = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool UseHSL { get; set; }
         public int MarginTop { get; set; }
         public int MarginBottom { get; set; }
@@ -75,6 +91,10 @@ namespace CronusZenMessageScreenStudio
         public bool InvertBackground { get; set; }
         public InterpolationMode InterpolationMode { get; set; }
         public ImageProcessor.DitheringAlgorithms DitheringAlgorithm { get; set; }
+        public CompositingQuality RotationCompositingQuality { get; set; }
+        public SmoothingMode RotationSmoothingMode { get; set; }
+        public PixelOffsetMode RotationPixelOffsetMode { get; set; }
+        public InterpolationMode RotationInterpolationMode { get; set; }
 
         public int SelectedFrame
         {
@@ -90,6 +110,9 @@ namespace CronusZenMessageScreenStudio
 
         public bool MergeWhites { get; set; }
         public bool MergeBlacks { get; set; }
+
+        public bool FlipVertically { get; set; }
+        public bool FlipHorizontally { get; set; }
 
         private void SelectImage_Click(object sender, RoutedEventArgs e)
         {
@@ -134,6 +157,16 @@ namespace CronusZenMessageScreenStudio
             }
 
             _selectedImage = ImageProcessor.SetFrame(_originalSelectedImage, SelectedFrame);
+
+            if (FlipHorizontally || FlipVertically)
+            {
+                _selectedImage = ImageProcessor.FlipImage(_selectedImage, FlipHorizontally, FlipVertically);
+            }
+
+            if (RotationDegrees != 0)
+            {
+                _selectedImage = ImageProcessor.RotateImage(_selectedImage, RotationDegrees, RotationInterpolationMode, RotationPixelOffsetMode, RotationSmoothingMode, RotationCompositingQuality, InvertBackground ? Color.White : Color.Black);
+            }
 
             Bitmap scaledImage = ImageProcessor.ScaleImage(_selectedImage,
                                                            128,
