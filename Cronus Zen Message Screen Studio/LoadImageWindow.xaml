@@ -3,8 +3,9 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  Title="Load image"
-                 ResizeMode="NoResize"
-                 SizeToContent="Width"
+                 Width="500"
+                 MinWidth="500"
+                 MinHeight="870"
                  WindowStartupLocation="CenterOwner">
     <Grid x:Name="LayoutRoot" Margin="10">
         <Grid.RowDefinitions>
@@ -265,7 +266,7 @@
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1" Margin="0,10,0,0" Header="Preview">
-            <Viewbox Stretch="Uniform">
+            <Viewbox MinHeight="128" Stretch="Uniform">
                 <Image x:Name="ImagePreview"
                        Width="128"
                        Height="64"

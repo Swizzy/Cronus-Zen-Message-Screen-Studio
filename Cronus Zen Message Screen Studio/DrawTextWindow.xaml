@@ -6,9 +6,10 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  Title="Draw Text"
-                 ResizeMode="NoResize"
+                 Width="550"
+                 MinWidth="550"
+                 MinHeight="900"
                  SizeChanged="DrawTextWindow_OnSizeChanged"
-                 SizeToContent="Width"
                  WindowStartupLocation="CenterOwner"
                  mc:Ignorable="d">
     <mah:MetroWindow.Resources>
@@ -341,7 +342,7 @@
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1" Margin="0,10,0,0" Header="Preview">
-            <Viewbox Stretch="Uniform">
+            <Viewbox MinHeight="128" Stretch="Uniform">
                 <Image x:Name="ImagePreview"
                        Width="128"
                        Height="64"
